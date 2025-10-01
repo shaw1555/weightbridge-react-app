@@ -1,0 +1,29 @@
+npm create vite@latest weightbridge-react-app -- --template react-ts
+cd weightbridge-react-app
+npm install
+
+
+npm install -D tailwindcss@3 postcss autoprefixer
+npx tailwindcss init -p
+
+
+
+-----------------Configure tailwind.config.js -----------------
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+
+
+
+ ----------------- src/index.css -----------------
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
