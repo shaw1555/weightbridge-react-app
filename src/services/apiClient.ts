@@ -2,7 +2,7 @@
 import axios from "axios";
 import { AuthService } from "./AuthService";
 
-const API_BASE_URL = "https://localhost:7207/api"; // replace with real URL
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL as string;
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,

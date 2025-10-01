@@ -1,9 +1,8 @@
 const ROUTES = {
   Dashboard: "/",
-  
-    // Login
-  Login: "/Login",
 
+  // Login
+  Login: "/Login",
 
   // Category
   Category_List: "/Category",

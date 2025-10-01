@@ -5,7 +5,7 @@ import { AuthService } from "../services/AuthService";
 import Button from "./Button";
 
 export interface Field<T> {
-  name: keyof Omit<T, "id">;
+  name: keyof T;
   label: string;
   type?:
     | "text"
@@ -17,15 +17,16 @@ export interface Field<T> {
     | "tel"
     | "radio";
   required?: boolean;
-  options?: { label: string; value: any }[]; // for select or radio
+  options?: { label: string; value: any }[];
 }
 
-export interface EntityFormProps<T extends { id?: string | number }> {
+export interface EntityFormProps<T, K extends keyof T> {
   title: string;
   fields: Field<T>[];
-  fetchById?: (id: string | number) => Promise<T | null>;
-  create?: (data: Omit<T, "id">) => Promise<T>;
-  update?: (data: T) => Promise<T>;
+  idField: K;
+  fetchById?: (id: string | number) => Promise<T>;
+  create?: (data: T) => Promise<T>; // full entity now
+  update?: (id: string | number, data: T) => Promise<T>;
   deleteFn?: (id: string | number) => void | Promise<void>;
   listRoute: string;
   createPermission?: string;
@@ -33,9 +34,10 @@ export interface EntityFormProps<T extends { id?: string | number }> {
   deletePermission?: string;
 }
 
-function EntityForm<T extends { id?: string | number }>({
+function EntityForm<T extends object, K extends keyof T>({
   title,
   fields,
+  idField,
   fetchById,
   create,
   update,
@@ -44,63 +46,53 @@ function EntityForm<T extends { id?: string | number }>({
   createPermission,
   updatePermission,
   deletePermission,
-}: EntityFormProps<T>) {
+}: EntityFormProps<T, K>) {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const canCreate = createPermission
-    ? AuthService.hasPermission(createPermission)
-    : false;
-  const canUpdate = updatePermission
-    ? AuthService.hasPermission(updatePermission)
-    : false;
-  const canDelete = deletePermission
-    ? AuthService.hasPermission(deletePermission)
-    : false;
+  const canCreate = createPermission ? AuthService.hasPermission(createPermission) : false;
+  const canUpdate = updatePermission ? AuthService.hasPermission(updatePermission) : false;
+  const canDelete = deletePermission ? AuthService.hasPermission(deletePermission) : false;
 
-  const [entity, setEntity] = useState<Omit<T, "id">>(
+  const [entity, setEntity] = useState<Partial<T>>(
     fields.reduce(
       (acc, f) => ({
         ...acc,
-        [f.name]:
-          f.type === "checkbox" ? false : f.type === "radio" ? undefined : "",
+        [f.name]: f.type === "checkbox" ? false : f.type === "radio" ? undefined : "",
       }),
-      {} as Omit<T, "id">
+      {} as Partial<T>
     )
   );
-
   const [confirmOpen, setConfirmOpen] = useState(false);
 
+  const parseId = (id: string | undefined): string | number | undefined => {
+    if (!id) return undefined;
+    return /^\d+$/.test(id) ? parseInt(id, 10) : id;
+  };
+
+  // Fetch entity
   useEffect(() => {
     if (id && id !== "new" && fetchById) {
-      fetchById(id).then((data) => {
-        if (data) {
-          const { id: _id, ...rest } = data;
-          setEntity(rest as Omit<T, "id">);
-        } else {
+      fetchById(id)
+        .then((data) => setEntity(data))
+        .catch(() =>
           setEntity(
             fields.reduce(
               (acc, f) => ({
                 ...acc,
-                [f.name]:
-                  f.type === "checkbox"
-                    ? false
-                    : f.type === "radio"
-                    ? undefined
-                    : "",
+                [f.name]: f.type === "checkbox" ? false : f.type === "radio" ? undefined : "",
               }),
-              {} as Omit<T, "id">
+              {} as Partial<T>
             )
-          );
-        }
-      });
+          )
+        );
     }
   }, [id, fetchById, fields]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const name = e.target.name as keyof Omit<T, "id">;
+    const name = e.target.name as keyof T;
     let value: any;
 
     if (e.target instanceof HTMLInputElement) {
@@ -112,42 +104,34 @@ function EntityForm<T extends { id?: string | number }>({
           value = e.target.checked;
           break;
         case "radio":
-          // Convert radio string values back to boolean if needed
-          if (e.target.value === "true") value = true;
-          else if (e.target.value === "false") value = false;
-          else value = e.target.value;
+          value = e.target.value === "true" ? true : e.target.value === "false" ? false : e.target.value;
           break;
         default:
           value = e.target.value;
       }
-    } else if (e.target instanceof HTMLSelectElement) {
+    } else {
       value = e.target.value;
     }
 
     setEntity({ ...entity, [name]: value });
   };
 
-  const parseId = (id: string | undefined): string | number | undefined => {
-    if (!id) return undefined;
-    return /^\d+$/.test(id) ? parseInt(id, 10) : id;
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const parsedId = parseId(id);
     try {
-      const parsedId = parseId(id);
-      if (parsedId !== undefined && id !== "new" && update)
-        await update({ id: parsedId, ...(entity as T) });
-      else if (create) await create(entity);
+      if (parsedId !== undefined && id !== "new" && update) {
+        await update(parsedId, entity as T);
+      } else if (create) {
+        // automatically remove id field for create
+        const { [idField]: _, ...dataWithoutId } = entity as T;
+        await create(dataWithoutId as T);
+      }
       navigate(listRoute, { replace: true });
     } catch (err) {
       console.error(err);
       alert("Error saving entity");
     }
-  };
-
-  const handleDeleteClick = () => {
-    setConfirmOpen(true);
   };
 
   const handleConfirmDelete = async () => {
@@ -156,10 +140,6 @@ function EntityForm<T extends { id?: string | number }>({
       await deleteFn(parsedId);
       navigate(listRoute, { replace: true });
     }
-    setConfirmOpen(false);
-  };
-
-  const handleCancelDelete = () => {
     setConfirmOpen(false);
   };
 
@@ -174,7 +154,6 @@ function EntityForm<T extends { id?: string | number }>({
           {fields.map((field) => {
             const value = entity[field.name];
 
-            // Handle select fields
             if (field.type === "select" && field.options) {
               return (
                 <select
@@ -195,17 +174,13 @@ function EntityForm<T extends { id?: string | number }>({
               );
             }
 
-            // Handle radio fields
             if (field.type === "radio" && field.options) {
               return (
                 <div key={String(field.name)} className="flex flex-col">
                   <span className="font-medium">{field.label}</span>
                   <div className="flex gap-4">
                     {field.options.map((opt) => (
-                      <label
-                        key={opt.value}
-                        className="flex items-center gap-1"
-                      >
+                      <label key={opt.value} className="flex items-center gap-1">
                         <input
                           type="radio"
                           name={String(field.name)}
@@ -222,19 +197,14 @@ function EntityForm<T extends { id?: string | number }>({
               );
             }
 
-            // Handle all other fields (text, number, email, date, checkbox)
             return (
               <input
                 key={String(field.name)}
                 name={String(field.name)}
                 placeholder={field.label}
                 type={field.type || "text"}
-                checked={
-                  field.type === "checkbox" ? (value as boolean) : undefined
-                }
-                value={
-                  field.type === "checkbox" ? undefined : String(value ?? "")
-                }
+                checked={field.type === "checkbox" ? (value as boolean) : undefined}
+                value={field.type === "checkbox" ? undefined : String(value ?? "")}
                 onChange={handleChange}
                 className="border p-2 rounded"
                 required={field.required}
@@ -244,33 +214,18 @@ function EntityForm<T extends { id?: string | number }>({
 
           <div className="flex gap-2 mt-4">
             {(id === "new" && canCreate) || (id !== "new" && canUpdate) ? (
-              // <button
-              //   type="submit"
-              //   className="bg-green-500 text-white px-4 py-2 rounded"
-              // >
-              //   {id === "new" ? "Create" : "Update"}
-              // </button>
-
-              <Button
-                type="submit"
-                color="green"
-                onClick={() => alert("clicked")}
-              >
+              <Button type="submit" color="green">
                 {id === "new" ? "Create" : "Update"}
               </Button>
             ) : null}
 
             {id !== "new" && deleteFn && canDelete && (
-              <Button type="button" color="red" onClick={handleDeleteClick}>
+              <Button type="button" color="red" onClick={() => setConfirmOpen(true)}>
                 Delete
               </Button>
             )}
 
-            <Button
-              type="button"
-              color="gray"
-              onClick={() => navigate(listRoute)}
-            >
+            <Button type="button" color="gray" onClick={() => navigate(listRoute)}>
               Cancel
             </Button>
           </div>
@@ -280,7 +235,7 @@ function EntityForm<T extends { id?: string | number }>({
           open={confirmOpen}
           message={`Are you sure you want to delete this ${title}?`}
           onConfirm={handleConfirmDelete}
-          onCancel={handleCancelDelete}
+          onCancel={() => setConfirmOpen(false)}
         />
       </div>
     </div>

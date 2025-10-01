@@ -12,9 +12,12 @@ class AuthServiceClass {
       username: data.username,
       token: "demo-token-123",
       permissions: [
-        "View_Dashboard",     
+        "View_Dashboard",
         "View_Category",
-      ], // example permissions
+        "Create_Category",
+        "Update_Category",
+        "Delete_Category",
+      ],
     };
 
     localStorage.setItem("token", demoUser.token);
@@ -45,7 +48,6 @@ class AuthServiceClass {
     const user = this.getUser();
     return user?.permissions?.includes(permission) ?? false;
   }
-
 }
 
 export const AuthService = new AuthServiceClass();

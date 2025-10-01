@@ -8,6 +8,7 @@ import {
 import DashboardPage from "./pages/DashboardPage";
 import LoginPage from "./pages/login/LoginPage";
 import CategoryListPage from "./pages/category/CategoryListPage";
+import CategoryFormPage from "./pages/category/CategoryFormPage";
 
 import ROUTES from "./routes";
 import Header from "./components/Header";
@@ -52,6 +53,15 @@ const AppContent: React.FC = () => {
           element={
             <PrivateRoute>
               <CategoryListPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/category/:id"
+          element={
+            <PrivateRoute>
+              <CategoryFormPage />
             </PrivateRoute>
           }
         />
