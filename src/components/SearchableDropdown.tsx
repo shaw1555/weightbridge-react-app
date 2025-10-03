@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { Combobox } from "@headlessui/react";
 import { ChevronUpDownIcon } from "@heroicons/react/20/solid";
-
 interface SearchableDropdownProps<T extends Record<string, any>> {
-  label: string;
+  label?: string; // make optional
   options: T[];
   value: string | number | null; // primitive value (id or string)
   onChange: (value: string | number | null) => void; // return primitive
@@ -38,7 +37,9 @@ function SearchableDropdown<T extends Record<string, any>>({
 
   return (
     <div className="w-full">
-      <label className="block text-sm font-medium text-gray-700">{label}</label>
+      {label && (
+        <label className="block text-sm font-medium text-gray-700">{label}</label>
+      )}
       <Combobox
         value={selectedOption}
         onChange={(option: T | null) =>

@@ -4,4 +4,5 @@ export interface Column<T> {
   render?: (item: T) => React.ReactNode;
   type?: "text" | "number" | "date" | "select" | "checkbox";
   options?: { value: any; label: string }[];
+  showTime?: boolean; // for date columns: show time if true
 }

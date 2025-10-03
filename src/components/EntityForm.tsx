@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import ConfirmDialog from "../components/ConfirmDialog";
 import { AuthService } from "../services/AuthService";
 import Button from "./Button";
+import SearchableDropdown from "../components/SearchableDropdown";
 
 export interface Field<T> {
   name: keyof T;
@@ -15,7 +16,8 @@ export interface Field<T> {
     | "select"
     | "email"
     | "tel"
-    | "radio";
+    // radio removed on purpose
+    ;
   required?: boolean;
   options?: { label: string; value: any }[];
 }
@@ -25,7 +27,7 @@ export interface EntityFormProps<T, K extends keyof T> {
   fields: Field<T>[];
   idField: K;
   fetchById?: (id: string | number) => Promise<T>;
-  create?: (data: T) => Promise<T>; // full entity now
+  create?: (data: T) => Promise<T>;
   update?: (id: string | number, data: T) => Promise<T>;
   deleteFn?: (id: string | number) => void | Promise<void>;
   listRoute: string;
@@ -50,15 +52,22 @@ function EntityForm<T extends object, K extends keyof T>({
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const canCreate = createPermission ? AuthService.hasPermission(createPermission) : false;
-  const canUpdate = updatePermission ? AuthService.hasPermission(updatePermission) : false;
-  const canDelete = deletePermission ? AuthService.hasPermission(deletePermission) : false;
+  const canCreate = createPermission
+    ? AuthService.hasPermission(createPermission)
+    : false;
+  const canUpdate = updatePermission
+    ? AuthService.hasPermission(updatePermission)
+    : false;
+  const canDelete = deletePermission
+    ? AuthService.hasPermission(deletePermission)
+    : false;
 
   const [entity, setEntity] = useState<Partial<T>>(
     fields.reduce(
       (acc, f) => ({
         ...acc,
-        [f.name]: f.type === "checkbox" ? false : f.type === "radio" ? undefined : "",
+        [f.name]:
+          f.type === "checkbox" ? false : /* radio removed */ "" ,
       }),
       {} as Partial<T>
     )
@@ -70,7 +79,7 @@ function EntityForm<T extends object, K extends keyof T>({
     return /^\d+$/.test(id) ? parseInt(id, 10) : id;
   };
 
-  // Fetch entity
+  // Fetch entity by id
   useEffect(() => {
     if (id && id !== "new" && fetchById) {
       fetchById(id)
@@ -80,7 +89,7 @@ function EntityForm<T extends object, K extends keyof T>({
             fields.reduce(
               (acc, f) => ({
                 ...acc,
-                [f.name]: f.type === "checkbox" ? false : f.type === "radio" ? undefined : "",
+                [f.name]: f.type === "checkbox" ? false : "",
               }),
               {} as Partial<T>
             )
@@ -89,6 +98,7 @@ function EntityForm<T extends object, K extends keyof T>({
     }
   }, [id, fetchById, fields]);
 
+  // Normal event-based change handler (for input, checkbox)
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -103,9 +113,6 @@ function EntityForm<T extends object, K extends keyof T>({
         case "checkbox":
           value = e.target.checked;
           break;
-        case "radio":
-          value = e.target.value === "true" ? true : e.target.value === "false" ? false : e.target.value;
-          break;
         default:
           value = e.target.value;
       }
@@ -113,7 +120,13 @@ function EntityForm<T extends object, K extends keyof T>({
       value = e.target.value;
     }
 
-    setEntity({ ...entity, [name]: value });
+    // functional update to prevent stale-overwrite bugs
+    setEntity((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Helper for custom components (SearchableDropdown etc.)
+  const handleValueChange = (name: keyof T, value: string | number | null) => {
+    setEntity((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -123,8 +136,7 @@ function EntityForm<T extends object, K extends keyof T>({
       if (parsedId !== undefined && id !== "new" && update) {
         await update(parsedId, entity as T);
       } else if (create) {
-        // automatically remove id field for create
-        const { [idField]: _, ...dataWithoutId } = entity as T;
+        const { [idField]: _, ...dataWithoutId } = entity as T; // remove id for create
         await create(dataWithoutId as T);
       }
       navigate(listRoute, { replace: true });
@@ -150,65 +162,84 @@ function EntityForm<T extends object, K extends keyof T>({
           {id === "new" ? `Add ${title}` : `Edit ${title}`}
         </h2>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-2 max-w-sm">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3 max-w-lg">
           {fields.map((field) => {
             const value = entity[field.name];
 
+            const labelClass = "w-40 font-medium text-gray-700 text-sm";
+            const controlClass = "flex-1";
+
+            // SELECT / SEARCHABLE DROPDOWN
             if (field.type === "select" && field.options) {
               return (
-                <select
-                  key={String(field.name)}
-                  name={String(field.name)}
-                  value={value as string}
-                  onChange={handleChange}
-                  className="border p-2 rounded"
-                  required={field.required}
-                >
-                  <option value="">Select {field.label}</option>
-                  {field.options.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-              );
-            }
+                <div key={String(field.name)} className="flex items-center gap-4">
+                  {/* label on the left (fixed width) */}
+                  <span className={labelClass}>{field.label}</span>
 
-            if (field.type === "radio" && field.options) {
-              return (
-                <div key={String(field.name)} className="flex flex-col">
-                  <span className="font-medium">{field.label}</span>
-                  <div className="flex gap-4">
-                    {field.options.map((opt) => (
-                      <label key={opt.value} className="flex items-center gap-1">
-                        <input
-                          type="radio"
-                          name={String(field.name)}
-                          value={String(opt.value)}
-                          checked={value === opt.value}
-                          onChange={handleChange}
-                          required={field.required}
-                        />
-                        {opt.label}
-                      </label>
-                    ))}
+                  {/* control on the right (takes remaining width) */}
+                  <div className={controlClass}>
+                    {/* Do NOT pass label prop to SearchableDropdown so it doesn't render its own label above */}
+                    <SearchableDropdown
+                      options={field.options.map((opt) => ({
+                        id: opt.value,
+                        name: opt.label,
+                      }))}
+                      // pass raw-type value (string | number | null) to match option ids
+                      value={
+                        value !== undefined && value !== null
+                          ? (value as unknown as string | number)
+                          : null
+                      }
+                      onChange={(val) => handleValueChange(field.name, val)}
+                      displayKey="name"
+                      valueKey="id"
+                      placeholder={`Select ${field.label}`}
+                    />
                   </div>
                 </div>
               );
             }
 
+            // CHECKBOX
+            if (field.type === "checkbox") {
+              return (
+                <div key={String(field.name)} className="flex items-center gap-4">
+                  <span className={labelClass}>{field.label}</span>
+                  <div className={controlClass}>
+                    <input
+                      id={String(field.name)}
+                      name={String(field.name)}
+                      type="checkbox"
+                      checked={Boolean(value)}
+                      onChange={handleChange}
+                      className="h-4 w-4 accent-blue-500 cursor-pointer"
+                    />
+                  </div>
+                </div>
+              );
+            }
+
+            // DEFAULT INPUT (covers text, number, date, email, tel, etc.)
             return (
-              <input
-                key={String(field.name)}
-                name={String(field.name)}
-                placeholder={field.label}
-                type={field.type || "text"}
-                checked={field.type === "checkbox" ? (value as boolean) : undefined}
-                value={field.type === "checkbox" ? undefined : String(value ?? "")}
-                onChange={handleChange}
-                className="border p-2 rounded"
-                required={field.required}
-              />
+              <div key={String(field.name)} className="flex items-center gap-4">
+                <span className={labelClass}>{field.label}</span>
+                <div className={controlClass}>
+                  <input
+                    id={String(field.name)}
+                    name={String(field.name)}
+                    type={field.type || "text"}
+                    placeholder={field.label}
+                    value={
+                      field.type === "number"
+                        ? (value ?? "") as unknown as number | string
+                        : String(value ?? "")
+                    }
+                    onChange={handleChange}
+                    className="w-full border p-2 rounded"
+                    required={field.required}
+                  />
+                </div>
+              </div>
             );
           })}
 

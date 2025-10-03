@@ -11,6 +11,8 @@ import CategoryListPage from "./pages/category/CategoryListPage";
 import CategoryFormPage from "./pages/category/CategoryFormPage";
 import CustomerListPage from "./pages/customer/CustomerListPage";
 import CustomerFormPage from "./pages/customer/CustomerFormPage";
+import PermissionListPage from "./pages/permission/PermissionListPage";
+import PermissionFormPage from "./pages/permission/PermissionFormPage";
 
 import ROUTES from "./routes";
 import Header from "./components/Header";
@@ -34,6 +36,11 @@ const AppContent: React.FC = () => {
       label: "Customers",
       path: ROUTES.Customer_List,
       permission: "View_Customer",
+    },
+    {
+      label: "Permissions",
+      path: ROUTES.Permission_List,
+      permission: "View_Permission",
     },
   ];
 
@@ -87,6 +94,24 @@ const AppContent: React.FC = () => {
           element={
             <PrivateRoute>
               <CustomerFormPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.Permission_List}
+          element={
+            <PrivateRoute>
+              <PermissionListPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/permission/:id"
+          element={
+            <PrivateRoute>
+              <PermissionFormPage />
             </PrivateRoute>
           }
         />

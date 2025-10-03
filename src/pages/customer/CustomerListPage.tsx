@@ -14,14 +14,14 @@ const CustomerListPage: React.FC = () => {
   }, []);
 
   const columns: Column<Customer>[] = [
-    { key: "customer_id_f", label: "Customer Id" },
+    // { key: "customer_id_f", label: "Customer Id" }, // can remove, but it still work for save, update, delete//
     { key: "customer_code_f", label: "Customer Code" },
     { key: "customer_name_f", label: "Customer Name" },
     { key: "address_f", label: "Address" },
     { key: "phone_no_f", label: "Phone.No" },
     { key: "registration_number_f", label: "Registration.No" },
     { key: "log_by_f", label: "Log By" },
-    { key: "log_date_time_f", label: "Log Date & Time" },
+    { key: "log_date_time_f", label: "Log Date & Time", type: "date", showTime: true },
   ];
 
   return (

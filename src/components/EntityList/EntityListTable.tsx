@@ -12,7 +12,7 @@ interface EntityListTableProps<T> {
   onToggleRow: (id: string | number) => void;
   onSelectAll: (checked: boolean) => void;
   allSelected: boolean;
-  idKey: keyof T; // 👈 configurable ID key
+  idKey: keyof T;
 }
 
 function EntityListTable<T>({
@@ -27,6 +27,24 @@ function EntityListTable<T>({
   allSelected,
   idKey,
 }: EntityListTableProps<T>) {
+  const formatDate = (value: any, showTime?: boolean) => {
+    if (!value) return "";
+    const date = new Date(value);
+    if (isNaN(date.getTime())) return String(value);
+    return showTime ? date.toLocaleString() : date.toLocaleDateString();
+  };
+
+  const getAlignmentClass = (type?: string) => {
+    switch (type) {
+      case "checkbox":
+        return "text-center";
+      case "number":
+        return "text-right";
+      default:
+        return "text-left";
+    }
+  };
+
   return (
     <table className="border-collapse border border-gray-300 w-full">
       <thead>
@@ -36,12 +54,13 @@ function EntityListTable<T>({
               type="checkbox"
               checked={allSelected}
               onChange={(e) => onSelectAll(e.target.checked)}
+              className="mx-auto block"
             />
           </th>
           {columns.map((col) => (
             <th
               key={String(col.key)}
-              className="border border-gray-300 p-2 bg-gray-100 text-left font-semibold"
+              className="border border-gray-300 p-2 bg-gray-100 font-semibold text-left"
             >
               <div className="flex items-center gap-1">
                 <span>{col.label}</span>
@@ -54,17 +73,34 @@ function EntityListTable<T>({
         {/* Filters Row */}
         <tr className="bg-gray-50">
           <th className="border border-gray-300 p-2"></th>
-          {columns.map((col) => (
-            <th key={String(col.key)} className="border border-gray-300 p-2">
-              <input
-                type={col.type || "text"}
-                placeholder="Filter..."
-                value={filters[col.key as string] ?? ""}
-                onChange={(e) => onFilterChange(col.key, e.target.value)}
-                className="border border-gray-300 rounded w-full p-1 text-sm placeholder-gray-400"
-              />
-            </th>
-          ))}
+          {columns.map((col) => {
+            const alignmentClass = getAlignmentClass(col.type);
+            const isCheckbox = col.type === "checkbox";
+
+            // Filter input: number => number, date => date (always no time), else text
+            const inputType =
+              col.type === "number"
+                ? "number"
+                : col.type === "date"
+                ? "date" // always date only
+                : "text";
+
+            return (
+              <th
+                key={String(col.key)}
+                className={`border border-gray-300 p-2 ${alignmentClass}`}
+              >
+                <input
+                  type={inputType}
+                  placeholder={isCheckbox ? "" : "Filter..."}
+                  value={filters[String(col.key)] ?? ""}
+                  onChange={(e) => onFilterChange(col.key, e.target.value)}
+                  className="border border-gray-300 rounded w-full p-1 text-sm placeholder-gray-400"
+                  disabled={isCheckbox} // disable checkbox filter
+                />
+              </th>
+            );
+          })}
         </tr>
       </thead>
 
@@ -78,6 +114,7 @@ function EntityListTable<T>({
                 selectedRows[itemId] ? "bg-blue-100" : ""
               }`}
             >
+              {/* Row selection checkbox */}
               <td
                 className="border border-gray-300 p-2 text-center w-12"
                 style={{ minWidth: 40, maxWidth: 40 }}
@@ -87,18 +124,41 @@ function EntityListTable<T>({
                   type="checkbox"
                   checked={!!selectedRows[itemId]}
                   onChange={() => onToggleRow(itemId)}
+                  className="mx-auto block"
                 />
               </td>
 
-              {columns.map((col) => (
-                <td
-                  key={String(col.key)}
-                  className="border border-gray-300 p-2"
-                  onClick={() => onRowClick(itemId)}
-                >
-                  {col.render ? col.render(item) : String(item[col.key] ?? "")}
-                </td>
-              ))}
+              {columns.map((col) => {
+                const alignmentClass = getAlignmentClass(col.type);
+                let content: React.ReactNode;
+
+                if (col.type === "checkbox") {
+                  content = (
+                    <input
+                      type="checkbox"
+                      checked={!!item[col.key]}
+                      readOnly
+                      className="mx-auto block cursor-default"
+                    />
+                  );
+                } else if (col.type === "date") {
+                  content = formatDate(item[col.key], col.showTime);
+                } else if (col.render) {
+                  content = col.render(item);
+                } else {
+                  content = String(item[col.key] ?? "");
+                }
+
+                return (
+                  <td
+                    key={String(col.key)}
+                    className={`border border-gray-300 p-2 ${alignmentClass}`}
+                    onClick={() => onRowClick(itemId)}
+                  >
+                    {content}
+                  </td>
+                );
+              })}
             </tr>
           );
         })}

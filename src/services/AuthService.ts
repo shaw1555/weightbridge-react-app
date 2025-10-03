@@ -23,6 +23,11 @@ class AuthServiceClass {
         "Create_Customer",
         "Update_Customer",
         "Delete_Customer",
+
+        "View_Permission",
+        "Create_Permission",
+        "Update_Permission",
+        "Delete_Permission",
       ],
     };
 

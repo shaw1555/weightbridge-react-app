@@ -14,7 +14,7 @@ const CategoryListPage: React.FC = () => {
   }, []);
 
   const columns: Column<Category>[] = [
-    { key: "category_Id_F", label: "Category Id" }, 
+    // { key: "category_Id_F", label: "Category Id" }, 
     { key: "category_F", label: "Category" },
   ];
 
