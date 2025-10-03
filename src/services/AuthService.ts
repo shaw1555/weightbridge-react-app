@@ -13,10 +13,16 @@ class AuthServiceClass {
       token: "demo-token-123",
       permissions: [
         "View_Dashboard",
+        
         "View_Category",
         "Create_Category",
         "Update_Category",
         "Delete_Category",
+
+        "View_Customer",
+        "Create_Customer",
+        "Update_Customer",
+        "Delete_Customer",
       ],
     };
 
