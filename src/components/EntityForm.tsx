@@ -8,16 +8,8 @@ import SearchableDropdown from "../components/SearchableDropdown";
 export interface Field<T> {
   name: keyof T;
   label: string;
-  type?:
-    | "text"
-    | "number"
-    | "checkbox"
-    | "date"
-    | "select"
-    | "email"
-    | "tel"
-    // radio removed on purpose
-    ;
+  type?: "text" | "number" | "checkbox" | "date" | "select" | "email" | "tel";
+  // radio removed on purpose
   required?: boolean;
   options?: { label: string; value: any }[];
 }
@@ -66,8 +58,7 @@ function EntityForm<T extends object, K extends keyof T>({
     fields.reduce(
       (acc, f) => ({
         ...acc,
-        [f.name]:
-          f.type === "checkbox" ? false : /* radio removed */ "" ,
+        [f.name]: f.type === "checkbox" ? false : /* radio removed */ "",
       }),
       {} as Partial<T>
     )
@@ -172,7 +163,10 @@ function EntityForm<T extends object, K extends keyof T>({
             // SELECT / SEARCHABLE DROPDOWN
             if (field.type === "select" && field.options) {
               return (
-                <div key={String(field.name)} className="flex items-center gap-4">
+                <div
+                  key={String(field.name)}
+                  className="flex items-center gap-4"
+                >
                   {/* label on the left (fixed width) */}
                   <span className={labelClass}>{field.label}</span>
 
@@ -203,7 +197,10 @@ function EntityForm<T extends object, K extends keyof T>({
             // CHECKBOX
             if (field.type === "checkbox") {
               return (
-                <div key={String(field.name)} className="flex items-center gap-4">
+                <div
+                  key={String(field.name)}
+                  className="flex items-center gap-4"
+                >
                   <span className={labelClass}>{field.label}</span>
                   <div className={controlClass}>
                     <input
@@ -230,8 +227,12 @@ function EntityForm<T extends object, K extends keyof T>({
                     type={field.type || "text"}
                     placeholder={field.label}
                     value={
-                      field.type === "number"
-                        ? (value ?? "") as unknown as number | string
+                      field.type === "date"
+                        ? value
+                          ? String(value).split("T")[0] // ✅ fix: convert "2025-10-15T00:00:00" → "2025-10-15"
+                          : ""
+                        : field.type === "number"
+                        ? ((value ?? "") as unknown as number | string)
                         : String(value ?? "")
                     }
                     onChange={handleChange}
@@ -251,12 +252,20 @@ function EntityForm<T extends object, K extends keyof T>({
             ) : null}
 
             {id !== "new" && deleteFn && canDelete && (
-              <Button type="button" color="red" onClick={() => setConfirmOpen(true)}>
+              <Button
+                type="button"
+                color="red"
+                onClick={() => setConfirmOpen(true)}
+              >
                 Delete
               </Button>
             )}
 
-            <Button type="button" color="gray" onClick={() => navigate(listRoute)}>
+            <Button
+              type="button"
+              color="gray"
+              onClick={() => navigate(listRoute)}
+            >
               Cancel
             </Button>
           </div>

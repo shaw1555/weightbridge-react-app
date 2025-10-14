@@ -9,12 +9,18 @@ import DashboardPage from "./pages/DashboardPage";
 import LoginPage from "./pages/login/LoginPage";
 import CategoryListPage from "./pages/category/CategoryListPage";
 import CategoryFormPage from "./pages/category/CategoryFormPage";
+import ServiceListPage from "./pages/service/ServiceListPage";
+import ServiceFormPage from "./pages/service/ServiceFormPage";
+import TariffListPage from "./pages/tariff/TariffListPage";
+import TariffFormPage from "./pages/tariff/TariffFormPage";
 import CustomerListPage from "./pages/customer/CustomerListPage";
 import CustomerFormPage from "./pages/customer/CustomerFormPage";
 import PermissionListPage from "./pages/permission/PermissionListPage";
 import PermissionFormPage from "./pages/permission/PermissionFormPage";
 import SetupListPage from "./pages/setup/SetupListPage";
 import SetupFormPage from "./pages/setup/SetupFormPage";
+import UserListPage from "./pages/user/UserListPage";
+import UserFormPage from "./pages/user/UserFormPage";
 
 import ROUTES from "./routes";
 import Header from "./components/Header";
@@ -23,7 +29,7 @@ import { NAV_LINKS } from "./config/navLinks";
 
 const AppContent: React.FC = () => {
   const location = useLocation();
- 
+
   const links = NAV_LINKS;
 
   const showHeader = location.pathname !== ROUTES.Login;
@@ -58,6 +64,42 @@ const AppContent: React.FC = () => {
           element={
             <PrivateRoute>
               <CategoryFormPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.Service_List}
+          element={
+            <PrivateRoute>
+              <ServiceListPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/service/:id"
+          element={
+            <PrivateRoute>
+              <ServiceFormPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.Tariff_List}
+          element={
+            <PrivateRoute>
+              <TariffListPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/tariff/:id"
+          element={
+            <PrivateRoute>
+              <TariffFormPage />
             </PrivateRoute>
           }
         />
@@ -98,7 +140,7 @@ const AppContent: React.FC = () => {
           }
         />
 
-         <Route
+        <Route
           path={ROUTES.Setup_List}
           element={
             <PrivateRoute>
@@ -116,6 +158,23 @@ const AppContent: React.FC = () => {
           }
         />
 
+        <Route
+          path={ROUTES.User_List}
+          element={
+            <PrivateRoute>
+              <UserListPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/user/:id"
+          element={
+            <PrivateRoute>
+              <UserFormPage />
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </>
   );
