@@ -13,36 +13,18 @@ import CustomerListPage from "./pages/customer/CustomerListPage";
 import CustomerFormPage from "./pages/customer/CustomerFormPage";
 import PermissionListPage from "./pages/permission/PermissionListPage";
 import PermissionFormPage from "./pages/permission/PermissionFormPage";
+import SetupListPage from "./pages/setup/SetupListPage";
+import SetupFormPage from "./pages/setup/SetupFormPage";
 
 import ROUTES from "./routes";
 import Header from "./components/Header";
 import PrivateRoute from "./components/PrivateRoute";
+import { NAV_LINKS } from "./config/navLinks";
 
 const AppContent: React.FC = () => {
   const location = useLocation();
-
-  const links = [
-    {
-      label: "Dashboard",
-      path: ROUTES.Dashboard,
-      permission: "View_Dashboard",
-    },
-    {
-      label: "Categorys",
-      path: ROUTES.Category_List,
-      permission: "View_Category",
-    },
-    {
-      label: "Customers",
-      path: ROUTES.Customer_List,
-      permission: "View_Customer",
-    },
-    {
-      label: "Permissions",
-      path: ROUTES.Permission_List,
-      permission: "View_Permission",
-    },
-  ];
+ 
+  const links = NAV_LINKS;
 
   const showHeader = location.pathname !== ROUTES.Login;
 
@@ -115,6 +97,25 @@ const AppContent: React.FC = () => {
             </PrivateRoute>
           }
         />
+
+         <Route
+          path={ROUTES.Setup_List}
+          element={
+            <PrivateRoute>
+              <SetupListPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/setup/:id"
+          element={
+            <PrivateRoute>
+              <SetupFormPage />
+            </PrivateRoute>
+          }
+        />
+
       </Routes>
     </>
   );

@@ -1,35 +1,31 @@
 // src/services/AuthService.ts
 import type { LoginRequest } from "../pages/login/types";
+import apiClient from "./apiClient";
 
 class AuthServiceClass {
   // private _subscribers: ((loggedIn: boolean) => void)[] = [];
 
   // simulate login API
   async login(data: LoginRequest) {
+    const basePathPermission = "/Permission";
+
     // Normally, call your API here
     // For demo, just return a fake token
     const demoUser = {
       username: data.username,
       token: "demo-token-123",
-      permissions: [
-        "View_Dashboard",
-        
-        "View_Category",
-        "Create_Category",
-        "Update_Category",
-        "Delete_Category",
-
-        "View_Customer",
-        "Create_Customer",
-        "Update_Customer",
-        "Delete_Customer",
-
-        "View_Permission",
-        "Create_Permission",
-        "Update_Permission",
-        "Delete_Permission",
-      ],
+      permissions: [] as string[],
     };
+
+    // 🔹 Fetch permissions from API
+    try {
+      const response = await apiClient.get<string[]>(
+        `${basePathPermission}/GrantPermission`
+      );
+      demoUser.permissions = response.data; // assign permissions
+    } catch (error) {
+      console.error("Error fetching permissions:", error);
+    }
 
     localStorage.setItem("token", demoUser.token);
     localStorage.setItem("user", JSON.stringify(demoUser));
