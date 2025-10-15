@@ -4,6 +4,9 @@ const ROUTES = {
   // Login
   Login: "/Login",
 
+  //TariffSetup_List
+  TariffSetup_Menu: "/TariffSetup",
+
   // Category
   Category_List: "/Category",
   Category_Form: (id: string | "new" = "new") => `/Category/${id}`,
@@ -23,6 +26,9 @@ const ROUTES = {
   // Permission
   Permission_List: "/Permission",
   Permission_Form: (id: string | "new" = "new") => `/Permission/${id}`,
+
+  //Setting
+  Setting_Menu: "/Setting", 
 
   // Setup
   Setup_List: "/Setup",
