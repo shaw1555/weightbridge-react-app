@@ -11,8 +11,12 @@ import CategoryListPage from "./pages/category/CategoryListPage";
 import CategoryFormPage from "./pages/category/CategoryFormPage";
 import ServiceListPage from "./pages/service/ServiceListPage";
 import ServiceFormPage from "./pages/service/ServiceFormPage";
+import TruckTypeListPage from "./pages/truckType/TruckTypeListPage";
+import TruckTypeFormPage from "./pages/truckType/TruckTypeFormPage";
 import TariffListPage from "./pages/tariff/TariffListPage";
 import TariffFormPage from "./pages/tariff/TariffFormPage";
+import TariffDetailListPage from "./pages/tariffDetail/TariffDetailListPage";
+import TariffDetailFormPage from "./pages/tariffDetail/TariffDetailFormPage";
 import CustomerListPage from "./pages/customer/CustomerListPage";
 import CustomerFormPage from "./pages/customer/CustomerFormPage";
 import PermissionListPage from "./pages/permission/PermissionListPage";
@@ -21,6 +25,8 @@ import SetupListPage from "./pages/setup/SetupListPage";
 import SetupFormPage from "./pages/setup/SetupFormPage";
 import UserListPage from "./pages/user/UserListPage";
 import UserFormPage from "./pages/user/UserFormPage";
+import WeighingCompanyProfileListPage from "./pages/weighingCompanyProfile/weighingCompanyProfileListPage";
+import WeighingCompanyProfileFormPage from "./pages/weighingCompanyProfile/weighingCompanyProfileFormPage";
 
 import ROUTES from "./routes";
 import Header from "./components/Header";
@@ -87,6 +93,24 @@ const AppContent: React.FC = () => {
         />
 
         <Route
+          path={ROUTES.TruckType_List}
+          element={
+            <PrivateRoute>
+              <TruckTypeListPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/truckType/:id"
+          element={
+            <PrivateRoute>
+              <TruckTypeFormPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
           path={ROUTES.Tariff_List}
           element={
             <PrivateRoute>
@@ -100,6 +124,24 @@ const AppContent: React.FC = () => {
           element={
             <PrivateRoute>
               <TariffFormPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.TariffDetail_List}
+          element={
+            <PrivateRoute>
+              <TariffDetailListPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/tariffDetail/:id"
+          element={
+            <PrivateRoute>
+              <TariffDetailFormPage />
             </PrivateRoute>
           }
         />
@@ -175,6 +217,25 @@ const AppContent: React.FC = () => {
             </PrivateRoute>
           }
         />
+
+          <Route
+          path={ROUTES.WeighingCompanyProfile_List}
+          element={
+            <PrivateRoute>
+              <WeighingCompanyProfileListPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/weighingCompanyProfile/:id"
+          element={
+            <PrivateRoute>
+              <WeighingCompanyProfileFormPage />
+            </PrivateRoute>
+          }
+        />
+
       </Routes>
     </>
   );

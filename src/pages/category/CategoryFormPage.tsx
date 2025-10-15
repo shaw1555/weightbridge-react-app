@@ -12,16 +12,16 @@ import EntityForm, { type Field } from "../../components/EntityForm";
 const CategoryFormPage: React.FC = () => {
   const fields: Field<Category>[] = [
     {
-      name: "category_F",
+      name: "category_f",
       label: "Category Name",
       type: "text",
       required: true,
     },
   ];
   return (
-    <EntityForm<Category, "category_Id_F">
+    <EntityForm<Category, "category_id_f">
       title="Category"
-      idField="category_Id_F"
+      idField="category_id_f"
       fields={fields}
       fetchById={fetchCategoryById}
       create={createCategory}

@@ -4,6 +4,14 @@ const ROUTES = {
   // Login
   Login: "/Login",
 
+  //VGM_Menu
+  VGM_Menu: "/VGM_Menu",
+
+  //weighingCompanyProfile
+  WeighingCompanyProfile_List: "/WeighingCompanyProfile",
+  WeighingCompanyProfile_Form: (id: string | "new" = "new") =>
+    `/WeighingCompanyProfile/${id}`,
+
   //TariffSetup_List
   TariffSetup_Menu: "/TariffSetup",
 
@@ -15,9 +23,17 @@ const ROUTES = {
   Service_List: "/Service",
   Service_Form: (id: string | "new" = "new") => `/Service/${id}`,
 
-//Tariff
+  // TruckType
+  TruckType_List: "/TruckType",
+  TruckType_Form: (id: string | "new" = "new") => `/TruckType/${id}`,
+
+  //Tariff
   Tariff_List: "/Tariff",
   Tariff_Form: (id: string | "new" = "new") => `/Tariff/${id}`,
+
+  //Tariff Detail
+  TariffDetail_List: "/TariffDetail",
+  TariffDetail_Form: (id: string | "new" = "new") => `/TariffDetail/${id}`,
 
   // Customer
   Customer_List: "/Customer",
@@ -28,7 +44,7 @@ const ROUTES = {
   Permission_Form: (id: string | "new" = "new") => `/Permission/${id}`,
 
   //Setting
-  Setting_Menu: "/Setting", 
+  Setting_Menu: "/Setting",
 
   // Setup
   Setup_List: "/Setup",

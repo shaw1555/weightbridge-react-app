@@ -1,4 +1,4 @@
 export interface Category {
-  category_Id_F: number;
-  category_F: string;
+  category_id_f: number;
+  category_f: string;
 }

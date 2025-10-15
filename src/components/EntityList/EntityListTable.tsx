@@ -57,17 +57,26 @@ function EntityListTable<T>({
               className="mx-auto block"
             />
           </th>
-          {columns.map((col) => (
-            <th
-              key={String(col.key)}
-              className="border border-gray-300 p-2 bg-gray-100 font-semibold text-left"
-            >
-              <div className="flex items-center gap-1">
-                <span>{col.label}</span>
-                <Filter className="w-3 h-3 text-gray-500" />
-              </div>
-            </th>
-          ))}
+          {columns.map((col) => {
+            const alignmentClass = getAlignmentClass(col.type);
+            const isRightAligned = col.type === "number";
+
+            return (
+              <th
+                key={String(col.key)}
+                className={`border border-gray-300 p-2 bg-gray-100 font-semibold ${alignmentClass}`}
+              >
+                <div
+                  className={`flex items-center gap-1 ${
+                    isRightAligned ? "justify-end" : "justify-start"
+                  }`}
+                >
+                  <span>{col.label}</span>
+                  <Filter className="w-3 h-3 text-gray-500" />
+                </div>
+              </th>
+            );
+          })}
         </tr>
 
         {/* Filters Row */}

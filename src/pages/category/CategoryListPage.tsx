@@ -15,7 +15,7 @@ const CategoryListPage: React.FC = () => {
 
   const columns: Column<Category>[] = [
     // { key: "category_Id_F", label: "Category Id" }, 
-    { key: "category_F", label: "Category" },
+    { key: "category_f", label: "Category" },
   ];
 
   return (
@@ -23,7 +23,7 @@ const CategoryListPage: React.FC = () => {
       title="Category"
       data={categorys}
       columns={columns}
-       idKey="category_Id_F"   // 👈 tell which field is the PK
+       idKey="category_id_f"   // 👈 tell which field is the PK
       onRowClick={(id) => navigate(ROUTES.Category_Form(String(id)))}
       onAddClick={() => navigate(ROUTES.Category_Form())}
     />

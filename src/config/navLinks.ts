@@ -3,13 +3,35 @@ import { type HeaderLink } from "../types/navigation"; // ✅ use shared type
 
 export const NAV_LINKS: HeaderLink[] = [
   { label: "Dashboard", path: ROUTES.Dashboard, permission: "View_Dashboard" },
+
+  { label: "Master Setup", path: ROUTES.Setup_List, permission: "View_Setup" },
   {
     label: "Customers",
     path: ROUTES.Customer_List,
     permission: "View_Customer",
+  },  
+  {
+    label: "VGM",
+    path: ROUTES.VGM_Menu,
+    permission: "Menu_VGM",
+    children: [
+      {
+        label: "Weigh VGM",
+        path: "/",
+        permission: "",
+      },
+      {
+        label: "VGM Declaration Form",
+        path: "/",
+        permission: "",
+      },
+      {
+        label: "Weighing Company Profile",
+        path: ROUTES.WeighingCompanyProfile_List,
+        permission: "View_WeighingCompanyProfile",
+      },
+    ],
   },
-
-  { label: "Master Setup", path: ROUTES.Setup_List, permission: "View_Setup" },
   {
     label: "Tariff Setup",
     path: ROUTES.TariffSetup_Menu,
@@ -25,7 +47,17 @@ export const NAV_LINKS: HeaderLink[] = [
         path: ROUTES.Service_List,
         permission: "View_Service",
       },
+      {
+        label: "Truck Types",
+        path: ROUTES.TruckType_List,
+        permission: "View_TruckType",
+      },
       { label: "Tariffs", path: ROUTES.Tariff_List, permission: "View_Tariff" },
+      {
+        label: "Tariff Details",
+        path: ROUTES.TariffDetail_List,
+        permission: "View_TariffDetail",
+      },
     ],
   },
 

@@ -13,7 +13,7 @@ interface EntityListProps<T> {
   columns: Column<T>[];
   idKey: keyof T; // 👈 must specify which property is the PK
   onRowClick: (id: string | number) => void;
-  onAddClick: () => void;
+  onAddClick?: () => void; // ✅ made optional
 }
 
 function EntityList<T>({
@@ -122,7 +122,8 @@ function EntityList<T>({
       <div className="bg-white rounded shadow p-4">
         <div className="flex justify-between items-center mt-4 mb-4 gap-2">
           <div className="flex items-center gap-4">
-            <Button onClick={onAddClick}>Add</Button>
+            {/* ✅ only render Add button if provided */}
+            {onAddClick && <Button onClick={onAddClick}>Add</Button>}
             <span className="text-xl font-bold">{title}</span>
           </div>
 
