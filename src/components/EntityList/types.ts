@@ -5,4 +5,5 @@ export interface Column<T> {
   type?: "text" | "number" | "date" | "select" | "checkbox";
   options?: { value: any; label: string }[];
   showTime?: boolean; // for date columns: show time if true
+  width?: string | number; // 👈 add this
 }

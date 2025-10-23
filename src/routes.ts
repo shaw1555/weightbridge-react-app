@@ -39,6 +39,10 @@ const ROUTES = {
   Customer_List: "/Customer",
   Customer_Form: (id: string | "new" = "new") => `/Customer/${id}`,
 
+  // WeighGateInOut
+  WeighGateInOut_List: "/WeighGateInOut",
+  WeighGateInOut_Form: (id: string | "new" = "new") => `/WeighGateInOut/${id}`,
+
   // Permission
   Permission_List: "/Permission",
   Permission_Form: (id: string | "new" = "new") => `/Permission/${id}`,

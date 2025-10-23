@@ -81,23 +81,50 @@ function EntityList<T>({
     paginatedData.every((row) => selectedRows[String(row[idKey])]);
 
   const selectedCount = Object.values(selectedRows).filter(Boolean).length;
+  // ✅ Helper: format values nicely before exporting
+  function formatValue(col: { type?: string }, value: any): any {
+    if (col.type === "date" && value) {
+      const date = new Date(value as string | number | Date);
+      if (!isNaN(date.getTime())) {
+        return date.toLocaleString("en-US", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        });
+      }
+    }
+
+    if (col.type === "number" && !isNaN(Number(value))) {
+      return Number(value).toLocaleString("en-US");
+    }
+
+    return value ?? "";
+  }
 
   const exportToExcel = () => {
+    // Filter selected rows, or all if none selected
     const exportData = filteredData.filter(
       (row) => selectedRows[String(row[idKey])]
     );
     const rowsToExport = exportData.length ? exportData : filteredData;
 
-    const worksheet = XLSX.utils.json_to_sheet(
-      rowsToExport.map((row) =>
-        columns.reduce((acc, col) => {
-          acc[col.label] = row[col.key];
-          return acc;
-        }, {} as Record<string, any>)
-      )
+    // Map data and apply formatting
+    const worksheetData = rowsToExport.map((row) =>
+      columns.reduce((acc, col) => {
+        acc[col.label] = formatValue(col, row[col.key]);
+        return acc;
+      }, {} as Record<string, any>)
     );
+
+    // Create workbook
+    const worksheet = XLSX.utils.json_to_sheet(worksheetData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+
+    // Export to file
     const wbout = XLSX.write(workbook, { type: "array", bookType: "xlsx" });
     saveAs(
       new Blob([wbout], { type: "application/octet-stream" }),

@@ -25,8 +25,9 @@ import SetupListPage from "./pages/setup/SetupListPage";
 import SetupFormPage from "./pages/setup/SetupFormPage";
 import UserListPage from "./pages/user/UserListPage";
 import UserFormPage from "./pages/user/UserFormPage";
-import WeighingCompanyProfileListPage from "./pages/weighingCompanyProfile/weighingCompanyProfileListPage";
-import WeighingCompanyProfileFormPage from "./pages/weighingCompanyProfile/weighingCompanyProfileFormPage";
+import WeighingCompanyProfileListPage from "./pages/weighingCompanyProfile/WeighingCompanyProfileListPage";
+import WeighingCompanyProfileFormPage from "./pages/weighingCompanyProfile/WeighingCompanyProfileFormPage";
+import WeighGateInOutListPage from "./pages/weighGateInOut/WeighGateInOutListPage";
 
 import ROUTES from "./routes";
 import Header from "./components/Header";
@@ -52,6 +53,15 @@ const AppContent: React.FC = () => {
           element={
             <PrivateRoute>
               <DashboardPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.WeighGateInOut_List}
+          element={
+            <PrivateRoute>
+              <WeighGateInOutListPage />
             </PrivateRoute>
           }
         />
@@ -218,7 +228,7 @@ const AppContent: React.FC = () => {
           }
         />
 
-          <Route
+        <Route
           path={ROUTES.WeighingCompanyProfile_List}
           element={
             <PrivateRoute>
@@ -235,7 +245,6 @@ const AppContent: React.FC = () => {
             </PrivateRoute>
           }
         />
-
       </Routes>
     </>
   );
