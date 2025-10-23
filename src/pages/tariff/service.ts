@@ -14,9 +14,7 @@ export async function fetchTariffs(): Promise<Tariff[]> {
   }
 }
 
-export async function fetchTariffById(
-  id: string | number
-): Promise<Tariff> {
+export async function fetchTariffById(id: string | number): Promise<Tariff> {
   try {
     const response = await apiClient.get<Tariff>(`${basePath}/${id}`);
     return response.data;
@@ -41,10 +39,7 @@ export async function updateTariff(
   payload: Tariff
 ): Promise<Tariff> {
   try {
-    const response = await apiClient.put<Tariff>(
-      `${basePath}/${id}`,
-      payload
-    );
+    const response = await apiClient.put<Tariff>(`${basePath}/${id}`, payload);
     return response.data;
   } catch (error) {
     console.error(`Failed to update tariff with id ${id}:`, error);

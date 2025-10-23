@@ -11,7 +11,7 @@ export const NAV_LINKS: HeaderLink[] = [
     permission: "View_Customer",
   },  
   {
-    label: "Weigh / Gate In & Out",
+    label: "Weigh Gate In & Out",
     path: ROUTES.WeighGateInOut_List,
     permission: "View_WeighGateInOut",
   },  

@@ -60,3 +60,76 @@ export interface WeighGateInOut {
   lock_f: boolean;
   gate_charge_unitprice_f: number;
 }
+
+export interface ActiveTariff {
+  tariff_t: Tariff;
+  tariffDetail_t: TariffDetail;
+}
+
+export interface Tariff {
+  tariff_id_f: number;
+  tariff_no_f: string;
+  effective_date_f: string;
+}
+
+export interface TariffDetail {
+  tariff_detail_id_f: number;
+  tariff_id_f: number;
+  tariff_no_f: string;
+  service_id_f: number;
+  service_f: string;
+  category_id_f: number;
+  category_f: string;
+  truck_type_id_f: number;
+  truck_type_f: string;
+  unit_price_f: number;
+}
+
+export interface Customer {
+  customer_id_f: number;
+  customer_code_f: string;
+  customer_name_f: string;
+}
+
+export interface Setup {
+  setup_id_f: number;
+  category_f: string;
+  description_f: string;
+  is_default_f: boolean;
+}
+
+export interface Service {
+  service_id_f: number;
+  service_f: string;
+}
+
+export interface Category {
+  category_id_f: number;
+  category_f: string;
+}
+
+export interface TruckType {
+  truck_type_id_f: number;
+  truck_type_f: string;
+}
+
+export interface gateUom {
+  id: number;
+  name: string;
+}
+
+export interface paymentType {
+  id: number;
+  name: string;
+}
+
+// ✅ Helper to display gender as text in UI
+export function getGenderText(gender?: boolean): string {
+  if (gender === undefined || gender === null) return "-";
+  return gender ? "Male" : "Female";
+}
+
+// ✅ Helper to convert text back to boolean (useful in forms)
+export function genderTextToBoolean(genderText: string): boolean {
+  return genderText.toLowerCase() === "male";
+}

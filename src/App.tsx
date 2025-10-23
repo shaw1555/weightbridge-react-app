@@ -28,7 +28,7 @@ import UserFormPage from "./pages/user/UserFormPage";
 import WeighingCompanyProfileListPage from "./pages/weighingCompanyProfile/WeighingCompanyProfileListPage";
 import WeighingCompanyProfileFormPage from "./pages/weighingCompanyProfile/WeighingCompanyProfileFormPage";
 import WeighGateInOutListPage from "./pages/weighGateInOut/WeighGateInOutListPage";
-
+import WeighGateInOutFormPage from "./pages/weighGateInOut/WeighGateInOutFormPage";
 import ROUTES from "./routes";
 import Header from "./components/Header";
 import PrivateRoute from "./components/PrivateRoute";
@@ -62,6 +62,14 @@ const AppContent: React.FC = () => {
           element={
             <PrivateRoute>
               <WeighGateInOutListPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/weighGateInOut/:id"
+          element={
+            <PrivateRoute>
+              <WeighGateInOutFormPage />
             </PrivateRoute>
           }
         />

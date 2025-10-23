@@ -1,58 +1,52 @@
-// import React from "react";
-// import { type WeighGateInOut } from "./types";
-// import {
-//   fetchWeighGateInOutById,
-//   createWeighGateInOut,
-//   updateWeighGateInOut,
-//   deleteWeighGateInOut,
-// } from "./service";
-// import ROUTES from "../../routes";
-// import EntityForm, { type Field } from "../../components/EntityForm";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import HeaderInfo from "./HeaderInfo";
+// import DetailInfo from "./DetailInfo";
+import type { ActiveTariff } from "./types";
 
-// const WeighGateInOutFormPage: React.FC = () => {
-//   const fields: Field<WeighGateInOut>[] = [
-//     {
-//       name: "weighGateInOut_code_f",
-//       label: "WeighGateInOut Code",
-//       type: "text",
-//     },
-//     {
-//       name: "weighGateInOut_name_f",
-//       label: "WeighGateInOut Name",
-//       type: "text",
-//       required: true,
-//     },
-//     {
-//       name: "address_f",
-//       label: "Address",
-//       type: "text",
-//     },
-//     {
-//       name: "phone_no_f",
-//       label: "Phone.No",
-//       type: "text",
-//     },
-//     {
-//       name: "registration_number_f",
-//       label: "Registration.No",
-//       type: "text",
-//     },
-//   ];
-//   return (
-//     <EntityForm<WeighGateInOut, "weighGateInOut_id_f">
-//       title="WeighGateInOut"
-//       idField="weighGateInOut_id_f"
-//       fields={fields}
-//       fetchById={fetchWeighGateInOutById}
-//       create={createWeighGateInOut}
-//       update={updateWeighGateInOut}
-//       deleteFn={deleteWeighGateInOut}
-//       listRoute={ROUTES.WeighGateInOut_List}
-//       createPermission="Create_WeighGateInOut"
-//       updatePermission="Update_WeighGateInOut"
-//       deletePermission="Delete_WeighGateInOut"
-//     />
-//   );
-// };
+import { fetchActiveTariff } from "./service";
 
-// export default WeighGateInOutFormPage;
+export default function WeighGateInOutFormPage() {
+  const [transactionId, setTransactionId] = useState<string | null>(null);
+  const [activeTariff, setActiveTariff] = useState<ActiveTariff>();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const activeTariff = await fetchActiveTariff();
+        setActiveTariff(activeTariff); 
+      } catch (err) {
+        setError("Failed to load data");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
+
+  const saveHeaderInfo = async (data: any) => {
+    const res = await axios.post("/api/transactions", data);
+    // setTransactionId(res.data.id); // assume API returns { id: "123" }
+    setTransactionId("123");
+    alert("Block A saved!");
+  };
+
+  return (
+    <div className="p-6 bg-gray-50">
+      <h2 className="text-lg font-semibold mb-4">Weigh Gate In & Out</h2>
+      <HeaderInfo
+        onSave={saveHeaderInfo}
+        disabled={!!transactionId}
+        tariff={activeTariff?.tariff_t}
+      />
+      {/* <DetailInfo transactionId={transactionId} /> */}
+    </div>
+  );
+}

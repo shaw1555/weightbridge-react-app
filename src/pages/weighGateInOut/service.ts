@@ -1,8 +1,89 @@
-import { type WeighGateInOut } from "./types";
+import type {
+  Customer,
+  ActiveTariff,
+  WeighGateInOut,
+  Setup,
+  TruckType,
+  Category,
+  Service,
+} from "./types";
 import apiClient from "../../services/apiClient";
 // weighGateInOutApi.ts
 
 const basePath = "/WeighGateInOut";
+
+const basePathSetup = "/Setup";
+
+const basePathCustomer = "/Customer";
+
+const basePathTruckType = "/TruckType";
+
+const basePathCategory = "/Category";
+
+const basePathService = "/Service";
+
+
+const basePathTariff = "/Tariff";
+ 
+export async function fetchActiveTariff(): Promise<ActiveTariff> {
+  try {
+    const response = await apiClient.get<ActiveTariff>(`${basePathTariff}/ActiveTariff`);
+     return response.data;
+  } catch (error) {
+    console.error(`Failed to fetch active tariff`, error);
+    throw error;
+  }
+}
+
+export async function fetchServices(): Promise<Service[]> {
+  try {
+    const response = await apiClient.get<Service[]>(basePathService);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch services:", error);
+    throw error;
+  }
+}
+
+export async function fetchCategories(): Promise<Category[]> {
+  try {
+    const response = await apiClient.get<Category[]>(basePathCategory);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch categories:", error);
+    throw error;
+  }
+}
+
+export async function fetchTruckTypes(): Promise<TruckType[]> {
+  try {
+    const response = await apiClient.get<TruckType[]>(basePathTruckType);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch truckTypes:", error);
+    throw error;
+  }
+}
+
+export async function fetchCustomers(): Promise<Customer[]> {
+  try {
+    const response = await apiClient.get<Customer[]>(basePathCustomer);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch customers:", error);
+    throw error;
+  }
+}
+
+export async function fetchSetups(): Promise<Setup[]> {
+  try {
+    const response = await apiClient.get<Setup[]>(basePathSetup);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch setups:", error);
+    throw error;
+  }
+}
 
 export async function fetchWeighGateInOuts(
   fromDate: string,

@@ -81,24 +81,29 @@ function EntityList<T>({
     paginatedData.every((row) => selectedRows[String(row[idKey])]);
 
   const selectedCount = Object.values(selectedRows).filter(Boolean).length;
-  // ✅ Helper: format values nicely before exporting
-  function formatValue(col: { type?: string }, value: any): any {
+  // Helper: format values nicely before exporting
+  function formatValue(
+    col: { type?: string; showTime?: boolean },
+    value: any
+  ): any {
     if (col.type === "date" && value) {
       const date = new Date(value as string | number | Date);
       if (!isNaN(date.getTime())) {
-        return date.toLocaleString("en-US", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-        });
+        return col.showTime
+          ? date.toLocaleString("en-US", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+            })
+          : date.toLocaleDateString("en-US"); // Only date
       }
     }
 
     if (col.type === "number" && !isNaN(Number(value))) {
-      return Number(value).toLocaleString("en-US");
+      return Number(value).toLocaleString("en-US"); // Thousand separator
     }
 
     return value ?? "";
