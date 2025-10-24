@@ -123,9 +123,9 @@ function EntityListTable<T>({
             return (
               <tr
                 key={itemId}
-                className={`cursor-pointer hover:bg-blue-50 transition ${
-                  selectedRows[itemId] ? "bg-blue-100" : ""
-                }`}
+                className={`cursor-pointer hover:bg-blue-50 transition
+              odd:bg-gray-50 even:bg-white
+              ${selectedRows[itemId] ? "bg-blue-100" : ""}`}  
               >
                 {/* Row selection checkbox */}
                 <td
@@ -168,7 +168,7 @@ function EntityListTable<T>({
                   return (
                     <td
                       key={String(col.key)}
-                      className={`border border-gray-300 p-2 ${alignmentClass}`}
+                      className={`border border-gray p-2 ${alignmentClass}`}
                       onClick={() => onRowClick(itemId)}
                     >
                       {content}

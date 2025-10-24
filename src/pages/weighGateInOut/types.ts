@@ -113,15 +113,6 @@ export interface TruckType {
   truck_type_f: string;
 }
 
-export interface gateUom {
-  id: number;
-  name: string;
-}
-
-export interface paymentType {
-  id: number;
-  name: string;
-}
 
 // ✅ Helper to display gender as text in UI
 export function getGenderText(gender?: boolean): string {

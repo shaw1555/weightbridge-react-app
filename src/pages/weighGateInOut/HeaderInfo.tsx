@@ -50,19 +50,17 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
     location_f: null as string | null,
     job_department_f: null as string | null,
     remark_f: "",
-    tariff_detail_id_f: "",
     truck_arrange_by_f: null as string | null,
     service_id_f: null as number | null,
     category_id_f: null as number | null,
-    truck_type_id_f: null as number | null,
     product_f: null as string | null,
-
+    truck_type_id_f: null as number | null,
     truck_no_f: "", // FreeTextDropdown can store string
     container_size_type_f: null as string | null,
     container_no_f: "",
+    bl_no_f: "",
     vessel_f: "",
     voy_f: "",
-    bl_no_f: "",
     accepted_by_f: null as string | null,
     approved_by_f: null as string | null,
     received_by_f: "",
@@ -172,10 +170,10 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
         />
 
         <TextInput
-          label="B/L No"
-          value={form.bl_no_f}
-          onChange={(val) => handleChange("bl_no_f", val)}
-          placeholder="Enter B/L number"
+          label="Vessel"
+          value={form.vessel_f}
+          onChange={(val) => handleChange("vessel_f", val)}
+          placeholder="Enter vessel name"
         />
 
         {/* Row 2 */}
@@ -205,16 +203,12 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
           placeholder="Select or type truck number"
         />
 
-        <SearchableDropdown
-          label="Accepted By"
-          options={acceptedBys}
-          value={form.accepted_by_f}
-          onChange={(val) => handleChange("accepted_by_f", val)}
-          displayKey="description_f"
-          valueKey="description_f"
-          placeholder="Select accepted by"
+        <TextInput
+          label="Voy"
+          value={form.voy_f}
+          onChange={(val) => handleChange("voy_f", val)}
+          placeholder="Enter voyage number"
         />
-
         {/* Row 3 */}
         <SearchableDropdown
           label="Customer Name"
@@ -247,13 +241,13 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
         />
 
         <SearchableDropdown
-          label="Approved By"
-          options={approvedBys}
-          value={form.approved_by_f}
-          onChange={(val) => handleChange("approved_by_f", val)}
+          label="Accepted By"
+          options={acceptedBys}
+          value={form.accepted_by_f}
+          onChange={(val) => handleChange("accepted_by_f", val)}
           displayKey="description_f"
           valueKey="description_f"
-          placeholder="Select approved by"
+          placeholder="Select accepted by"
         />
 
         {/* Row 4 */}
@@ -280,15 +274,21 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
         <TextInput
           label="Container No"
           value={form.container_no_f}
-          onChange={(val) => handleChange("container_no_f", val)}
-          placeholder="Enter Container No"
+          onChange={(val) => {
+            const upperVal = val.toUpperCase(); // ✅ convert to uppercase
+            handleChange("container_no_f", upperVal);
+          }}
+          placeholder="(e.g., ABCD1234567 or ABCD1234567, EFGH7654321)"
         />
 
-        <TextInput
-          label="Received By"
-          value={form.received_by_f}
-          onChange={(val) => handleChange("received_by_f", val)}
-          placeholder="Enter receiver name"
+        <SearchableDropdown
+          label="Approved By"
+          options={approvedBys}
+          value={form.approved_by_f}
+          onChange={(val) => handleChange("approved_by_f", val)}
+          displayKey="description_f"
+          valueKey="description_f"
+          placeholder="Select approved by"
         />
 
         {/* Row 5 */}
@@ -313,17 +313,17 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
         />
 
         <TextInput
-          label="Vessel"
-          value={form.vessel_f}
-          onChange={(val) => handleChange("vessel_f", val)}
-          placeholder="Enter vessel name"
+          label="B/L No"
+          value={form.bl_no_f}
+          onChange={(val) => handleChange("bl_no_f", val)}
+          placeholder="Enter B/L number"
         />
 
         <TextInput
-          label="Voy"
-          value={form.voy_f}
-          onChange={(val) => handleChange("voy_f", val)}
-          placeholder="Enter voyage number"
+          label="Received By"
+          value={form.received_by_f}
+          onChange={(val) => handleChange("received_by_f", val)}
+          placeholder="Enter receiver name"
         />
 
         {/* Full Width Remark */}

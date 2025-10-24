@@ -6,24 +6,35 @@ interface DateInputProps {
   onChange?: (date: string) => void;
   includeTime?: boolean;
   resettable?: boolean;
+  auto?: boolean; // ✅ NEW: allow auto mode to be passed as a prop
+  onAutoChange?: (isAuto: boolean) => void; // ✅ NEW: notify parent when auto toggled
 }
+
 const DateInput: React.FC<DateInputProps> = ({
   label,
   value,
   onChange,
   includeTime = false,
+  auto: autoProp = false, // default false
+  onAutoChange,
 }) => {
   const defaultValue = includeTime
     ? new Date().toISOString().slice(0, 19)
     : new Date().toISOString().slice(0, 10);
 
   const [date, setDate] = useState<string>(value || defaultValue);
-  const [auto, setAuto] = useState<boolean>(false);
+  const [auto, setAuto] = useState<boolean>(autoProp);
+
+  // ✅ Keep local state in sync with prop
+  useEffect(() => {
+    setAuto(autoProp);
+  }, [autoProp]);
 
   useEffect(() => {
     if (value) setDate(value);
   }, [value]);
 
+  // ✅ Auto update time every second if enabled
   useEffect(() => {
     if (!auto || !includeTime) return;
 
@@ -40,6 +51,11 @@ const DateInput: React.FC<DateInputProps> = ({
     const newDate = e.target.value;
     setDate(newDate);
     onChange?.(newDate);
+  };
+
+  const handleAutoToggle = (checked: boolean) => {
+    setAuto(checked);
+    onAutoChange?.(checked); // ✅ Notify parent if needed
   };
 
   return (
@@ -66,7 +82,7 @@ const DateInput: React.FC<DateInputProps> = ({
             <input
               type="checkbox"
               checked={auto}
-              onChange={(e) => setAuto(e.target.checked)}
+              onChange={(e) => handleAutoToggle(e.target.checked)}
             />
             Auto
           </label>
