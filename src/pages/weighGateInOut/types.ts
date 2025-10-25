@@ -63,7 +63,7 @@ export interface WeighGateInOut {
 
 export interface ActiveTariff {
   tariff_t: Tariff;
-  tariffDetail_t: TariffDetail;
+  tariff_detail_t: TariffDetail;
 }
 
 export interface Tariff {

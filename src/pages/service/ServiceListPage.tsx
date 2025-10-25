@@ -7,15 +7,31 @@ import { EntityList, type Column } from "../../components/EntityList";
 
 const ServiceListPage: React.FC = () => {
   const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchServices().then(setServices);
+    const loadData = async () => {
+      try {
+        fetchServices().then(setServices);
+      } catch (err) {
+        setError("Failed to load form names");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
   }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
 
   const columns: Column<Service>[] = [
     // { key: "service_id_f", label: "Service Id" }, // can remove, but it still work for save, update, delete//
-    { key: "service_f", label: "Service"  }, 
+    { key: "service_f", label: "Service" },
   ];
 
   return (

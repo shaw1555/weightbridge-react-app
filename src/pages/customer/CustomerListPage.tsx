@@ -7,11 +7,27 @@ import { EntityList, type Column } from "../../components/EntityList";
 
 const CustomerListPage: React.FC = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchCustomers().then(setCustomers);
+    const loadData = async () => {
+      try {
+        fetchCustomers().then(setCustomers);
+      } catch (err) {
+        setError("Failed to load form names");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
   }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
 
   const columns: Column<Customer>[] = [
     // { key: "customer_id_f", label: "Customer Id" }, // can remove, but it still work for save, update, delete//
@@ -21,7 +37,13 @@ const CustomerListPage: React.FC = () => {
     { key: "phone_no_f", label: "Phone.No" },
     { key: "registration_number_f", label: "Registration.No" },
     { key: "log_by_f", label: "Log By" },
-    { key: "log_date_time_f", label: "Log Date & Time", type: "date", showTime: true },
+    {
+      key: "log_date_time_f",
+      label: "Log Date & Time",
+      type: "date",
+      width: "200px",
+      showTime: true,
+    },
   ];
 
   return (

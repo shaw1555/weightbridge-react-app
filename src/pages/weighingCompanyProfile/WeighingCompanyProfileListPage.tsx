@@ -9,14 +9,32 @@ const WeighingCompanyProfileListPage: React.FC = () => {
   const [weighingCompanyProfiles, setWeighingCompanyProfiles] = useState<
     WeighingCompanyProfile[]
   >([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchWeighingCompanyProfiles().then(setWeighingCompanyProfiles);
+    const loadData = async () => {
+      try {
+        fetchWeighingCompanyProfiles().then(setWeighingCompanyProfiles);
+      } catch (err) {
+        setError("Failed to load form names");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
   }, []);
 
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
+
   const columns: Column<WeighingCompanyProfile>[] = [
-    { key: "weighing_company_name_f", label: "Weighing Company Name" },
+    { key: "weighing_company_name_f", label: "Weighing Company Name",
+        width: "200px",
+     },
     {
       key: "weighing_company_authorization_number_f",
       label: "Weighing Company Authorization Number",
@@ -31,6 +49,7 @@ const WeighingCompanyProfileListPage: React.FC = () => {
       key: "log_date_time_f",
       label: "Log Date & Time",
       type: "date",
+      width: "200px",
       showTime: true,
     },
   ];

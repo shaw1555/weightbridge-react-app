@@ -4,7 +4,7 @@ import { type HeaderLink } from "../types/navigation"; // ✅ use shared type
 export const NAV_LINKS: HeaderLink[] = [
   { label: "Dashboard", path: ROUTES.Dashboard, permission: "View_Dashboard" },
 
-  { label: "Master Setup", path: ROUTES.Setup_List, permission: "View_Setup" },
+  { label: "Master Setup", path: ROUTES.Setup_List, permission: "View_MasterSetup" },
   {
     label: "Customers",
     path: ROUTES.Customer_List,
@@ -18,7 +18,7 @@ export const NAV_LINKS: HeaderLink[] = [
   {
     label: "VGM",
     path: ROUTES.VGM_Menu,
-    permission: "Menu_VGM",
+    permission: "View_MenuVGM",
     children: [
       {
         label: "Weigh VGM",
@@ -40,7 +40,7 @@ export const NAV_LINKS: HeaderLink[] = [
   {
     label: "Tariff Setup",
     path: ROUTES.TariffSetup_Menu,
-    permission: "Menu_TariffSetup",
+    permission: "View_MenuTariffSetup",
     children: [
       {
         label: "Categorys",
@@ -57,7 +57,7 @@ export const NAV_LINKS: HeaderLink[] = [
         path: ROUTES.TruckType_List,
         permission: "View_TruckType",
       },
-      { label: "Tariffs", path: ROUTES.Tariff_List, permission: "View_Tariff" },
+      { label: "Tariffs", path: ROUTES.Tariff_List, permission: "View_TariffSetup" },
       {
         label: "Tariff Details",
         path: ROUTES.TariffDetail_List,
@@ -69,7 +69,7 @@ export const NAV_LINKS: HeaderLink[] = [
   {
     label: "Setting",
     path: ROUTES.Setting_Menu,
-    permission: "Menu_Setting",
+    permission: "View_MenuSetting",
     children: [
       { label: "Users", path: ROUTES.User_List, permission: "View_User" },
       {

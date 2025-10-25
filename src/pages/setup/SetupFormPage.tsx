@@ -79,9 +79,9 @@ const SetupFormPage: React.FC = () => {
       update={updateSetup}
       deleteFn={deleteSetup}
       listRoute={ROUTES.Setup_List}
-      createPermission="Create_Setup"
-      updatePermission="Update_Setup"
-      deletePermission="Delete_Setup"
+      createPermission="Create_MasterSetup"
+      updatePermission="Update_MasterSetup"
+      deletePermission="Delete_MasterSetup"
     />
   );
 };

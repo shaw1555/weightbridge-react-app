@@ -34,9 +34,9 @@ const TariffFormPage: React.FC = () => {
       update={updateTariff}
       deleteFn={deleteTariff}
       listRoute={ROUTES.Tariff_List}
-      createPermission="Create_Tariff"
-      updatePermission="Update_Tariff"
-      deletePermission="Delete_Tariff"
+      createPermission="Create_TariffSetup"
+      updatePermission="Update_TariffSetup"
+      deletePermission="Delete_TariffSetup"
     />
   );
 };

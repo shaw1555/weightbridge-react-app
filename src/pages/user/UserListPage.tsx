@@ -7,11 +7,27 @@ import { EntityList, type Column } from "../../components/EntityList";
 
 const UserListPage: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchUsers().then(setUsers);
+    const loadData = async () => {
+      try {
+        fetchUsers().then(setUsers);
+      } catch (err) {
+        setError("Failed to load form names");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
   }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
 
   const columns: Column<User>[] = [
     // { key: "user_id_f", label: "User Id" }, // can remove, but it still work for save, update, delete//

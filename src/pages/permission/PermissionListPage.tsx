@@ -7,11 +7,27 @@ import { EntityList, type Column } from "../../components/EntityList";
 
 const PermissionListPage: React.FC = () => {
   const [permissions, setPermissions] = useState<Permission[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchPermissions().then(setPermissions);
+    const loadData = async () => {
+      try {
+        fetchPermissions().then(setPermissions);
+      } catch (err) {
+        setError("Failed to load form names");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
   }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
 
   const columns: Column<Permission>[] = [
     { key: "user_name_f", label: "User Name" },
@@ -21,7 +37,13 @@ const PermissionListPage: React.FC = () => {
     { key: "update_f", label: "Update", type: "checkbox" },
     { key: "delete_f", label: "Delete", type: "checkbox" },
     { key: "modified_by_f", label: "Modified By" },
-    { key: "modified_on_f", label: "Modified On", type: "date" },
+    {
+      key: "modified_on_f",
+      label: "Modified On",
+      type: "date",
+      width: "200px",
+      showTime: true,
+    },
   ];
 
   return (

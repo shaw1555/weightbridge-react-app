@@ -20,9 +20,13 @@ class AuthServiceClass {
     // 🔹 Fetch permissions from API
     try {
       const response = await apiClient.get<string[]>(
-        `${basePathPermission}/GrantPermission`
+        // `${basePathPermission}/GrantPermission` // temporary use before auth// 
+        // to update with login user id on later.. // 
+         `${basePathPermission}/PermissionListByUserId/45`
       );
       demoUser.permissions = response.data; // assign permissions
+
+      console.log('demoUser.permissions ', demoUser.permissions);
     } catch (error) {
       console.error("Error fetching permissions:", error);
     }

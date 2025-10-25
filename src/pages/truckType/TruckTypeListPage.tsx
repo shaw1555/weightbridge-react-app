@@ -7,15 +7,31 @@ import { EntityList, type Column } from "../../components/EntityList";
 
 const TruckTypeListPage: React.FC = () => {
   const [truckTypes, setTruckTypes] = useState<TruckType[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchTruckTypes().then(setTruckTypes);
+    const loadData = async () => {
+      try {
+        fetchTruckTypes().then(setTruckTypes);
+      } catch (err) {
+        setError("Failed to load form names");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
   }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
 
   const columns: Column<TruckType>[] = [
     // { key: "truckType_id_f", label: "TruckType Id" }, // can remove, but it still work for save, update, delete//
-    { key: "truck_type_f", label: "Truck Type" }, 
+    { key: "truck_type_f", label: "Truck Type" },
   ];
 
   return (
