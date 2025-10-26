@@ -6,7 +6,7 @@ import Button from "../../components/Button";
 import Checkbox from "../../components/Checkbox";
 import RadioGroup from "../../components/RadioGroup";
 
-import type { Setup } from "./types";
+import type { Setup, WeighGateInOut } from "./types";
 
 import { fetchSetups } from "./service";
 
@@ -15,8 +15,9 @@ type GateUOM = Setup;
 type PaymentType = Setup;
 
 interface DetailInfoProps {
-  onSave: (data: any) => void;
-  disabled: boolean;
+  onSave: (data: WeighGateInOut) => void;
+  weighGateInOutData: WeighGateInOut;
+  setWeighGateInOutData: React.Dispatch<React.SetStateAction<WeighGateInOut>>;
 }
 
 const optionStatus = [
@@ -31,35 +32,11 @@ const optionInfo = [
   { label: "General Cargo", value: "cargo" },
 ];
 
-const DetailInfo: React.FC<DetailInfoProps> = ({ onSave, disabled }) => {
-  const initialForm = {
-    weightUomName: null as string | null,
-    numberOfContainer: "0.00",
-    unitCharge: "0.00",
-    weightAmount: "0.00",
-    weightFOC: false,
-    dateTimeIn: "",
-    dateTimeOut: "",
-    truckCargoWeight: "0.00",
-    truckEmptyWeight: "0.00",
-    netWeight: "0.00",
-
-    gateUomName: null as string | null,
-    paymentTypeName: null as string | null,
-    gateAmount: "0.00",
-    gateFOC: false,
-
-    status: "",
-    info: "",
-    dateTime: "",
-    weightValue: "0.00",
-
-    subTotal: "0.00",
-    commercialTax5Percent: "0.00",
-    grandTotal: "0.00",
-  };
-
-  const [form, setForm] = useState(initialForm);
+const DetailInfo: React.FC<DetailInfoProps> = ({
+  onSave,
+  weighGateInOutData,
+  setWeighGateInOutData,
+}) => {
   const [weightUOMs, setWeightUOMs] = useState<WeightUOM[]>([]);
   const [gateUOMs, setGateUOMs] = useState<GateUOM[]>([]);
   const [paymentTypes, setPaymentTypes] = useState<PaymentType[]>([]);
@@ -87,16 +64,16 @@ const DetailInfo: React.FC<DetailInfoProps> = ({ onSave, disabled }) => {
   if (error) return <p className="text-red-500">{error}</p>;
 
   // Generic change handler
-  const handleChange = (field: keyof typeof form, value: any) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
+  const handleChange = (field: keyof typeof weighGateInOutData, value: any) => {
+    setWeighGateInOutData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = () => {
-    // Show all form values in an alert
-    alert(JSON.stringify(form, null, 2));
+    // Show all dataDetailInfo values in an alert
+    alert(JSON.stringify(weighGateInOutData, null, 2));
 
     // Call the onSave callback
-    onSave(form);
+    onSave(weighGateInOutData);
   };
 
   return (
@@ -108,8 +85,8 @@ const DetailInfo: React.FC<DetailInfoProps> = ({ onSave, disabled }) => {
           <SearchableDropdown
             label="UOM"
             options={weightUOMs}
-            value={form.weightUomName}
-            onChange={(val) => handleChange("weightUomName", val)}
+            value={weighGateInOutData.weight_charge_uom_f}
+            onChange={(val) => handleChange("weight_charge_uom_f", val)}
             displayKey="description_f"
             valueKey="setup_id_f"
             placeholder="Select a UOM"
@@ -117,26 +94,26 @@ const DetailInfo: React.FC<DetailInfoProps> = ({ onSave, disabled }) => {
           <TextInput
             label="No. Container"
             type="number"
-            value={form.numberOfContainer}
+            value={weighGateInOutData.no_of_container_f}
             readOnly
           />
 
           <TextInput
             label="Unit Charge"
             type="number"
-            value={form.unitCharge}
+            value={weighGateInOutData.weight_charge_unitprice_f}
             readOnly
           />
           <TextInput
             label="Amount"
             type="number"
-            value={form.weightAmount}
+            value={weighGateInOutData.weight_charge_amount_f}
             readOnly
           />
           <Checkbox
             label="FOC"
-            checked={form.weightFOC}
-            onChange={(val) => handleChange("weightFOC", val)}
+            checked={weighGateInOutData.is_weight_foc_f}
+            onChange={(val) => handleChange("is_weight_foc_f", val)}
           />
         </div>
 
@@ -144,13 +121,13 @@ const DetailInfo: React.FC<DetailInfoProps> = ({ onSave, disabled }) => {
           <TextInput
             label="Date & Time (In)"
             type="number"
-            value={form.dateTimeIn}
+            value={weighGateInOutData.date_time_in_f}
             readOnly
           />
           <TextInput
             label="Date & Time (Out)"
             type="number"
-            value={form.dateTimeOut}
+            value={weighGateInOutData.date_time_out_f}
             readOnly
           />
         </div>
@@ -159,19 +136,19 @@ const DetailInfo: React.FC<DetailInfoProps> = ({ onSave, disabled }) => {
           <TextInput
             label="(Truck + Cargo) Weight"
             type="number"
-            value={form.truckCargoWeight}
-            onChange={(val) => handleChange("truckCargoWeight", val)}
+            value={weighGateInOutData.truck_cargo_weight_f}
+            onChange={(val) => handleChange("truck_cargo_weight_f", val)}
           />
           <TextInput
             label="Truck/Empty Weight"
             type="number"
-            value={form.truckEmptyWeight}
-            onChange={(val) => handleChange("truckEmptyWeight", val)}
+            value={weighGateInOutData.truck_weight_f}
+            onChange={(val) => handleChange("truck_weight_f", val)}
           />
           <TextInput
             label="Net Weight"
             type="number"
-            value={form.netWeight}
+            value={weighGateInOutData.net_weight_f}
             readOnly
           />
         </div>
@@ -186,8 +163,8 @@ const DetailInfo: React.FC<DetailInfoProps> = ({ onSave, disabled }) => {
           <SearchableDropdown
             label="UOM"
             options={gateUOMs}
-            value={form.gateUomName}
-            onChange={(val) => handleChange("gateUomName", val)}
+            value={weighGateInOutData.gate_charge_uom_f}
+            onChange={(val) => handleChange("gate_charge_uom_f", val)}
             displayKey="description_f"
             valueKey="setup_id_f"
             placeholder="Select a UOM"
@@ -195,8 +172,8 @@ const DetailInfo: React.FC<DetailInfoProps> = ({ onSave, disabled }) => {
           <SearchableDropdown
             label="Payment Type"
             options={paymentTypes}
-            value={form.paymentTypeName}
-            onChange={(val) => handleChange("paymentTypeName", val)}
+            value={weighGateInOutData.payment_type_f}
+            onChange={(val) => handleChange("payment_type_f", val)}
             displayKey="description_f"
             valueKey="setup_id_f"
             placeholder="Select a Payment Type"
@@ -204,13 +181,13 @@ const DetailInfo: React.FC<DetailInfoProps> = ({ onSave, disabled }) => {
           <TextInput
             label="Amount"
             type="number"
-            value={form.gateAmount}
+            value={weighGateInOutData.gate_charge_amount_f}
             readOnly
           />
           <Checkbox
             label="FOC"
-            checked={form.gateFOC}
-            onChange={(val) => handleChange("gateFOC", val)}
+            checked={weighGateInOutData.is_gate_foc_f}
+            onChange={(val) => handleChange("is_gate_foc_f", val)}
           />
         </div>
         <div className="col-span-1">
@@ -218,8 +195,8 @@ const DetailInfo: React.FC<DetailInfoProps> = ({ onSave, disabled }) => {
             label="Status"
             name="status"
             options={optionStatus}
-            value={form.status}
-            onChange={(val) => handleChange("status", val)}
+            value={weighGateInOutData.gateInOutStatus}
+            onChange={(val) => handleChange("gateInOutStatus", val)}
             direction="horizontal"
             layout="grid"
           />
@@ -229,8 +206,8 @@ const DetailInfo: React.FC<DetailInfoProps> = ({ onSave, disabled }) => {
             label="Info"
             name="info"
             options={optionInfo}
-            value={form.info}
-            onChange={(val) => handleChange("info", val)}
+            value={weighGateInOutData.gateInOutTruckInfo}
+            onChange={(val) => handleChange("gateInOutTruckInfo", val)}
             direction="horizontal"
             layout="grid"
             columns={4} // 4 columns → 4x1 layout
@@ -240,8 +217,10 @@ const DetailInfo: React.FC<DetailInfoProps> = ({ onSave, disabled }) => {
             <div className="col-span-5">
               <DateInput
                 label="Date Time"
-                value={form.dateTime}
-                onChange={(date) => handleChange("dateTime", date)}
+                value={weighGateInOutData.gateInOutTruckDateTime}
+                onChange={(date) =>
+                  handleChange("gateInOutTruckDateTime", date)
+                }
                 auto={true}
                 includeTime
               />
@@ -250,8 +229,10 @@ const DetailInfo: React.FC<DetailInfoProps> = ({ onSave, disabled }) => {
               <TextInput
                 label="Weight Value"
                 type="number"
-                value={form.weightValue}
-                onChange={(val) => handleChange("weightValue", val)}
+                value={weighGateInOutData.gateInOutTruckWeighValue}
+                onChange={(val) =>
+                  handleChange("gateInOutTruckWeighValue", val)
+                }
               />
             </div>
           </div>
@@ -267,19 +248,19 @@ const DetailInfo: React.FC<DetailInfoProps> = ({ onSave, disabled }) => {
           <TextInput
             label="Sub Total"
             type="number"
-            value={form.subTotal}
+            value={weighGateInOutData.sub_total_amount_f}
             readOnly
           />
           <TextInput
             label="Commercial Tax 5%"
             type="number"
-            value={form.commercialTax5Percent}
+            value={weighGateInOutData.commerical_tax_amount_f}
             readOnly
           />
           <TextInput
             label="Grand Total"
             type="number"
-            value={form.grandTotal}
+            value={weighGateInOutData.grand_total_amount_f}
             readOnly
           />
         </div>
@@ -290,7 +271,11 @@ const DetailInfo: React.FC<DetailInfoProps> = ({ onSave, disabled }) => {
             <div className="border rounded-xl p-4 relative">
               <span className="absolute -top-3 left-4 bg-white px-2 text-sm font-semibold"></span>
               <div className="flex gap-3">
-                <Button color="green" onClick={handleSubmit}>
+                <Button
+                  disabled={!weighGateInOutData.transaction_id_f}
+                  color="green"
+                  onClick={handleSubmit}
+                >
                   Update Weight and Gate Info
                 </Button>
               </div>
@@ -302,8 +287,12 @@ const DetailInfo: React.FC<DetailInfoProps> = ({ onSave, disabled }) => {
               </span>
 
               <div className="flex gap-3">
-                <Button>Receipt / Invoice</Button>
-                <Button>Weight Slip</Button>
+                <Button disabled={!weighGateInOutData.transaction_id_f}>
+                  Receipt / Invoice
+                </Button>
+                <Button disabled={!weighGateInOutData.transaction_id_f}>
+                  Weight Slip
+                </Button>
               </div>
             </div>
           </div>

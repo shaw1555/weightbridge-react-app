@@ -13,6 +13,7 @@ import type {
   Service,
   Category,
   TruckType,
+  WeighGateInOut,
 } from "./types";
 
 import {
@@ -34,39 +35,21 @@ type TruckNo = Setup;
 
 interface HeaderInfoProps {
   onSave: (data: any) => void;
-  disabled: boolean;
+  weighGateInOutData: WeighGateInOut;
+  setWeighGateInOutData: React.Dispatch<React.SetStateAction<WeighGateInOut>>;
+  onClear: () => void;
+  duplicateData: () => void;
   tariff?: Tariff;
 }
 
 const HeaderInfo: React.FC<HeaderInfoProps> = ({
   onSave,
-  disabled,
+  weighGateInOutData,
+  setWeighGateInOutData,
+  onClear,
+  duplicateData,
   tariff,
 }) => {
-  const initialForm = {
-    date_f: "",
-    transaction_no_f: "Auto",
-    customer_id_f: null as number | null,
-    location_f: null as string | null,
-    job_department_f: null as string | null,
-    remark_f: "",
-    truck_arrange_by_f: null as string | null,
-    service_id_f: null as number | null,
-    category_id_f: null as number | null,
-    product_f: null as string | null,
-    truck_type_id_f: null as number | null,
-    truck_no_f: "", // FreeTextDropdown can store string
-    container_size_type_f: null as string | null,
-    container_no_f: "",
-    bl_no_f: "",
-    vessel_f: "",
-    voy_f: "",
-    accepted_by_f: null as string | null,
-    approved_by_f: null as string | null,
-    received_by_f: "",
-  };
-
-  const [form, setForm] = useState(initialForm);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [services, setServices] = useState<Service[]>([]);
   const [categorys, setCategorys] = useState<Category[]>([]);
@@ -128,21 +111,25 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
 
   // Reset handler
   const handleReset = () => {
-    setForm(initialForm);
+    onClear();
+  };
+
+  // Duplicate handler
+  const handleDuplicate = () => {
+    duplicateData();
   };
 
   // Generic change handler
-  const handleChange = (field: keyof typeof form, value: any) => {
-    console.log("value ", value);
-    setForm((prev) => ({ ...prev, [field]: value }));
+  const handleChange = (field: keyof WeighGateInOut, value: any) => {
+    setWeighGateInOutData((prev) => ({
+      ...prev,
+      [field]: value, // update only this field in parent state
+    }));
   };
 
   const handleSubmit = () => {
-    // Show all form values in an alert
-    alert(JSON.stringify(form, null, 2));
-
     // Call the onSave callback
-    onSave(form);
+    onSave(weighGateInOutData);
   };
 
   return (
@@ -153,7 +140,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
         {/* Row 1 */}
         <DateInput
           label="Date"
-          value={form.date_f}
+          value={weighGateInOutData.date_f}
           onChange={(date) => handleChange("date_f", date)}
         />
 
@@ -162,7 +149,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
         <SearchableDropdown
           label="Truck Type"
           options={truckTypes}
-          value={form.truck_type_id_f}
+          value={weighGateInOutData.truck_type_id_f}
           onChange={(val) => handleChange("truck_type_id_f", val)}
           displayKey="truck_type_f"
           valueKey="truck_type_id_f"
@@ -171,7 +158,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
 
         <TextInput
           label="Vessel"
-          value={form.vessel_f}
+          value={weighGateInOutData.vessel_f}
           onChange={(val) => handleChange("vessel_f", val)}
           placeholder="Enter vessel name"
         />
@@ -179,14 +166,14 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
         {/* Row 2 */}
         <TextInput
           label="Transaction No"
-          value={form.transaction_no_f}
+          value={weighGateInOutData.transaction_no_f}
           readOnly
         />
 
         <SearchableDropdown
           label="Arrange By"
           options={arrangeBys}
-          value={form.truck_arrange_by_f}
+          value={weighGateInOutData.truck_arrange_by_f}
           onChange={(val) => handleChange("truck_arrange_by_f", val)}
           displayKey="description_f"
           valueKey="description_f"
@@ -196,7 +183,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
         <FreeTextDropdown
           label="Truck No"
           options={truckNos}
-          value={form.truck_no_f}
+          value={weighGateInOutData.truck_no_f}
           onChange={(val) => handleChange("truck_no_f", val)}
           displayKey="description_f"
           valueKey="description_f"
@@ -205,7 +192,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
 
         <TextInput
           label="Voy"
-          value={form.voy_f}
+          value={weighGateInOutData.voy_f}
           onChange={(val) => handleChange("voy_f", val)}
           placeholder="Enter voyage number"
         />
@@ -213,7 +200,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
         <SearchableDropdown
           label="Customer Name"
           options={customers}
-          value={form.customer_id_f}
+          value={weighGateInOutData.customer_id_f}
           onChange={(val) => handleChange("customer_id_f", val)}
           displayKey="customer_name_f"
           valueKey="customer_id_f"
@@ -223,7 +210,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
         <SearchableDropdown
           label="Service"
           options={services}
-          value={form.service_id_f}
+          value={weighGateInOutData.service_id_f}
           onChange={(val) => handleChange("service_id_f", val)}
           displayKey="service_f"
           valueKey="service_id_f"
@@ -233,7 +220,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
         <SearchableDropdown
           label="Container Type"
           options={containerSizeTypes}
-          value={form.container_size_type_f}
+          value={weighGateInOutData.container_size_type_f}
           onChange={(val) => handleChange("container_size_type_f", val)}
           displayKey="description_f"
           valueKey="description_f"
@@ -243,7 +230,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
         <SearchableDropdown
           label="Accepted By"
           options={acceptedBys}
-          value={form.accepted_by_f}
+          value={weighGateInOutData.accepted_by_f}
           onChange={(val) => handleChange("accepted_by_f", val)}
           displayKey="description_f"
           valueKey="description_f"
@@ -254,7 +241,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
         <SearchableDropdown
           label="Location"
           options={locations}
-          value={form.location_f}
+          value={weighGateInOutData.location_f}
           onChange={(val) => handleChange("location_f", val)}
           displayKey="description_f"
           valueKey="description_f"
@@ -264,7 +251,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
         <SearchableDropdown
           label="Category"
           options={categorys}
-          value={form.category_id_f}
+          value={weighGateInOutData.category_id_f}
           onChange={(val) => handleChange("category_id_f", val)}
           displayKey="category_f"
           valueKey="category_id_f"
@@ -273,7 +260,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
 
         <TextInput
           label="Container No"
-          value={form.container_no_f}
+          value={weighGateInOutData.container_no_f}
           onChange={(val) => {
             const upperVal = val.toUpperCase(); // ✅ convert to uppercase
             handleChange("container_no_f", upperVal);
@@ -284,7 +271,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
         <SearchableDropdown
           label="Approved By"
           options={approvedBys}
-          value={form.approved_by_f}
+          value={weighGateInOutData.approved_by_f}
           onChange={(val) => handleChange("approved_by_f", val)}
           displayKey="description_f"
           valueKey="description_f"
@@ -295,7 +282,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
         <SearchableDropdown
           label="Job Department"
           options={jobDepartments}
-          value={form.job_department_f}
+          value={weighGateInOutData.job_department_f}
           onChange={(val) => handleChange("job_department_f", val)}
           displayKey="description_f"
           valueKey="description_f"
@@ -305,7 +292,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
         <SearchableDropdown
           label="Product"
           options={products}
-          value={form.product_f}
+          value={weighGateInOutData.product_f}
           onChange={(val) => handleChange("product_f", val)}
           displayKey="description_f"
           valueKey="description_f"
@@ -314,14 +301,14 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
 
         <TextInput
           label="B/L No"
-          value={form.bl_no_f}
+          value={weighGateInOutData.bl_no_f}
           onChange={(val) => handleChange("bl_no_f", val)}
           placeholder="Enter B/L number"
         />
 
         <TextInput
           label="Received By"
-          value={form.received_by_f}
+          value={weighGateInOutData.received_by_f}
           onChange={(val) => handleChange("received_by_f", val)}
           placeholder="Enter receiver name"
         />
@@ -330,7 +317,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
         <div className="col-span-4">
           <TextareaInput
             label="Remark"
-            value={form.remark_f}
+            value={weighGateInOutData.remark_f}
             onChange={(val) => handleChange("remark_f", val)}
             placeholder="Enter remarks"
             rows={2}
@@ -343,11 +330,17 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
         <Button color="gray" onClick={handleReset}>
           New
         </Button>
-        <Button>Duplicate</Button>
-        <Button color="green" onClick={handleSubmit}>
+        <Button onClick={handleDuplicate}>Duplicate</Button>
+        <Button
+          disabled={weighGateInOutData.transaction_id_f !== 0}
+          color="green"
+          onClick={handleSubmit}
+        >
           Save
         </Button>
-        <Button color="red">Delete</Button>
+        <Button disabled={!weighGateInOutData.transaction_id_f} color="red">
+          Delete
+        </Button>
       </div>
     </div>
   );
