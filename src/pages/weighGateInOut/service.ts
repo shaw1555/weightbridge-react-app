@@ -1,6 +1,8 @@
 import type {
   Customer,
   ActiveTariff,
+  GateInOutInfo,
+  GateInOutStatus,
   WeighGateInOut,
   Setup,
   TruckType,
@@ -23,6 +25,30 @@ const basePathCategory = "/Category";
 const basePathService = "/Service";
 
 const basePathTariff = "/Tariff";
+
+export async function fetchGateInOutInfos(): Promise<GateInOutInfo[]> {
+  try {
+    const response = await apiClient.get<GateInOutInfo[]>(
+      `${basePath}/GateInOutInfo`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch truckTypes:", error);
+    throw error;
+  }
+}
+
+export async function fetchGateInOutStatus(): Promise<GateInOutStatus[]> {
+  try {
+    const response = await apiClient.get<GateInOutStatus[]>(
+      `${basePath}/GateInOutStatus`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch GateInOutStatus:", error);
+    throw error;
+  }
+}
 
 export async function fetchActiveTariff(): Promise<ActiveTariff> {
   try {

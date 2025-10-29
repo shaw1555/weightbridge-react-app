@@ -60,15 +60,18 @@ const WeighGateInOutListPage: React.FC = () => {
       setWeighGateInOuts(data);
 
       const setups = await fetchSetups();
+      const filterNameLocation = "Location";
+
       // Filter for locations
-      const dbLocation = setups.filter((x) => x.category_f === "Location");
+      const dbLocation = setups.filter(
+        (x) => x.category_f === filterNameLocation
+      );
 
       // Add "All Location" at the beginning
       const allLocations: Location[] = [
         {
           setup_id_f: 0,
-          category_f: "",
-          is_default_f: false,
+          category_f: filterNameLocation,
           description_f: allLocName,
         },
         ...dbLocation,

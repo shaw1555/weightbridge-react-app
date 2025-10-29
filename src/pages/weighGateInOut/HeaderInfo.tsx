@@ -224,9 +224,35 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
           label="Container Type"
           options={containerSizeTypes}
           value={weighGateInOutData.container_size_type_f}
-          onChange={(val) => handleChange("container_size_type_f", val)}
+          onChange={(val) => {
+            // Find the matching container type
+            const selectedType = containerSizeTypes.find(
+              (x) => x.description_f === val
+            );
+
+            // Safely read its description_f (if exists)
+            const sizeType = selectedType?.description_f;
+            handleChange("container_size_type_f", sizeType);
+
+            // Safely read its option_1_f (if exists)
+            // Convert to number explicitly and type it as number
+            const weightUnitPrice: number = Number(
+              selectedType?.option1_f ?? 0
+            );
+            handleChange("weight_charge_unitprice_f", weightUnitPrice);
+
+            // Get current container count (convert to number safely)
+            const containerCount: number = Number(
+              weighGateInOutData.no_of_container_f ?? 0
+            );
+
+            const weightChargeAmount: number = weightUnitPrice * containerCount;
+            handleChange("weight_charge_amount_f", weightChargeAmount);
+          }}
           displayKey="description_f"
-          valueKey="description_f"
+          //due to value is bind as string -> value={weighGateInOutData.container_size_type_f}
+          //send to api wit description_f directly //
+          valueKey="description_f" // cannot apply with setup_id_f
           placeholder="Select a container type"
         />
 
@@ -267,6 +293,23 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
           onChange={(val) => {
             const upperVal = val ? val.toUpperCase() : null; // convert to uppercase, allow null
             handleChange("container_no_f", upperVal);
+
+            // Count containers (split by comma, trim spaces, ignore empty)
+            const count = upperVal
+              ? upperVal
+                  .split(",")
+                  .map((x) => x.trim())
+                  .filter((x) => x !== "").length
+              : 0;
+
+            handleChange("no_of_container_f", count);
+
+            const weightUnitPrice: number = Number(
+              weighGateInOutData.weight_charge_unitprice_f ?? 0
+            );
+
+            const weightChargeAmount: number = weightUnitPrice * count;
+            handleChange("weight_charge_amount_f", weightChargeAmount);
           }}
           placeholder="(e.g., ABCD1234567 or ABCD1234567, EFGH7654321)"
         />

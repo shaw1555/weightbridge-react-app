@@ -6,9 +6,18 @@ import Button from "../../components/Button";
 import Checkbox from "../../components/Checkbox";
 import RadioGroup from "../../components/RadioGroup";
 
-import type { Setup, WeighGateInOut } from "./types";
+import type {
+  Setup,
+  WeighGateInOut,
+  GateInOutInfo,
+  GateInOutStatus,
+} from "./types";
 
-import { fetchSetups } from "./service";
+import {
+  fetchSetups,
+  fetchGateInOutInfos,
+  fetchGateInOutStatus,
+} from "./service";
 
 type WeightUOM = Setup;
 type GateUOM = Setup;
@@ -20,24 +29,16 @@ interface DetailInfoProps {
   setWeighGateInOutData: React.Dispatch<React.SetStateAction<WeighGateInOut>>;
 }
 
-const optionStatus = [
-  { label: "In", value: "in" },
-  { label: "Out", value: "out" },
-];
-
-const optionInfo = [
-  { label: "Truck Only", value: "truck" },
-  { label: "Empty Container", value: "empty" },
-  { label: "Laden Container", value: "laden" },
-  { label: "General Cargo", value: "cargo" },
-];
-
 const DetailInfo: React.FC<DetailInfoProps> = ({
   onSubmit,
   weighGateInOutData,
   setWeighGateInOutData,
 }) => {
   const [weightUOMs, setWeightUOMs] = useState<WeightUOM[]>([]);
+  const [gateInOutInfos, setGateInOutInfos] = useState<GateInOutInfo[]>([]);
+  const [gateInOutStatuss, setGateInOutStatuss] = useState<GateInOutStatus[]>(
+    []
+  );
   const [gateUOMs, setGateUOMs] = useState<GateUOM[]>([]);
   const [paymentTypes, setPaymentTypes] = useState<PaymentType[]>([]);
   const [loading, setLoading] = useState(true);
@@ -50,6 +51,12 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
         setWeightUOMs(setups.filter((x) => x.category_f === "WeightUOM"));
         setGateUOMs(setups.filter((x) => x.category_f === "GateUOM"));
         setPaymentTypes(setups.filter((x) => x.category_f === "PaymentType"));
+
+        const gateInOutInfo = await fetchGateInOutInfos();
+        setGateInOutInfos(gateInOutInfo);
+
+        const gateInOutStatus = await fetchGateInOutStatus();
+        setGateInOutStatuss(gateInOutStatus);
       } catch (err) {
         setError("Failed to load data");
         console.error(err);
@@ -68,7 +75,6 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
     setWeighGateInOutData((prev) => ({ ...prev, [field]: value }));
   };
 
-  
   return (
     <div className="w-full p-12 bg-white rounded-2xl shadow-lg border border-gray-200">
       <h2 className="text-lg font-semibold mb-4 border-b pb-2">Weight Info</h2>
@@ -187,7 +193,7 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
           <RadioGroup
             label="Status"
             name="status"
-            options={optionStatus}
+            options={gateInOutStatuss}
             value={weighGateInOutData.gateInOutStatus}
             onChange={(val) => handleChange("gateInOutStatus", val)}
             direction="horizontal"
@@ -198,7 +204,7 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
           <RadioGroup
             label="Info"
             name="info"
-            options={optionInfo}
+            options={gateInOutInfos}
             value={weighGateInOutData.gateInOutTruckInfo}
             onChange={(val) => handleChange("gateInOutTruckInfo", val)}
             direction="horizontal"

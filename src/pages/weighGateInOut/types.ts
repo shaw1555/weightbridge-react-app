@@ -110,7 +110,7 @@ export const initialForm: WeighGateInOut = {
   truck_arrange_by_f: "",
   bl_no_f: "",
   date_time_in_f: null,
-  date_time_out_f:null,
+  date_time_out_f: null,
   truck_cargo_weight_f: 0,
   truck_weight_f: 0,
   net_weight_f: 0,
@@ -159,6 +159,16 @@ export interface TariffDetail {
   unit_price_f: number;
 }
 
+export interface GateInOutInfo {
+  label: string;
+  value: string;
+}
+
+export interface GateInOutStatus {
+  label: string;
+  value: string;
+}
+
 export interface Customer {
   customer_id_f: number;
   // customer_code_f: string;
@@ -167,9 +177,10 @@ export interface Customer {
 
 export interface Setup {
   setup_id_f: number;
-  category_f: string;
   description_f: string;
-  is_default_f: boolean;
+  category_f: string;
+  option1_f?: string;
+  is_default_f?: boolean;
 }
 
 export interface Service {
