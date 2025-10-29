@@ -1,23 +1,53 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import axios from "axios";
 import HeaderInfo from "./HeaderInfo";
 import DetailInfo from "./DetailInfo";
+import { ArrowLeft } from "lucide-react";
+import Button from "../../components/Button";
 import type { ActiveTariff, WeighGateInOut } from "./types";
 import { initialForm } from "./types"; // this is data (not type)
-import { fetchActiveTariff } from "./service";
+import {
+  fetchActiveTariff,
+  fetchWeighGateInOutById,
+  createWeighGateInOut,
+  updateWeighGateInOut,
+  deleteWeighGateInOut,
+} from "./service";
 
 export default function WeighGateInOutFormPage() {
+  const { id } = useParams<{ id: string }>(); // 👈 get the :id from route
   const [weighGateInOutData, setWeighGateInOutData] =
     useState<WeighGateInOut>(initialForm);
   const [activeTariff, setActiveTariff] = useState<ActiveTariff>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  //it must be delcar before useEffect , due to use this funtion inside of useEffect //
+  const getInitialWeighGateInOutData = (): WeighGateInOut => {
+    const today = new Date().toISOString().split("T")[0]; // e.g. "2025-10-28"
+    return {
+      ...initialForm,
+      tariff_id_f: activeTariff?.tariff_t.tariff_id_f ?? 0,
+      date_f: today, // ✅ added properly
+    };
+  };
+
   useEffect(() => {
     const loadData = async () => {
       try {
         const activeTariff = await fetchActiveTariff();
         setActiveTariff(activeTariff);
+
+        if (!id || id === "new" || id === "0") {
+          // 🆕 new record
+          setWeighGateInOutData(getInitialWeighGateInOutData());
+        } else {
+          // ✏️ existing record
+          const existingRecord = await fetchWeighGateInOutById(Number(id));
+          setWeighGateInOutData(existingRecord);
+        }
       } catch (err) {
         setError("Failed to load data");
         console.error(err);
@@ -33,13 +63,15 @@ export default function WeighGateInOutFormPage() {
   if (error) return <p className="text-red-500">{error}</p>;
 
   const clearData = () => {
-    setWeighGateInOutData({ ...initialForm }); // ✅ new object each time
+    setWeighGateInOutData(getInitialWeighGateInOutData());
   };
+
   const duplicateData = () => {
     setWeighGateInOutData((prev) => ({
       ...prev,
       transaction_id_f: initialForm.transaction_id_f,
       transaction_no_f: initialForm.transaction_no_f,
+      // tariff_id_f: activeTariff?.tariff_t.tariff_id_f ?? 0, // no need, bczo no change //
       truck_no_f: initialForm.truck_no_f,
       container_no_f: initialForm.container_no_f,
       date_time_in_f: initialForm.date_time_in_f,
@@ -51,38 +83,77 @@ export default function WeighGateInOutFormPage() {
       weight_charge_uom_f: initialForm.weight_charge_uom_f,
     }));
   };
-  const saveHeaderInfo = async (data: WeighGateInOut) => {
-    // const res = await axios.post("/api/transactions", data);
-    // setTransactionId(res.data.id); // assume API returns { id: "123" }
-    setWeighGateInOutData((prev) => ({
-      ...prev,
-      transaction_id_f: 1,
-    }));
-    
-    // Show all dataHeaderInfo values in an alert
-    alert(JSON.stringify(weighGateInOutData, null, 2)); 
+  const deleteRecord = async () => {
+    try {
+      const res = await deleteWeighGateInOut(
+        weighGateInOutData.transaction_id_f
+      );
+      clearData();
+      toast.success("Successfully deleted!");
+    } catch (error: any) {
+      console.error("Delete failed:", error);
+      toast.error(error.message || "An error occurred while deleting.");
+    }
   };
 
-  const saveDetailInfo = async (data: WeighGateInOut) => {
-    const res = await axios.post("/api/transactions", data); 
+  const saveHeaderInfo = async () => {
+    try {
+      if (weighGateInOutData.transaction_id_f === 0) {
+        // 👉 Create new record
+        const res = await createWeighGateInOut(weighGateInOutData);
+
+        toast.success(`${res.transaction_no_f}`);
+
+        setWeighGateInOutData((prev) => ({
+          ...prev,
+          transaction_id_f: res.transaction_id_f,
+          transaction_no_f: res.transaction_no_f,
+        }));
+      } else {
+        // 👉 Update existing record
+        await updateWeighGateInOut(
+          weighGateInOutData.transaction_id_f,
+          weighGateInOutData
+        );
+
+        toast.success("Successfully updated!");
+      }
+    } catch (error: any) {
+      console.error("Save failed:", error);
+      toast.error(error.message || "An error occurred while saving.");
+    }
+  };
+
+  const saveDetailInfo = async () => {
+    const res = await axios.post("/api/transactions", weighGateInOutData);
     alert("Block B saved!");
   };
 
   return (
     <div className="p-6 bg-gray-50">
-      <h2 className="text-lg font-semibold mb-4">Weigh Gate In & Out</h2>
+      <div className="flex items-center mb-4">
+        <Button
+          onClick={() => window.history.back()}
+          className="p-2 rounded-full hover:bg-gray-200 transition-colors"
+          // title="Go Back"
+        >
+          <ArrowLeft className="w-5 h-5 text-gray-700" />
+        </Button>
+        <h2 className="text-lg font-semibold ml-2">Weigh Gate In & Out</h2>
+      </div>
       <HeaderInfo
-        onSave={saveHeaderInfo}
+        onSubmit={saveHeaderInfo}
+        onDelete={deleteRecord}
         weighGateInOutData={weighGateInOutData}
         setWeighGateInOutData={setWeighGateInOutData}
         onClear={clearData}
-        duplicateData={duplicateData} 
+        duplicateData={duplicateData}
         tariff={activeTariff?.tariff_t}
       />
       <DetailInfo
-        onSave={saveDetailInfo}
+        onSubmit={saveDetailInfo}
         weighGateInOutData={weighGateInOutData}
-        setWeighGateInOutData={setWeighGateInOutData} 
+        setWeighGateInOutData={setWeighGateInOutData}
       />
     </div>
   );

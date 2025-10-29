@@ -34,7 +34,8 @@ type ContainerType = Setup;
 type TruckNo = Setup;
 
 interface HeaderInfoProps {
-  onSave: (data: any) => void;
+  onSubmit: () => void;
+  onDelete: () => void;
   weighGateInOutData: WeighGateInOut;
   setWeighGateInOutData: React.Dispatch<React.SetStateAction<WeighGateInOut>>;
   onClear: () => void;
@@ -43,7 +44,8 @@ interface HeaderInfoProps {
 }
 
 const HeaderInfo: React.FC<HeaderInfoProps> = ({
-  onSave,
+  onSubmit,
+  onDelete,
   weighGateInOutData,
   setWeighGateInOutData,
   onClear,
@@ -103,7 +105,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
       }
     };
 
-    loadData();
+    loadData(); // call the async function
   }, []);
 
   if (loading) return <p>Loading...</p>;
@@ -125,11 +127,6 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
       ...prev,
       [field]: value, // update only this field in parent state
     }));
-  };
-
-  const handleSubmit = () => {
-    // Call the onSave callback
-    onSave(weighGateInOutData);
   };
 
   return (
@@ -168,8 +165,14 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
           label="Transaction No"
           value={weighGateInOutData.transaction_no_f}
           readOnly
+          className={`${
+            weighGateInOutData.transaction_no_f &&
+            weighGateInOutData.transaction_no_f !== "Auto" &&
+            weighGateInOutData.transaction_no_f !== ""
+              ? "text-blue-600 font-semibold"
+              : "text-gray-700"
+          }`}
         />
-
         <SearchableDropdown
           label="Arrange By"
           options={arrangeBys}
@@ -262,7 +265,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
           label="Container No"
           value={weighGateInOutData.container_no_f}
           onChange={(val) => {
-            const upperVal = val.toUpperCase(); // ✅ convert to uppercase
+            const upperVal = val ? val.toUpperCase() : null; // convert to uppercase, allow null
             handleChange("container_no_f", upperVal);
           }}
           placeholder="(e.g., ABCD1234567 or ABCD1234567, EFGH7654321)"
@@ -331,14 +334,14 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
           New
         </Button>
         <Button onClick={handleDuplicate}>Duplicate</Button>
-        <Button
-          disabled={weighGateInOutData.transaction_id_f !== 0}
-          color="green"
-          onClick={handleSubmit}
-        >
-          Save
+        <Button color="green" onClick={onSubmit}>
+          {weighGateInOutData.transaction_id_f !== 0 ? "Update" : "Save"}
         </Button>
-        <Button disabled={!weighGateInOutData.transaction_id_f} color="red">
+        <Button
+          disabled={!weighGateInOutData.transaction_id_f}
+          color="red"
+          onClick={onDelete}
+        >
           Delete
         </Button>
       </div>

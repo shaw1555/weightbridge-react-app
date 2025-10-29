@@ -1,4 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { PopupProvider } from "./context/PopupContext";
+import { usePopup } from "./context/PopupContext";
+import { setGlobalPopup } from "./services/apiClient";
 import {
   BrowserRouter as Router,
   Routes,
@@ -35,6 +40,12 @@ import PrivateRoute from "./components/PrivateRoute";
 import { NAV_LINKS } from "./config/navLinks";
 
 const AppContent: React.FC = () => {
+  const { showPopup } = usePopup();
+
+  useEffect(() => {
+    setGlobalPopup(showPopup);
+  }, [showPopup]);
+
   const location = useLocation();
 
   const links = NAV_LINKS;
@@ -254,13 +265,26 @@ const AppContent: React.FC = () => {
           }
         />
       </Routes>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </>
   );
 };
 
 const App: React.FC = () => (
   <Router>
-    <AppContent />
+    <PopupProvider>
+      <AppContent />
+    </PopupProvider>
   </Router>
 );
 

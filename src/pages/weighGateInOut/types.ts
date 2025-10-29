@@ -7,7 +7,7 @@ export interface WeighGateInOut {
   customer_id_f: number;
   truck_no_f: string;
   product_f: string;
-  date_f: string;
+  date_f: string | null;
   vessel_f: string;
   voy_f: string;
   container_size_type_f: string;
@@ -40,8 +40,8 @@ export interface WeighGateInOut {
   job_department_f: string;
   truck_arrange_by_f: string;
   bl_no_f: string;
-  date_time_in_f: string;
-  date_time_out_f: string;
+  date_time_in_f: string | null;
+  date_time_out_f: string | null;
   truck_cargo_weight_f: number;
   truck_weight_f: number;
   net_weight_f: number;
@@ -55,7 +55,7 @@ export interface WeighGateInOut {
   approved_by_f: string;
   inactive_f: boolean;
   log_by_f: string;
-  log_date_time_f: string;
+  log_date_time_f: string | null;
   self_own_f: boolean;
   lock_f: boolean;
   gate_charge_unitprice_f: number;
@@ -76,7 +76,7 @@ export const initialForm: WeighGateInOut = {
   customer_id_f: 0,
   truck_no_f: "",
   product_f: "",
-  date_f: "",
+  date_f: null,
   vessel_f: "",
   voy_f: "",
   container_size_type_f: "",
@@ -109,8 +109,8 @@ export const initialForm: WeighGateInOut = {
   job_department_f: "",
   truck_arrange_by_f: "",
   bl_no_f: "",
-  date_time_in_f: "",
-  date_time_out_f: "",
+  date_time_in_f: null,
+  date_time_out_f:null,
   truck_cargo_weight_f: 0,
   truck_weight_f: 0,
   net_weight_f: 0,
@@ -124,7 +124,7 @@ export const initialForm: WeighGateInOut = {
   approved_by_f: "",
   inactive_f: false,
   log_by_f: "",
-  log_date_time_f: "",
+  log_date_time_f: null,
   self_own_f: false,
   lock_f: false,
   gate_charge_unitprice_f: 0,
@@ -161,7 +161,7 @@ export interface TariffDetail {
 
 export interface Customer {
   customer_id_f: number;
-  customer_code_f: string;
+  // customer_code_f: string;
   customer_name_f: string;
 }
 

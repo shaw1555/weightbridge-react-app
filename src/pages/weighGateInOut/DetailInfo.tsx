@@ -15,7 +15,7 @@ type GateUOM = Setup;
 type PaymentType = Setup;
 
 interface DetailInfoProps {
-  onSave: (data: WeighGateInOut) => void;
+  onSubmit: () => void;
   weighGateInOutData: WeighGateInOut;
   setWeighGateInOutData: React.Dispatch<React.SetStateAction<WeighGateInOut>>;
 }
@@ -33,7 +33,7 @@ const optionInfo = [
 ];
 
 const DetailInfo: React.FC<DetailInfoProps> = ({
-  onSave,
+  onSubmit,
   weighGateInOutData,
   setWeighGateInOutData,
 }) => {
@@ -68,14 +68,7 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
     setWeighGateInOutData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = () => {
-    // Show all dataDetailInfo values in an alert
-    alert(JSON.stringify(weighGateInOutData, null, 2));
-
-    // Call the onSave callback
-    onSave(weighGateInOutData);
-  };
-
+  
   return (
     <div className="w-full p-12 bg-white rounded-2xl shadow-lg border border-gray-200">
       <h2 className="text-lg font-semibold mb-4 border-b pb-2">Weight Info</h2>
@@ -274,7 +267,7 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
                 <Button
                   disabled={!weighGateInOutData.transaction_id_f}
                   color="green"
-                  onClick={handleSubmit}
+                  onClick={onSubmit}
                 >
                   Update Weight and Gate Info
                 </Button>

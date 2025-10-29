@@ -22,13 +22,14 @@ const basePathCategory = "/Category";
 
 const basePathService = "/Service";
 
-
 const basePathTariff = "/Tariff";
- 
+
 export async function fetchActiveTariff(): Promise<ActiveTariff> {
   try {
-    const response = await apiClient.get<ActiveTariff>(`${basePathTariff}/ActiveTariff`);
-     return response.data;
+    const response = await apiClient.get<ActiveTariff>(
+      `${basePathTariff}/ActiveTariff`
+    );
+    return response.data;
   } catch (error) {
     console.error(`Failed to fetch active tariff`, error);
     throw error;
@@ -118,13 +119,8 @@ export async function fetchWeighGateInOutById(
 export async function createWeighGateInOut(
   payload: WeighGateInOut
 ): Promise<WeighGateInOut> {
-  try {
-    const response = await apiClient.post<WeighGateInOut>(basePath, payload);
-    return response.data;
-  } catch (error) {
-    console.error("Failed to create weighGateInOut:", error);
-    throw error;
-  }
+  const response = await apiClient.post<WeighGateInOut>(basePath, payload);
+  return response.data;
 }
 
 export async function updateWeighGateInOut(

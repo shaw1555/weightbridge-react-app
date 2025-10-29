@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 interface DateInputProps {
   label?: string;
-  value?: string; // ISO string: "YYYY-MM-DD" or "YYYY-MM-DDTHH:mm:ss"
+  value?: string | null; // ISO string: "YYYY-MM-DD" or "YYYY-MM-DDTHH:mm:ss"
   onChange?: (date: string) => void;
   includeTime?: boolean;
   resettable?: boolean;

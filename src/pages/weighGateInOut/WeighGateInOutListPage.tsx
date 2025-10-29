@@ -1,13 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { fetchWeighGateInOuts } from "./service"; // your API function
-import { type WeighGateInOut } from "./types"; // your Product type
+import { fetchWeighGateInOuts, fetchSetups } from "./service"; // your API function
+import type { WeighGateInOut, Setup } from "./types"; // your Product type
 import ROUTES from "../../routes";
 import { EntityList, type Column } from "../../components/EntityList";
 import DateRangeFilter from "../../components/DateRangeFilter";
+import Checkbox from "../../components/Checkbox";
+import SearchableDropdown from "../../components/SearchableDropdown";
+
+type Location = Setup;
 
 const WeighGateInOutListPage: React.FC = () => {
   const [weighGateInOuts, setWeighGateInOuts] = useState<WeighGateInOut[]>([]);
+  const [locations, setLocations] = useState<Location[]>([]);
+  const [selectedLocation, setselectedLocation] = useState(String);
+  const [inactive, setInactive] = useState(false);
+  const [selfOwn, setSelfOwn] = useState(false);
+  const [subContractor, setSubContractor] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState<{
     fromDate: string;
@@ -19,11 +30,51 @@ const WeighGateInOutListPage: React.FC = () => {
 
   const navigate = useNavigate();
 
+  const allLocName = "All Location";
+
+  const handleDateFilterApply = (fromDate: string, toDate: string) => {
+    setFilters({ fromDate, toDate });
+    fetchData(fromDate, toDate);
+  };
+
+  const handleSelectedLocation = (val: string) => {
+    setselectedLocation(val);
+  };
+
+  const handleInactiveChange = (val: boolean) => {
+    setInactive(val);
+  };
+
+  const handleSelfOwnChange = (val: boolean) => {
+    setSelfOwn(val);
+  };
+
+  const handleSubContractorChange = (val: boolean) => {
+    setSubContractor(val);
+  };
+
   const fetchData = async (fromDate: string, toDate: string) => {
     setLoading(true);
     try {
       const data = await fetchWeighGateInOuts(fromDate, toDate);
       setWeighGateInOuts(data);
+
+      const setups = await fetchSetups();
+      // Filter for locations
+      const dbLocation = setups.filter((x) => x.category_f === "Location");
+
+      // Add "All Location" at the beginning
+      const allLocations: Location[] = [
+        {
+          setup_id_f: 0,
+          category_f: "",
+          is_default_f: false,
+          description_f: allLocName,
+        },
+        ...dbLocation,
+      ];
+      setLocations(allLocations);
+      setselectedLocation(allLocName);
     } catch (error) {
       console.error("Error fetching weighGateInOuts:", error);
     } finally {
@@ -31,14 +82,20 @@ const WeighGateInOutListPage: React.FC = () => {
     }
   };
 
+  // Automatically recompute filtered data
+  const filteredWeighGateInOuts = useMemo(() => {
+    return weighGateInOuts.filter(
+      (x) =>
+        x.inactive_f === inactive &&
+        (!selfOwn || x.self_own_f === true) &&
+        (!subContractor || x.self_own_f === false) &&
+        (selectedLocation === allLocName || x.location_f === selectedLocation)
+    );
+  }, [weighGateInOuts, inactive, selfOwn, subContractor, selectedLocation]);
+
   useEffect(() => {
     fetchData(filters.fromDate, filters.toDate);
   }, [filters.fromDate, filters.toDate]);
-
-  const handleDateFilterApply = (fromDate: string, toDate: string) => {
-    setFilters({ fromDate, toDate });
-    fetchData(fromDate, toDate);
-  };
 
   const columns: Column<WeighGateInOut>[] = [
     // { key: "weighGateInOut_id_f", label: "WeighGateInOut Id" }, // can remove, but it still work for save, update, delete//
@@ -119,10 +176,10 @@ const WeighGateInOutListPage: React.FC = () => {
     { key: "gate_out_weight_f", label: "Gate Out Weight", type: "number" },
     { key: "remark_f", label: "Remark" },
     { key: "received_by_f", label: "Received By" },
-    { key: "accepted_by_f", label: "Accepted By" ,   width: "150px"},
-    { key: "approved_by_f", label: "Approved By" ,   width: "150px"},
+    { key: "accepted_by_f", label: "Accepted By", width: "150px" },
+    { key: "approved_by_f", label: "Approved By", width: "150px" },
     { key: "inactive_f", label: "Inactive", type: "checkbox" },
-    { key: "log_by_f", label: "Log By" ,   width: "150px"},
+    { key: "log_by_f", label: "Log By", width: "150px" },
     {
       key: "log_date_time_f",
       label: "Log Date Time",
@@ -131,7 +188,7 @@ const WeighGateInOutListPage: React.FC = () => {
       width: "200px",
     },
     { key: "self_own_f", label: "Self Own", type: "checkbox" },
-    { key: "lock_f", label: "Lock", type: "checkbox" },
+    // { key: "lock_f", label: "Lock", type: "checkbox" },
     {
       key: "gate_charge_unitprice_f",
       label: "Gate Charge Unit Price",
@@ -142,13 +199,46 @@ const WeighGateInOutListPage: React.FC = () => {
   return (
     <div>
       {/* Top Toolbar */}
-      <DateRangeFilter
-        label="Transaction Date"
-        startKey="fromDate"
-        endKey="toDate"
-        filters={filters}
-        onFilterApply={handleDateFilterApply}
-      />
+      <div className="flex items-center space-x-4">
+        <DateRangeFilter
+          label="Transaction Date"
+          startKey="fromDate"
+          endKey="toDate"
+          filters={filters}
+          onFilterApply={handleDateFilterApply}
+        />
+        <div className="w-64">
+          {" "}
+          {/* adjust width as needed, e.g., w-48, w-72 */}
+          <SearchableDropdown
+            // label="Location"
+            options={locations}
+            value={selectedLocation}
+            onChange={(val) => {
+              if (val !== null) handleSelectedLocation(String(val));
+            }}
+            displayKey="description_f"
+            valueKey="description_f"
+            placeholder="Select a location"
+          />
+        </div>
+
+        <Checkbox
+          label="Inactive"
+          checked={inactive}
+          onChange={(val) => handleInactiveChange(val)}
+        />
+        <Checkbox
+          label="Self Own"
+          checked={selfOwn}
+          onChange={(val) => handleSelfOwnChange(val)}
+        />
+        <Checkbox
+          label="Sub Contractor"
+          checked={subContractor}
+          onChange={(val) => handleSubContractorChange(val)}
+        />
+      </div>
 
       {/* Table */}
       <div className="mt-1 relative">
@@ -160,10 +250,20 @@ const WeighGateInOutListPage: React.FC = () => {
 
         <EntityList
           title="Weigh Gate In & Out"
-          data={weighGateInOuts}
+          data={filteredWeighGateInOuts}
           columns={columns}
           idKey="transaction_id_f" // 👈 tell which field is the PK
-          onRowClick={(id) => navigate(ROUTES.WeighGateInOut_Form(String(id)))}
+          // onRowClick={(id) => navigate(ROUTES.WeighGateInOut_Form(String(id)))}
+          onRowClick={(id) => {
+            const selected = filteredWeighGateInOuts.find(
+              (item) => String(item.transaction_id_f) === String(id)
+            );
+            if (selected?.inactive_f) {
+              toast.warning("This record is inactive and cannot be modified.");
+              return;
+            }
+            navigate(ROUTES.WeighGateInOut_Form(String(id)));
+          }}
           onAddClick={() => navigate(ROUTES.WeighGateInOut_Form())}
         />
       </div>
