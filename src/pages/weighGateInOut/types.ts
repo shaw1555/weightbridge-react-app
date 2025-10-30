@@ -137,7 +137,7 @@ export const initialForm: WeighGateInOut = {
 
 export interface ActiveTariff {
   tariff_t: Tariff;
-  tariff_detail_t: TariffDetail;
+  tariff_detail_t: TariffDetail[];
 }
 
 export interface Tariff {

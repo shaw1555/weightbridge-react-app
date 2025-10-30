@@ -129,6 +129,45 @@ export default function WeighGateInOutFormPage() {
     alert("Block B saved!");
   };
 
+  const updateGateChargeAmount = (data = weighGateInOutData) => {
+    const { category_id_f, service_id_f, truck_type_id_f, is_gate_foc_f } = data;
+
+    const matchedDetail = activeTariff?.tariff_detail_t.find(
+      (x) =>
+        x.category_id_f === category_id_f &&
+        x.service_id_f === service_id_f &&
+        x.truck_type_id_f === truck_type_id_f
+    );
+
+    const tariffUnitPrice = matchedDetail?.unit_price_f ?? 0;
+    let tariffGateAmount = tariffUnitPrice;
+    if (is_gate_foc_f) {
+      tariffGateAmount = 0;
+    }
+
+    // create a new object instead of mutating //to refresh UI // re-render
+    setWeighGateInOutData({
+      ...data,
+      gate_charge_unitprice_f: tariffUnitPrice,
+      gate_charge_amount_f: tariffGateAmount,
+    });
+  };
+
+  const updateWeightChargeAmount = (data = weighGateInOutData) => {
+    const { weight_charge_unitprice_f, no_of_container_f , is_weight_foc_f} = data;
+    let weightChargeAmount = weight_charge_unitprice_f * no_of_container_f;
+
+    if (is_weight_foc_f) {
+      weightChargeAmount = 0;
+    }
+
+    // create a new object instead of mutating //to refresh UI // re-render
+    setWeighGateInOutData({
+      ...data,
+      weight_charge_amount_f: weightChargeAmount,
+    });
+  };
+
   return (
     <div className="p-6 bg-gray-50">
       <div className="flex items-center mb-4">
@@ -148,12 +187,16 @@ export default function WeighGateInOutFormPage() {
         setWeighGateInOutData={setWeighGateInOutData}
         onClear={clearData}
         duplicateData={duplicateData}
-        tariff={activeTariff?.tariff_t}
+        activeTariff={activeTariff}
+        updateGateChargeAmount={updateGateChargeAmount}
+        updateWeightChargeAmount={updateWeightChargeAmount}
       />
       <DetailInfo
         onSubmit={saveDetailInfo}
         weighGateInOutData={weighGateInOutData}
         setWeighGateInOutData={setWeighGateInOutData}
+        updateGateChargeAmount={updateGateChargeAmount}
+        updateWeightChargeAmount={updateWeightChargeAmount}
       />
     </div>
   );

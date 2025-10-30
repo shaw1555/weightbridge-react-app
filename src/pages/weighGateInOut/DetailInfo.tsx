@@ -27,12 +27,16 @@ interface DetailInfoProps {
   onSubmit: () => void;
   weighGateInOutData: WeighGateInOut;
   setWeighGateInOutData: React.Dispatch<React.SetStateAction<WeighGateInOut>>;
+  updateGateChargeAmount: (data: WeighGateInOut) => void;
+  updateWeightChargeAmount: (data: WeighGateInOut) => void;
 }
 
 const DetailInfo: React.FC<DetailInfoProps> = ({
   onSubmit,
   weighGateInOutData,
   setWeighGateInOutData,
+  updateGateChargeAmount,
+  updateWeightChargeAmount,
 }) => {
   const [weightUOMs, setWeightUOMs] = useState<WeightUOM[]>([]);
   const [gateInOutInfos, setGateInOutInfos] = useState<GateInOutInfo[]>([]);
@@ -75,6 +79,44 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
     setWeighGateInOutData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const handleGateAmountFOC = (isFoc: boolean) => {
+    handleChange("is_gate_foc_f", isFoc);
+    updateGateChargeAmount({
+      ...weighGateInOutData,
+      is_gate_foc_f: isFoc,
+    });
+  };
+
+  const handleWeighAmountFOC = (isFoc: boolean) => {
+    handleChange("is_weight_foc_f", isFoc);
+    updateWeightChargeAmount({
+      ...weighGateInOutData,
+      is_weight_foc_f: isFoc,
+    });
+  };
+
+  const updateNetWeighChange = (
+    truckCargoWeight?: number,
+    truckWeight?: number
+  ) => {
+    const truckPlusCargoWeight = Number(truckCargoWeight ?? 0);
+    const truckOnlyWeight = Number(truckWeight ?? 0);
+    const netWeight = truckPlusCargoWeight - truckOnlyWeight;
+    handleChange("net_weight_f", netWeight);
+  };
+
+  const handleTruckEmptyWeighChange = (val: string | null) => {
+    handleChange("truck_weight_f", val);
+
+    updateNetWeighChange(weighGateInOutData.truck_cargo_weight_f, Number(val));
+  };
+
+  const handleTruckPluseCargoWeighChange = (val: string | null) => {
+    handleChange("truck_cargo_weight_f", val);
+
+    updateNetWeighChange(Number(val), weighGateInOutData.truck_weight_f);
+  };
+
   return (
     <div className="w-full p-12 bg-white rounded-2xl shadow-lg border border-gray-200">
       <h2 className="text-lg font-semibold mb-4 border-b pb-2">Weight Info</h2>
@@ -112,7 +154,7 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
           <Checkbox
             label="FOC"
             checked={weighGateInOutData.is_weight_foc_f}
-            onChange={(val) => handleChange("is_weight_foc_f", val)}
+            onChange={handleWeighAmountFOC}
           />
         </div>
 
@@ -136,13 +178,13 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
             label="(Truck + Cargo) Weight"
             type="number"
             value={weighGateInOutData.truck_cargo_weight_f}
-            onChange={(val) => handleChange("truck_cargo_weight_f", val)}
+            onChange={handleTruckPluseCargoWeighChange}
           />
           <TextInput
             label="Truck/Empty Weight"
             type="number"
             value={weighGateInOutData.truck_weight_f}
-            onChange={(val) => handleChange("truck_weight_f", val)}
+            onChange={handleTruckEmptyWeighChange}
           />
           <TextInput
             label="Net Weight"
@@ -186,7 +228,7 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
           <Checkbox
             label="FOC"
             checked={weighGateInOutData.is_gate_foc_f}
-            onChange={(val) => handleChange("is_gate_foc_f", val)}
+            onChange={handleGateAmountFOC}
           />
         </div>
         <div className="col-span-1">
