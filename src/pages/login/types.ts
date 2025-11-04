@@ -15,3 +15,11 @@ export interface LoginResponse {
   image: string;
   token: string;
 }
+
+export interface Setup {
+  setup_id_f: number;
+  description_f: string;
+  category_f: string;
+  option1_f?: string;
+  is_default_f?: boolean;
+}

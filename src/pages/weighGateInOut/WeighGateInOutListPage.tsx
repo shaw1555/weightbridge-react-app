@@ -3,11 +3,12 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { fetchWeighGateInOuts, fetchSetups } from "./service"; // your API function
 import type { WeighGateInOut, Setup } from "./types"; // your Product type
-import ROUTES from "../../routes";
+import ROUTES from "../../config/routes";
 import { EntityList, type Column } from "../../components/EntityList";
 import DateRangeFilter from "../../components/DateRangeFilter";
 import Checkbox from "../../components/Checkbox";
 import SearchableDropdown from "../../components/SearchableDropdown";
+import { ALL_LOCATION_NAME, STORAGE_KEYS } from "../../constants";
 
 type Location = Setup;
 
@@ -29,8 +30,6 @@ const WeighGateInOutListPage: React.FC = () => {
   });
 
   const navigate = useNavigate();
-
-  const allLocName = "All Location";
 
   const handleDateFilterApply = (fromDate: string, toDate: string) => {
     setFilters({ fromDate, toDate });
@@ -72,12 +71,16 @@ const WeighGateInOutListPage: React.FC = () => {
         {
           setup_id_f: 0,
           category_f: filterNameLocation,
-          description_f: allLocName,
+          description_f: ALL_LOCATION_NAME.ALLLOCATION,
         },
         ...dbLocation,
       ];
       setLocations(allLocations);
-      setselectedLocation(allLocName);
+
+      const defaultLoc = localStorage.getItem(
+        STORAGE_KEYS.DEFAULT_LOCATION
+      );
+      setselectedLocation(String(defaultLoc));
     } catch (error) {
       console.error("Error fetching weighGateInOuts:", error);
     } finally {
@@ -92,7 +95,8 @@ const WeighGateInOutListPage: React.FC = () => {
         x.inactive_f === inactive &&
         (!selfOwn || x.self_own_f === true) &&
         (!subContractor || x.self_own_f === false) &&
-        (selectedLocation === allLocName || x.location_f === selectedLocation)
+        (selectedLocation === ALL_LOCATION_NAME.ALLLOCATION ||
+          x.location_f === selectedLocation)
     );
   }, [weighGateInOuts, inactive, selfOwn, subContractor, selectedLocation]);
 

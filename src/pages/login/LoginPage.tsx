@@ -1,17 +1,55 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthService } from "../../services/AuthService";
-import type { LoginRequest } from "./types";
-import ROUTES from "../../routes";
-import { EyeIcon, EyeSlashIcon, UserIcon, LockClosedIcon } from "@heroicons/react/24/outline";
+import SearchableDropdown from "../../components/SearchableDropdown";
+import type { LoginRequest, Setup } from "./types";
+import ROUTES from "../../config/routes";
+import { SETUP_CATEGORIES, STORAGE_KEYS } from "../../constants";
+import {
+  EyeIcon,
+  EyeSlashIcon,
+  UserIcon,
+  LockClosedIcon,
+} from "@heroicons/react/24/outline";
 import logo from "../../assets/logo.png";
+import { fetchSetups } from "./service";
+
+type Location = Setup;
 
 const LoginPage: React.FC = () => {
-  const [form, setForm] = useState<LoginRequest>({ username: "", password: "" });
+  const [form, setForm] = useState<LoginRequest>({
+    username: "",
+    password: "",
+  });
+  const [locations, setLocations] = useState<Location[]>([]);
+  const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
+
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showPassword, setShowPassword] = useState(false);
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        const setups = await fetchSetups();
+        setLocations(
+          setups.filter((x) => x.category_f === SETUP_CATEGORIES.LOCATION)
+        );
+        const defaultLoc = localStorage.getItem(STORAGE_KEYS.DEFAULT_LOCATION);
+        setSelectedLocation(String(defaultLoc));
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData(); // run only once
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -20,11 +58,21 @@ const LoginPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError(null);
+
+    if (!selectedLocation) {
+      setError("Please select a location.");
+      return;
+    }
+
+    setLoading(true);
 
     try {
       await AuthService.login(form);
+      localStorage.setItem(
+        STORAGE_KEYS.DEFAULT_LOCATION,
+        String(selectedLocation)
+      );
       navigate(ROUTES.Dashboard);
     } catch (err: any) {
       setError(err.message || "Login failed");
@@ -82,8 +130,24 @@ const LoginPage: React.FC = () => {
               onClick={() => setShowPassword((prev) => !prev)}
               className="absolute right-3 top-10 text-gray-500"
             >
-              {showPassword ? <EyeSlashIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
+              {showPassword ? (
+                <EyeSlashIcon className="w-5 h-5" />
+              ) : (
+                <EyeIcon className="w-5 h-5" />
+              )}
             </button>
+          </div>
+          <div className="relative">
+            <SearchableDropdown
+              label="Location"
+              options={locations}
+              value={selectedLocation ?? null} // 👈 ensures no undefined is passed
+              onChange={(val) => setSelectedLocation(val ? String(val) : null)}
+              displayKey="description_f"
+              valueKey="description_f"
+              placeholder="Select a location"
+              required
+            />
           </div>
 
           <button

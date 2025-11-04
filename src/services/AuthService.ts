@@ -1,6 +1,7 @@
 // src/services/AuthService.ts
 import type { LoginRequest } from "../pages/login/types";
 import apiClient from "./apiClient";
+import {STORAGE_KEYS} from "../constants";
 
 class AuthServiceClass {
   // private _subscribers: ((loggedIn: boolean) => void)[] = [];
@@ -25,33 +26,32 @@ class AuthServiceClass {
          `${basePathPermission}/PermissionListByUserId/45`
       );
       demoUser.permissions = response.data; // assign permissions
-
-      console.log('demoUser.permissions ', demoUser.permissions);
     } catch (error) {
       console.error("Error fetching permissions:", error);
     }
 
-    localStorage.setItem("token", demoUser.token);
-    localStorage.setItem("user", JSON.stringify(demoUser));
+    localStorage.setItem(STORAGE_KEYS.TOKEN, demoUser.token);
+    localStorage.setItem(STORAGE_KEYS.USER_INFO, JSON.stringify(demoUser));
+ 
 
     return demoUser;
   }
 
   logout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    localStorage.removeItem(STORAGE_KEYS.TOKEN);
+    localStorage.removeItem(STORAGE_KEYS.USER_INFO);
   }
 
   isLoggedIn(): boolean {
-    return !!localStorage.getItem("token");
+    return !!localStorage.getItem(STORAGE_KEYS.TOKEN);
   }
 
   getToken(): string | null {
-    return localStorage.getItem("token");
+    return localStorage.getItem(STORAGE_KEYS.TOKEN);
   }
 
   getUser(): { username: string; token: string; permissions: string[] } | null {
-    const userStr = localStorage.getItem("user");
+    const userStr = localStorage.getItem(STORAGE_KEYS.USER_INFO);
     return userStr ? JSON.parse(userStr) : null;
   }
 

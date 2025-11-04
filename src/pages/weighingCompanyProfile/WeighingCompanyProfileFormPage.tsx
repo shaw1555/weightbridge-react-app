@@ -6,8 +6,9 @@ import {
   updateWeighingCompanyProfile,
   deleteWeighingCompanyProfile,
 } from "./service";
-import ROUTES from "../../routes";
+import ROUTES from "../../config/routes";
 import EntityForm, { type Field } from "../../components/EntityForm";
+import {PERMISSIONS} from "../../constants";
 
 const WeighingCompanyProfileFormPage: React.FC = () => {
   const fields: Field<WeighingCompanyProfile>[] = [
@@ -57,10 +58,8 @@ const WeighingCompanyProfileFormPage: React.FC = () => {
       create={createWeighingCompanyProfile}
       update={updateWeighingCompanyProfile}
       deleteFn={deleteWeighingCompanyProfile}
-      listRoute={ROUTES.WeighingCompanyProfile_List}
-      // createPermission="Create_WeighingCompanyProfile"
-      updatePermission="Update_WeighingCompanyProfile"
-      // deletePermission="Delete_WeighingCompanyProfile"
+      listRoute={ROUTES.WeighingCompanyProfile_List} 
+    updatePermission={PERMISSIONS.UPDATE_WEIGHING_COMPANY_PROFILE} 
     />
   );
 };

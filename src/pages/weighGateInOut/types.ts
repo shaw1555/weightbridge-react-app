@@ -1,3 +1,5 @@
+import { GATE_STATUS, GATE_TRUCK_INFO } from "../../constants";
+
 export interface WeighGateInOut {
   transaction_id_f: number;
   transaction_no_f: string;
@@ -131,8 +133,8 @@ export const initialForm: WeighGateInOut = {
   lock_f: false,
   gate_charge_unitprice_f: 0,
 
-  gate_in_out_status_f: "",
-  gate_in_out_truck_info_f: "",
+  gate_in_out_status_f: GATE_STATUS.IN,
+  gate_in_out_truck_info_f: GATE_TRUCK_INFO.TRUCK_ONLY,
   gate_in_out_truck_dateTime_f: "",
   gate_in_out_truck_weighValue_f: 0,
 };
@@ -207,14 +209,4 @@ export interface ServiceCategoryMapping {
   category_id_f: number;
   category_f: string;
 }
-
-// ✅ Helper to display gender as text in UI
-export function getGenderText(gender?: boolean): string {
-  if (gender === undefined || gender === null) return "-";
-  return gender ? "Male" : "Female";
-}
-
-// ✅ Helper to convert text back to boolean (useful in forms)
-export function genderTextToBoolean(genderText: string): boolean {
-  return genderText.toLowerCase() === "male";
-}
+ 

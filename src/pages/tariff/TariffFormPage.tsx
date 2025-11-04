@@ -6,8 +6,9 @@ import {
   updateTariff,
   deleteTariff,
 } from "./service";
-import ROUTES from "../../routes";
+import ROUTES from "../../config/routes";
 import EntityForm, { type Field } from "../../components/EntityForm";
+import { PERMISSIONS } from "../../constants";
 
 const TariffFormPage: React.FC = () => {
   const fields: Field<Tariff>[] = [
@@ -22,7 +23,7 @@ const TariffFormPage: React.FC = () => {
       label: "Effective Date",
       type: "date",
       required: true,
-    },     
+    },
   ];
   return (
     <EntityForm<Tariff, "tariff_id_f">
@@ -34,9 +35,9 @@ const TariffFormPage: React.FC = () => {
       update={updateTariff}
       deleteFn={deleteTariff}
       listRoute={ROUTES.Tariff_List}
-      createPermission="Create_TariffSetup"
-      updatePermission="Update_TariffSetup"
-      deletePermission="Delete_TariffSetup"
+      createPermission={PERMISSIONS.CREATE_TARIFF_SETUP}
+      updatePermission={PERMISSIONS.UPDATE_TARIFF_SETUP}
+      deletePermission={PERMISSIONS.DELETE_TARIFF_SETUP}
     />
   );
 };

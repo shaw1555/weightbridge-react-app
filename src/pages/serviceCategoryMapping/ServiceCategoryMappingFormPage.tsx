@@ -8,8 +8,9 @@ import {
   updateServiceCategoryMapping,
   deleteServiceCategoryMapping,
 } from "./service";
-import ROUTES from "../../routes";
+import ROUTES from "../../config/routes";
 import EntityForm, { type Field } from "../../components/EntityForm";
+import { PERMISSIONS } from "../../constants";
 
 const ServiceCategoryMappingCategoryMappingFormPage: React.FC = () => {
   const [services, setServices] = useState<Service[]>([]);
@@ -71,9 +72,9 @@ const ServiceCategoryMappingCategoryMappingFormPage: React.FC = () => {
       update={updateServiceCategoryMapping}
       deleteFn={deleteServiceCategoryMapping}
       listRoute={ROUTES.ServiceCategoryMapping_List}
-      createPermission="Create_ServiceCategoryMapping"
-      updatePermission="Update_ServiceCategoryMapping"
-      deletePermission="Delete_ServiceCategoryMapping"
+      createPermission={PERMISSIONS.CREATE_SERVICE_CATEGORY_MAPPING}
+      updatePermission={PERMISSIONS.UPDATE_SERVICE_CATEGORY_MAPPING}
+      deletePermission={PERMISSIONS.DELETE_SERVICE_CATEGORY_MAPPING}
     />
   );
 };

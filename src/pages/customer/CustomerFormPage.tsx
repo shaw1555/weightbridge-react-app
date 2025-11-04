@@ -6,8 +6,9 @@ import {
   updateCustomer,
   deleteCustomer,
 } from "./service";
-import ROUTES from "../../routes";
+import ROUTES from "../../config/routes";
 import EntityForm, { type Field } from "../../components/EntityForm";
+import { PERMISSIONS } from "../../constants";
 
 const CustomerFormPage: React.FC = () => {
   const fields: Field<Customer>[] = [
@@ -48,9 +49,9 @@ const CustomerFormPage: React.FC = () => {
       update={updateCustomer}
       deleteFn={deleteCustomer}
       listRoute={ROUTES.Customer_List}
-      createPermission="Create_Customer"
-      updatePermission="Update_Customer"
-      deletePermission="Delete_Customer"
+      createPermission={PERMISSIONS.CREATE_CUSTOMER}
+      updatePermission={PERMISSIONS.UPDATE_CUSTOMER}
+      deletePermission={PERMISSIONS.DELETE_CUSTOMER}
     />
   );
 };

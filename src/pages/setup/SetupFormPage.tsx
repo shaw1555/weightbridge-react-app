@@ -7,8 +7,9 @@ import {
   updateSetup,
   deleteSetup,
 } from "./service";
-import ROUTES from "../../routes";
+import ROUTES from "../../config/routes";
 import EntityForm, { type Field } from "../../components/EntityForm";
+import { PERMISSIONS } from "../../constants";
 
 const SetupFormPage: React.FC = () => {
   const [CategoriesNames, setCategoriesNames] = useState<string[]>([]);
@@ -66,7 +67,7 @@ const SetupFormPage: React.FC = () => {
     {
       name: "is_default_f",
       label: "Default",
-      type: "checkbox", 
+      type: "checkbox",
     },
   ];
   return (
@@ -79,9 +80,9 @@ const SetupFormPage: React.FC = () => {
       update={updateSetup}
       deleteFn={deleteSetup}
       listRoute={ROUTES.Setup_List}
-      createPermission="Create_MasterSetup"
-      updatePermission="Update_MasterSetup"
-      deletePermission="Delete_MasterSetup"
+      createPermission={PERMISSIONS.CREATE_MASTER_SETUP}
+      updatePermission={PERMISSIONS.UPDATE_MASTER_SETUP}
+      deletePermission={PERMISSIONS.DELETE_MASTER_SETUP}
     />
   );
 };

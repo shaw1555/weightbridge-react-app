@@ -39,9 +39,12 @@ const DateInput: React.FC<DateInputProps> = ({
     if (!auto || !includeTime) return;
 
     const interval = setInterval(() => {
-      const now = new Date().toISOString().slice(0, 19);
-      setDate(now);
-      onChange?.(now);
+      const now = new Date();
+      const local = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+        .toISOString()
+        .slice(0, 19);
+      setDate(local);
+      onChange?.(local);
     }, 1000);
 
     return () => clearInterval(interval);

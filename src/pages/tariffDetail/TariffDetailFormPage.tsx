@@ -17,8 +17,9 @@ import {
   deleteTariffDetail,
 } from "./service";
 
-import ROUTES from "../../routes";
+import ROUTES from "../../config/routes";
 import EntityForm, { type Field } from "../../components/EntityForm";
+import { PERMISSIONS } from "../../constants";
 
 const TariffDetailFormPage: React.FC = () => {
   const [tariffs, setTariffs] = useState<Tariff[]>([]);
@@ -115,9 +116,10 @@ const TariffDetailFormPage: React.FC = () => {
       update={updateTariffDetail}
       deleteFn={deleteTariffDetail}
       listRoute={ROUTES.TariffDetail_List}
-      createPermission="Create_TariffDetail"
-      updatePermission="Update_TariffDetail"
-      deletePermission="Delete_TariffDetail"
+  createPermission={PERMISSIONS.CREATE_TARIFF_DETAIL}
+updatePermission={PERMISSIONS.UPDATE_TARIFF_DETAIL}
+deletePermission={PERMISSIONS.DELETE_TARIFF_DETAIL}
+
     />
   );
 };

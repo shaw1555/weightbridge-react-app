@@ -6,8 +6,9 @@ import {
   updateService,
   deleteService,
 } from "./service";
-import ROUTES from "../../routes";
+import ROUTES from "../../config/routes";
 import EntityForm, { type Field } from "../../components/EntityForm";
+import { PERMISSIONS } from "../../constants";
 
 const ServiceFormPage: React.FC = () => {
   const fields: Field<Service>[] = [
@@ -28,9 +29,9 @@ const ServiceFormPage: React.FC = () => {
       update={updateService}
       deleteFn={deleteService}
       listRoute={ROUTES.Service_List}
-      createPermission="Create_Service"
-      updatePermission="Update_Service"
-      deletePermission="Delete_Service"
+      createPermission={PERMISSIONS.CREATE_SERVICE}
+      updatePermission={PERMISSIONS.UPDATE_SERVICE}
+      deletePermission={PERMISSIONS.DELETE_SERVICE}
     />
   );
 };

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchSetups } from "./service"; // your API function
 import { type Setup } from "./types"; // your Product type
-import ROUTES from "../../routes";
+import ROUTES from "../../config/routes";
 import { EntityList, type Column } from "../../components/EntityList";
 
 const SetupListPage: React.FC = () => {

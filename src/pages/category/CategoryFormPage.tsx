@@ -6,8 +6,9 @@ import {
   updateCategory,
   deleteCategory,
 } from "./service";
-import ROUTES from "../../routes";
+import ROUTES from "../../config/routes";
 import EntityForm, { type Field } from "../../components/EntityForm";
+import { PERMISSIONS } from "../../constants";
 
 const CategoryFormPage: React.FC = () => {
   const fields: Field<Category>[] = [
@@ -28,9 +29,9 @@ const CategoryFormPage: React.FC = () => {
       update={updateCategory}
       deleteFn={deleteCategory}
       listRoute={ROUTES.Category_List}
-      createPermission="Create_Category"
-      updatePermission="Update_Category"
-      deletePermission="Delete_Category"
+      createPermission={PERMISSIONS.CREATE_CATEGORY}
+      updatePermission={PERMISSIONS.UPDATE_CATEGORY}
+      deletePermission={PERMISSIONS.DELETE_CATEGORY}
     />
   );
 };

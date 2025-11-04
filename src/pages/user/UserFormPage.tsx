@@ -1,8 +1,9 @@
 import React from "react";
 import { type User } from "./types";
 import { fetchUserById, createUser, updateUser, deleteUser } from "./service";
-import ROUTES from "../../routes";
+import ROUTES from "../../config/routes";
 import EntityForm, { type Field } from "../../components/EntityForm";
+import {PERMISSIONS} from "../../constants";
 
 const UserFormPage: React.FC = () => {
   const fields: Field<User>[] = [
@@ -35,9 +36,10 @@ const UserFormPage: React.FC = () => {
       update={updateUser}
       deleteFn={deleteUser}
       listRoute={ROUTES.User_List}
-      createPermission="Create_User"
-      updatePermission="Update_User"
-      deletePermission="Delete_User"
+   createPermission={PERMISSIONS.CREATE_USER}
+updatePermission={PERMISSIONS.UPDATE_USER}
+deletePermission={PERMISSIONS.DELETE_USER}
+
     />
   );
 };

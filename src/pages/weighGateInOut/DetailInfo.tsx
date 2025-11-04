@@ -5,7 +5,7 @@ import TextInput from "../../components/TextInput";
 import Button from "../../components/Button";
 import Checkbox from "../../components/Checkbox";
 import RadioGroup from "../../components/RadioGroup";
-
+import { SETUP_CATEGORIES } from "../../constants";
 import type {
   Setup,
   WeighGateInOut,
@@ -52,9 +52,15 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
     const loadData = async () => {
       try {
         const setups = await fetchSetups();
-        setWeightUOMs(setups.filter((x) => x.category_f === "WeightUOM"));
-        setGateUOMs(setups.filter((x) => x.category_f === "GateUOM"));
-        setPaymentTypes(setups.filter((x) => x.category_f === "PaymentType"));
+        setWeightUOMs(
+          setups.filter((x) => x.category_f === SETUP_CATEGORIES.WEIGHT_UOM)
+        );
+        setGateUOMs(
+          setups.filter((x) => x.category_f === SETUP_CATEGORIES.GATE_UOM)
+        );
+        setPaymentTypes(
+          setups.filter((x) => x.category_f === SETUP_CATEGORIES.PAYMENT_TYPE)
+        );
 
         const gateInOutInfo = await fetchGateInOutInfos();
         setGateInOutInfos(gateInOutInfo);
@@ -107,13 +113,13 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
 
   const handleTruckEmptyWeighChange = (val: string | null) => {
     handleChange("truck_weight_f", val);
-
+    handleChange("gate_in_out_truck_weighValue_f", val);
     updateNetWeighChange(weighGateInOutData.truck_cargo_weight_f, Number(val));
   };
 
   const handleTruckPluseCargoWeighChange = (val: string | null) => {
     handleChange("truck_cargo_weight_f", val);
-
+    handleChange("gate_in_out_truck_weighValue_f", val);
     updateNetWeighChange(Number(val), weighGateInOutData.truck_weight_f);
   };
 
@@ -248,7 +254,7 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
             name="info"
             options={gateInOutInfos}
             value={weighGateInOutData.gate_in_out_truck_info_f}
-            onChange={(val) =>  handleChange("gate_in_out_truck_info_f", val)}
+            onChange={(val) => handleChange("gate_in_out_truck_info_f", val)}
             direction="horizontal"
             layout="grid"
             columns={4} // 4 columns → 4x1 layout
@@ -271,9 +277,10 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
                 label="Weight Value"
                 type="number"
                 value={weighGateInOutData.gate_in_out_truck_weighValue_f}
-                onChange={(val) =>
-                  handleChange("gate_in_out_truck_weighValue_f", val)
-                }
+                // onChange={(val) =>
+                //   handleChange("gate_in_out_truck_weighValue_f", val)
+                // }
+                readOnly
               />
             </div>
           </div>

@@ -6,8 +6,9 @@ import {
   updateTruckType,
   deleteTruckType,
 } from "./service";
-import ROUTES from "../../routes";
+import ROUTES from "../../config/routes";
 import EntityForm, { type Field } from "../../components/EntityForm";
+import {PERMISSIONS} from "../../constants";
 
 const TruckTypeFormPage: React.FC = () => {
   const fields: Field<TruckType>[] = [
@@ -30,9 +31,10 @@ const TruckTypeFormPage: React.FC = () => {
       update={updateTruckType}
       deleteFn={deleteTruckType}
       listRoute={ROUTES.TruckType_List}
-      createPermission="Create_TruckType"
-      updatePermission="Update_TruckType"
-      deletePermission="Delete_TruckType"
+  createPermission={PERMISSIONS.CREATE_TRUCK_TYPE}
+updatePermission={PERMISSIONS.UPDATE_TRUCK_TYPE}
+deletePermission={PERMISSIONS.DELETE_TRUCK_TYPE}
+
     />
   );
 };

@@ -36,7 +36,7 @@ import WeighingCompanyProfileListPage from "./pages/weighingCompanyProfile/Weigh
 import WeighingCompanyProfileFormPage from "./pages/weighingCompanyProfile/WeighingCompanyProfileFormPage";
 import WeighGateInOutListPage from "./pages/weighGateInOut/WeighGateInOutListPage";
 import WeighGateInOutFormPage from "./pages/weighGateInOut/WeighGateInOutFormPage";
-import ROUTES from "./routes";
+import ROUTES from "./config/routes";
 import Header from "./components/Header";
 import PrivateRoute from "./components/PrivateRoute";
 import { NAV_LINKS } from "./config/navLinks";

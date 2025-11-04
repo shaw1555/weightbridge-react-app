@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import axios from "axios";
+import { GATE_STATUS, SETUP_CATEGORIES , STORAGE_KEYS} from "../../constants";
 import HeaderInfo from "./HeaderInfo";
 import DetailInfo from "./DetailInfo";
 import { ArrowLeft } from "lucide-react";
 import Button from "../../components/Button";
-import type { ActiveTariff, WeighGateInOut } from "./types";
+import type { ActiveTariff, Setup, WeighGateInOut } from "./types";
 import { initialForm } from "./types"; // this is data (not type)
 import {
   fetchActiveTariff,
@@ -23,43 +23,80 @@ export default function WeighGateInOutFormPage() {
   const [weighGateInOutData, setWeighGateInOutData] =
     useState<WeighGateInOut>(initialForm);
   const [activeTariff, setActiveTariff] = useState<ActiveTariff>();
+  const [setups, setSetup] = useState<Setup[]>();
   const [commericalTaxPercentage, setCommericalTaxPercentage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   //it must be delcar before useEffect , due to use this funtion inside of useEffect //
-  const getInitialWeighGateInOutData = (): WeighGateInOut => {
-    const today = new Date().toISOString().split("T")[0]; // e.g. "2025-10-28"
+  const getInitialWeighGateInOutData = (
+    activeTariff: ActiveTariff,
+    setups: Setup[]
+  ): WeighGateInOut => {
+    const defaultDept = setups.find(
+      (x) => x.category_f === SETUP_CATEGORIES.JOB_DEPARTMENT && x.is_default_f
+    );
+    const defaultWeightUOM = setups.find(
+      (x) => x.category_f === SETUP_CATEGORIES.WEIGHT_UOM && x.is_default_f
+    );
+    const defaultGateUOM = setups.find(
+      (x) => x.category_f === SETUP_CATEGORIES.GATE_UOM && x.is_default_f
+    );
+    const defaultPaymentType = setups.find(
+      (x) => x.category_f === SETUP_CATEGORIES.PAYMENT_TYPE && x.is_default_f
+    );
+
+    const defaultLoc = localStorage.getItem(STORAGE_KEYS.DEFAULT_LOCATION);
+
+    const today = new Date().toISOString().split("T")[0]; // "YYYY-MM-DD"
+
     return {
       ...initialForm,
-      tariff_id_f: activeTariff?.tariff_t.tariff_id_f ?? 0,
-      tariff_no_f: activeTariff?.tariff_t.tariff_no_f?? "",
-      date_f: today, // ✅ added properly
+      tariff_id_f: activeTariff?.tariff_t?.tariff_id_f ?? 0,
+      tariff_no_f: activeTariff?.tariff_t?.tariff_no_f ?? "",
+      date_f: today,
+      job_department_f: defaultDept?.description_f ?? "",
+      weight_charge_uom_f: defaultWeightUOM?.description_f ?? "",
+      gate_charge_uom_f: defaultGateUOM?.description_f ?? "",
+      payment_type_f: defaultPaymentType?.description_f ?? "",
+      location_f: defaultLoc ?? "",
     };
   };
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const activeTariff = await fetchActiveTariff();
-        setActiveTariff(activeTariff);
-        activeTariff?.tariff_t.tariff_no_f
+        // ✅ Fetch once
+        const [activeTariffData, setups] = await Promise.all([
+          fetchActiveTariff(),
+          fetchSetups(),
+        ]);
 
-        const setups = await fetchSetups();
+        setActiveTariff(activeTariffData);
+        setSetup(setups);
+
+        // ✅ Extract tax once
         const tax = setups.find((x) => x.category_f === "CommericalTax");
         setCommericalTaxPercentage(Number(tax?.description_f ?? 0));
 
         if (!id || id === "new" || id === "0") {
-          // 🆕 new record
-          setWeighGateInOutData(getInitialWeighGateInOutData());          
+          // 🆕 New record
+          const initialData = getInitialWeighGateInOutData(
+            activeTariffData,
+            setups
+          );
+          setWeighGateInOutData(initialData);
         } else {
-          // ✏️ existing record
+          // ✏️ Existing record
           const existingRecord = await fetchWeighGateInOutById(Number(id));
+          if (!existingRecord.date_time_in_f)
+            existingRecord.gate_in_out_status_f = GATE_STATUS.IN;
+          else existingRecord.gate_in_out_status_f = GATE_STATUS.OUT;
           setWeighGateInOutData(existingRecord);
         }
       } catch (err) {
-        setError("Failed to load data");
         console.error(err);
+        setError("Failed to load data");
       } finally {
         setLoading(false);
       }
@@ -72,7 +109,8 @@ export default function WeighGateInOutFormPage() {
   if (error) return <p className="text-red-500">{error}</p>;
 
   const clearData = () => {
-    setWeighGateInOutData(getInitialWeighGateInOutData());
+    if (!activeTariff || !setups) return;
+    setWeighGateInOutData(getInitialWeighGateInOutData(activeTariff, setups));
   };
 
   const duplicateData = () => {
@@ -89,7 +127,6 @@ export default function WeighGateInOutFormPage() {
       truck_cargo_weight_f: initialForm.truck_cargo_weight_f,
       truck_weight_f: initialForm.truck_weight_f,
       net_weight_f: initialForm.net_weight_f,
-      weight_charge_uom_f: initialForm.weight_charge_uom_f,
       gate_in_out_truck_weighValue_f:
         initialForm.gate_in_out_truck_weighValue_f,
     }));
@@ -107,8 +144,64 @@ export default function WeighGateInOutFormPage() {
     }
   };
 
+  const validation = () => {
+    if (!weighGateInOutData.customer_id_f) {
+      toast.warn("Customer Name is required.");
+      return false;
+    }
+
+    if (!weighGateInOutData.location_f) {
+      toast.warn("Location is required.");
+      return false;
+    }
+
+    if (!weighGateInOutData.job_department_f) {
+      toast.warn("Job Department is required.");
+      return false;
+    }
+
+    if (!weighGateInOutData.truck_arrange_by_f) {
+      toast.warn("Arrange By is required.");
+      return false;
+    }
+
+    if (!weighGateInOutData.service_id_f) {
+      toast.warn("Service is required.");
+      return false;
+    }
+
+    if (!weighGateInOutData.category_id_f) {
+      toast.warn("Category is required.");
+      return false;
+    }
+
+    if (!weighGateInOutData.product_f) {
+      toast.warn("Product is required.");
+      return false;
+    }
+
+    if (!weighGateInOutData.truck_no_f?.trim()) {
+      toast.warn("Truck No is required.");
+      return false;
+    }
+
+    if (!weighGateInOutData.truck_type_id_f) {
+      toast.warn("Truck Type is required.");
+      return false;
+    }
+
+    if (!weighGateInOutData.container_size_type_f) {
+      toast.warn("Container Type is required.");
+      return false;
+    }
+
+    return true;
+  };
+
   const saveHeaderInfo = async () => {
     try {
+      if (!validation()) return;
+
       if (weighGateInOutData.transaction_id_f === 0) {
         // 👉 Create new record
         const res = await createWeighGateInOut(weighGateInOutData);
@@ -142,6 +235,37 @@ export default function WeighGateInOutFormPage() {
         weighGateInOutData.transaction_id_f,
         weighGateInOutData
       );
+
+      const {
+        gate_in_out_status_f,
+        gate_in_out_truck_dateTime_f,
+        date_time_in_f,
+        date_time_out_f,
+      } = weighGateInOutData;
+
+      let updatedFields: Partial<WeighGateInOut> = {};
+
+      if (gate_in_out_status_f === GATE_STATUS.IN) {
+        updatedFields = {
+          date_time_in_f: gate_in_out_truck_dateTime_f,
+          gate_in_out_status_f: date_time_out_f
+            ? GATE_STATUS.IN
+            : GATE_STATUS.OUT, // toggle if out time missing
+        };
+      } else if (gate_in_out_status_f === GATE_STATUS.OUT) {
+        updatedFields = {
+          date_time_out_f: gate_in_out_truck_dateTime_f,
+          gate_in_out_status_f: date_time_in_f
+            ? GATE_STATUS.OUT
+            : GATE_STATUS.IN, // toggle if in time missing
+        };
+      }
+
+      // ✅ Only update once, avoids duplicated setState calls
+      setWeighGateInOutData((prev) => ({
+        ...prev,
+        ...updatedFields,
+      }));
 
       toast.success("Successfully updated!");
     } catch (error: any) {

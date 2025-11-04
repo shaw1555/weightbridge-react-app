@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import { Combobox } from "@headlessui/react";
 import { ChevronUpDownIcon } from "@heroicons/react/20/solid";
+
 interface SearchableDropdownProps<T extends Record<string, any>> {
-  label?: string; // make optional
+  label?: string;
   options: T[];
-  value: string | number | null; // primitive value (id or string)
-  onChange: (value: string | number | null) => void; // return primitive
+  value: string | number | null;
+  onChange: (value: string | number | null) => void;
   displayKey: keyof T;
   valueKey: keyof T;
   placeholder?: string;
+  required?: boolean;
+  errorMessage?: string;
 }
 
 function SearchableDropdown<T extends Record<string, any>>({
@@ -19,10 +22,12 @@ function SearchableDropdown<T extends Record<string, any>>({
   displayKey,
   valueKey,
   placeholder = "Select...",
+  required = false,
+  errorMessage = "This field is required",
 }: SearchableDropdownProps<T>) {
   const [query, setQuery] = useState("");
+  const [touched, setTouched] = useState(false);
 
-  // filter options based on search query
   const filteredOptions =
     query === ""
       ? options
@@ -32,28 +37,38 @@ function SearchableDropdown<T extends Record<string, any>>({
             .includes(query.toLowerCase())
         );
 
-  // map primitive value back to object for display
   const selectedOption = options.find((o) => o[valueKey] === value) || null;
+  const showError = required && touched && !value;
 
   return (
     <div className="w-full">
       {label && (
-        <label className="block text-sm font-medium text-gray-700">{label}</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          {label} {required && <span className="text-red-500">*</span>}
+        </label>
       )}
+
       <Combobox
         value={selectedOption}
-        onChange={(option: T | null) =>
-          onChange(option ? option[valueKey] : null)
-        }
+        onChange={(option: T | null) => {
+          onChange(option ? option[valueKey] : null);
+          setTouched(true);
+        }}
       >
         <div className="relative mt-1">
           <Combobox.Input
-            className="w-full mt-1 rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 px-3 py-2 text-sm"
+            className={`w-full mt-1 rounded-lg border ${
+              showError ? "border-red-500" : "border-gray-300"
+            } shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 px-3 py-2 text-sm`}
             displayValue={(val: T | null) =>
               val ? String(val[displayKey]) : ""
             }
-            onChange={(event) => setQuery(event.target.value)}
+            onChange={(event) => {
+              setQuery(event.target.value);
+              setTouched(true);
+            }}
             placeholder={placeholder}
+            onBlur={() => setTouched(true)}
           />
           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
             <ChevronUpDownIcon className="h-5 w-5 text-gray-400" />
@@ -80,6 +95,10 @@ function SearchableDropdown<T extends Record<string, any>>({
           </Combobox.Options>
         </div>
       </Combobox>
+
+      {showError && (
+        <p className="mt-1 text-xs text-red-600">{errorMessage}</p>
+      )}
     </div>
   );
 }

@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import SearchableDropdown from "../../components/SearchableDropdown";
 import FreeTextDropdown from "../../components/FreeTextDropdown";
 import DateInput from "../../components/DateInput";
 import TextInput from "../../components/TextInput";
 import TextareaInput from "../../components/TextareaInput";
 import Button from "../../components/Button";
+import { SETUP_CATEGORIES } from "../../constants";
 
 import type {
   Customer,
@@ -97,18 +98,30 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
         setTruckTypes(truckTypes);
 
         const setups = await fetchSetups();
-        setLocations(setups.filter((x) => x.category_f === "Location"));
+        setLocations(
+          setups.filter((x) => x.category_f === SETUP_CATEGORIES.LOCATION)
+        );
         setJobDepartments(
-          setups.filter((x) => x.category_f === "JobDeparment")
+          setups.filter((x) => x.category_f === SETUP_CATEGORIES.JOB_DEPARTMENT)
         );
-        setArrangeBys(setups.filter((x) => x.category_f === "ArrangeBy"));
-        setAcceptedBys(setups.filter((x) => x.category_f === "AcceptedBy"));
-        setApprovedBys(setups.filter((x) => x.category_f === "ApprovedBy"));
-        setProducts(setups.filter((x) => x.category_f === "Product"));
+        setArrangeBys(
+          setups.filter((x) => x.category_f === SETUP_CATEGORIES.ARRANGE_BY)
+        );
+        setAcceptedBys(
+          setups.filter((x) => x.category_f === SETUP_CATEGORIES.ACCEPTED_BY)
+        );
+        setApprovedBys(
+          setups.filter((x) => x.category_f === SETUP_CATEGORIES.APPROVED_BY)
+        );
+        setProducts(
+          setups.filter((x) => x.category_f === SETUP_CATEGORIES.PRODUCT)
+        );
         setContainerSizeTypes(
-          setups.filter((x) => x.category_f === "ContainerType")
+          setups.filter((x) => x.category_f === SETUP_CATEGORIES.CONTAINER_TYPE)
         );
-        setTruckNos(setups.filter((x) => x.category_f === "TruckNo"));
+        setTruckNos(
+          setups.filter((x) => x.category_f === SETUP_CATEGORIES.TRUCK_NO)
+        );
 
         // ✅ await mapping fetch
         const serviceCategoryMappings = await fetchServiceCategoryMappings();
@@ -253,6 +266,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
           displayKey="truck_type_f"
           valueKey="truck_type_id_f"
           placeholder="Select a truck type"
+          required
         />
 
         <TextInput
@@ -283,6 +297,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
           displayKey="description_f"
           valueKey="description_f"
           placeholder="Select arrangement"
+          required
         />
 
         <FreeTextDropdown
@@ -293,6 +308,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
           displayKey="description_f"
           valueKey="description_f"
           placeholder="Select or type truck number"
+          required
         />
 
         <TextInput
@@ -310,6 +326,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
           displayKey="customer_name_f"
           valueKey="customer_id_f"
           placeholder="Select a customer"
+          required
         />
 
         <SearchableDropdown
@@ -320,6 +337,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
           displayKey="service_f"
           valueKey="service_id_f"
           placeholder="Select a service"
+          required
         />
 
         <SearchableDropdown
@@ -332,6 +350,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
           //send to api wit description_f directly //
           valueKey="description_f" // cannot apply with setup_id_f
           placeholder="Select a container type"
+          required
         />
 
         <SearchableDropdown
@@ -353,6 +372,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
           displayKey="description_f"
           valueKey="description_f"
           placeholder="Select a location"
+          required
         />
 
         <SearchableDropdown
@@ -363,6 +383,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
           displayKey="category_f"
           valueKey="category_id_f"
           placeholder="Select a category"
+          required
         />
 
         <TextInput
@@ -391,6 +412,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
           displayKey="description_f"
           valueKey="description_f"
           placeholder="Select a job department"
+          required
         />
 
         <SearchableDropdown
@@ -401,6 +423,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
           displayKey="description_f"
           valueKey="description_f"
           placeholder="Select a product"
+          required
         />
 
         <TextInput

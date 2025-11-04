@@ -10,6 +10,8 @@ interface FreeTextDropdownProps<T> {
   displayKey: keyof T;
   valueKey: keyof T;
   placeholder?: string;
+  required?: boolean;
+  errorMessage?: string;
 }
 
 export default function FreeTextDropdown<T extends Record<string, any>>({
@@ -20,8 +22,11 @@ export default function FreeTextDropdown<T extends Record<string, any>>({
   displayKey,
   valueKey,
   placeholder = "Select...",
+  required = false,
+  errorMessage = "This field is required",
 }: FreeTextDropdownProps<T>) {
   const [inputValue, setInputValue] = useState("");
+  const [touched, setTouched] = useState(false);
 
   useEffect(() => {
     setInputValue(value ?? "");
@@ -36,23 +41,36 @@ export default function FreeTextDropdown<T extends Record<string, any>>({
             .includes(inputValue.toLowerCase())
         );
 
+  const showError = required && touched && !inputValue.trim();
+
   return (
     <div className="w-full">
-      <label className="block text-sm font-medium text-gray-700">{label}</label>
-      <Combobox value={inputValue} onChange={(val: string | null) => {
-        const newVal = val ?? "";
-        setInputValue(newVal);
-        onChange(newVal);
-      }}>
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        {label} {required && <span className="text-red-500">*</span>}
+      </label>
+
+      <Combobox
+        value={inputValue}
+        onChange={(val: string | null) => {
+          const newVal = val ?? "";
+          setInputValue(newVal);
+          setTouched(true);
+          onChange(newVal);
+        }}
+      >
         <div className="relative mt-1">
           <Combobox.Input
-            className="w-full mt-1 rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 px-3 py-2 text-sm bg-yellow-50"
+            className={`w-full mt-1 rounded-lg border ${
+              showError ? "border-red-500" : "border-gray-300"
+            } shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 px-3 py-2 text-sm bg-yellow-50`}
             displayValue={() => inputValue}
             onChange={(e) => {
               const val = e.target.value;
               setInputValue(val);
-              onChange(val); // call onChange on every input
+              onChange(val);
+              setTouched(true);
             }}
+            onBlur={() => setTouched(true)}
             placeholder={placeholder}
           />
           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
@@ -78,6 +96,10 @@ export default function FreeTextDropdown<T extends Record<string, any>>({
           )}
         </div>
       </Combobox>
+
+      {showError && (
+        <p className="mt-1 text-xs text-red-600">{errorMessage}</p>
+      )}
     </div>
   );
 }

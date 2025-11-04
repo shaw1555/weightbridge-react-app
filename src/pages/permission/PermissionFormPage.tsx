@@ -9,8 +9,9 @@ import {
   deletePermission,
 } from "./service";
 
-import ROUTES from "../../routes";
+import ROUTES from "../../config/routes";
 import EntityForm, { type Field } from "../../components/EntityForm";
+import { PERMISSIONS } from "../../constants";
 
 const PermissionFormPage: React.FC = () => {
   const [permissionFormNames, setPermissionFormNames] = useState<string[]>([]);
@@ -92,9 +93,9 @@ const PermissionFormPage: React.FC = () => {
       update={updatePermission}
       deleteFn={deletePermission}
       listRoute={ROUTES.Permission_List}
-      createPermission="Create_Permission"
-      updatePermission="Update_Permission"
-      deletePermission="Delete_Permission"
+      createPermission={PERMISSIONS.CREATE_PERMISSION}
+      updatePermission={PERMISSIONS.UPDATE_PERMISSION}
+      deletePermission={PERMISSIONS.DELETE_PERMISSION}
     />
   );
 };
