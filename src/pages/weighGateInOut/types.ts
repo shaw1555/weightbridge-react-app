@@ -4,6 +4,7 @@ export interface WeighGateInOut {
 
   tariff_detail_id_f: number;
   tariff_id_f: number;
+  tariff_no_f: string;
   customer_id_f: number;
   truck_no_f: string;
   product_f: string;
@@ -61,10 +62,10 @@ export interface WeighGateInOut {
   gate_charge_unitprice_f: number;
 
   //for entry, UI field only //
-  gateInOutStatus: string;
-  gateInOutTruckInfo: string;
-  gateInOutTruckDateTime: string;
-  gateInOutTruckWeighValue: number;
+  gate_in_out_status_f: string;
+  gate_in_out_truck_info_f: string;
+  gate_in_out_truck_dateTime_f: string;
+  gate_in_out_truck_weighValue_f: number;
 }
 
 export const initialForm: WeighGateInOut = {
@@ -73,6 +74,7 @@ export const initialForm: WeighGateInOut = {
 
   tariff_detail_id_f: 0,
   tariff_id_f: 0,
+  tariff_no_f: "",
   customer_id_f: 0,
   truck_no_f: "",
   product_f: "",
@@ -129,10 +131,10 @@ export const initialForm: WeighGateInOut = {
   lock_f: false,
   gate_charge_unitprice_f: 0,
 
-  gateInOutStatus: "",
-  gateInOutTruckInfo: "",
-  gateInOutTruckDateTime: "",
-  gateInOutTruckWeighValue: 0,
+  gate_in_out_status_f: "",
+  gate_in_out_truck_info_f: "",
+  gate_in_out_truck_dateTime_f: "",
+  gate_in_out_truck_weighValue_f: 0,
 };
 
 export interface ActiveTariff {
@@ -198,116 +200,13 @@ export interface TruckType {
   truck_type_f: string;
 }
 
-// // types.ts (optional)
-// export interface DetailForm {
-//   weight_charge_uom_f: string | null;
-//   no_of_container_f: number;
-//   weight_charge_unitprice_f: number;
-//   weight_charge_amount_f: number;
-//   is_weight_foc_f: boolean;
-//   date_time_in_f: string;
-//   date_time_out_f: string;
-//   truck_cargo_weight_f: number;
-//   truck_weight_f: number;
-//   net_weight_f: number;
-//   gate_charge_uom_f: string | null;
-//   payment_type_f: string | null;
-//   gate_charge_amount_f: number;
-//   is_gate_foc_f: boolean;
-//   status: string;
-//   info: string;
-//   dateTime: string;
-//   weightValue: number;
-//   sub_total_amount_f: number;
-//   commerical_tax_amount_f: number;
-//   grand_total_amount_f: number;
-// }
-
-// export const initialDetailForm: DetailForm = {
-//   weight_charge_uom_f: null,
-//   no_of_container_f: 0,
-//   weight_charge_unitprice_f: 0,
-//   weight_charge_amount_f: 0,
-//   is_weight_foc_f: false,
-//   date_time_in_f: "",
-//   date_time_out_f: "",
-//   truck_cargo_weight_f: 0,
-//   truck_weight_f: 0,
-//   net_weight_f: 0,
-//   gate_charge_uom_f: null,
-//   payment_type_f: null,
-//   gate_charge_amount_f: 0,
-//   is_gate_foc_f: false,
-//   status: "",
-//   info: "",
-//   dateTime: "",
-//   weightValue: 0,
-//   sub_total_amount_f: 0,
-//   commerical_tax_amount_f: 0,
-//   grand_total_amount_f: 0,
-// };
-
-// export interface HeaderForm {
-//   transaction_id_f: number;
-
-//   transaction_no_f: string;
-//   tariff_detail_id_f: number;
-//   tariff_id_f: number;
-//   customer_id_f: number | null;
-//   truck_no_f: string;
-//  product_f: string | null;
-//   date_f: string;
-//   vessel_f: string;
-//   voy_f: string;
-//   container_size_type_f: string | null;
-//   service_id_f: number | null;
-//   service_f:string;
-//   category_id_f: number | null;
-//   category_f: string;
-//   truck_type_id_f: number | null;
-// truck_type_f: string;
-
-//   location_f: string | null;
-//   job_department_f: string | null;
-//   remark_f: string;
-//   truck_arrange_by_f: string | null;
-
-//   container_no_f: string;
-//   bl_no_f: string;
-
-//   accepted_by_f: string | null;
-//   approved_by_f: string | null;
-//   received_by_f: string;
-// }
-
-// export const initialHeaderForm: HeaderForm = {
-//   transaction_id_f: 0,
-//   date_f: "",
-//   transaction_no_f: "Auto",
-//   tariff_detail_id_f: 0,
-//   tariff_id_f:0,
-//   customer_id_f: null as number | null,
-//   location_f: null as string | null,
-//   job_department_f: null as string | null,
-//   remark_f: "",
-//   truck_arrange_by_f: null as string | null,
-//   service_id_f: null as number | null,
-//   service_f:"",
-//   category_id_f: null as number | null,
-//   category_f:"",
-//   product_f: null as string | null,
-//   truck_type_id_f: null as number | null,
-//   truck_type_f:"",
-//   truck_no_f: "", // FreeTextDropdown can store string
-//   container_size_type_f: null as string | null,
-//   container_no_f: "",
-//   bl_no_f: "",
-//   vessel_f: "",
-//   voy_f: "",
-//   accepted_by_f: null as string | null,
-//   approved_by_f: null as string | null,
-//   received_by_f: "",
-// };
+export interface ServiceCategoryMapping {
+  service_category_mapping_id_f: number;
+  service_id_f: number;
+  service_f: string;
+  category_id_f: number;
+  category_f: string;
+}
 
 // ✅ Helper to display gender as text in UI
 export function getGenderText(gender?: boolean): string {

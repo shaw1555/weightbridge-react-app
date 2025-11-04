@@ -16,6 +16,8 @@ import CategoryListPage from "./pages/category/CategoryListPage";
 import CategoryFormPage from "./pages/category/CategoryFormPage";
 import ServiceListPage from "./pages/service/ServiceListPage";
 import ServiceFormPage from "./pages/service/ServiceFormPage";
+import ServiceCategoryMappingListPage from "./pages/serviceCategoryMapping/ServiceCategoryMappingListPage";
+import ServiceCategoryMappingFormPage from "./pages/serviceCategoryMapping/ServiceCategoryMappingFormPage";
 import TruckTypeListPage from "./pages/truckType/TruckTypeListPage";
 import TruckTypeFormPage from "./pages/truckType/TruckTypeFormPage";
 import TariffListPage from "./pages/tariff/TariffListPage";
@@ -99,6 +101,24 @@ const AppContent: React.FC = () => {
           element={
             <PrivateRoute>
               <CategoryFormPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path={ROUTES.ServiceCategoryMapping_List}
+          element={
+            <PrivateRoute>
+              <ServiceCategoryMappingListPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/serviceCategoryMapping/:id"
+          element={
+            <PrivateRoute>
+              <ServiceCategoryMappingFormPage />
             </PrivateRoute>
           }
         />

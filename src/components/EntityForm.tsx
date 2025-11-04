@@ -132,8 +132,7 @@ function EntityForm<T extends object, K extends keyof T>({
       }
       navigate(listRoute, { replace: true });
     } catch (err) {
-      console.error(err);
-      alert("Error saving entity");
+      console.error(err); 
     }
   };
 

@@ -129,7 +129,7 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
             value={weighGateInOutData.weight_charge_uom_f}
             onChange={(val) => handleChange("weight_charge_uom_f", val)}
             displayKey="description_f"
-            valueKey="setup_id_f"
+            valueKey="description_f"
             placeholder="Select a UOM"
           />
           <TextInput
@@ -161,13 +161,13 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
         <div className="border rounded-lg p-4 space-y-4">
           <TextInput
             label="Date & Time (In)"
-            type="number"
+            type="text"
             value={weighGateInOutData.date_time_in_f}
             readOnly
           />
           <TextInput
             label="Date & Time (Out)"
-            type="number"
+            type="text"
             value={weighGateInOutData.date_time_out_f}
             readOnly
           />
@@ -207,7 +207,7 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
             value={weighGateInOutData.gate_charge_uom_f}
             onChange={(val) => handleChange("gate_charge_uom_f", val)}
             displayKey="description_f"
-            valueKey="setup_id_f"
+            valueKey="description_f"
             placeholder="Select a UOM"
           />
           <SearchableDropdown
@@ -216,7 +216,7 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
             value={weighGateInOutData.payment_type_f}
             onChange={(val) => handleChange("payment_type_f", val)}
             displayKey="description_f"
-            valueKey="setup_id_f"
+            valueKey="description_f"
             placeholder="Select a Payment Type"
           />
           <TextInput
@@ -236,8 +236,8 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
             label="Status"
             name="status"
             options={gateInOutStatuss}
-            value={weighGateInOutData.gateInOutStatus}
-            onChange={(val) => handleChange("gateInOutStatus", val)}
+            value={weighGateInOutData.gate_in_out_status_f}
+            onChange={(val) => handleChange("gate_in_out_status_f", val)}
             direction="horizontal"
             layout="grid"
           />
@@ -247,8 +247,8 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
             label="Info"
             name="info"
             options={gateInOutInfos}
-            value={weighGateInOutData.gateInOutTruckInfo}
-            onChange={(val) => handleChange("gateInOutTruckInfo", val)}
+            value={weighGateInOutData.gate_in_out_truck_info_f}
+            onChange={(val) =>  handleChange("gate_in_out_truck_info_f", val)}
             direction="horizontal"
             layout="grid"
             columns={4} // 4 columns → 4x1 layout
@@ -258,9 +258,9 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
             <div className="col-span-5">
               <DateInput
                 label="Date Time"
-                value={weighGateInOutData.gateInOutTruckDateTime}
+                value={weighGateInOutData.gate_in_out_truck_dateTime_f}
                 onChange={(date) =>
-                  handleChange("gateInOutTruckDateTime", date)
+                  handleChange("gate_in_out_truck_dateTime_f", date)
                 }
                 auto={true}
                 includeTime
@@ -270,9 +270,9 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
               <TextInput
                 label="Weight Value"
                 type="number"
-                value={weighGateInOutData.gateInOutTruckWeighValue}
+                value={weighGateInOutData.gate_in_out_truck_weighValue_f}
                 onChange={(val) =>
-                  handleChange("gateInOutTruckWeighValue", val)
+                  handleChange("gate_in_out_truck_weighValue_f", val)
                 }
               />
             </div>

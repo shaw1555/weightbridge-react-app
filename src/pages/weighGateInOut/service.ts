@@ -8,6 +8,7 @@ import type {
   TruckType,
   Category,
   Service,
+  ServiceCategoryMapping,
 } from "./types";
 import apiClient from "../../services/apiClient";
 // weighGateInOutApi.ts
@@ -25,6 +26,22 @@ const basePathCategory = "/Category";
 const basePathService = "/Service";
 
 const basePathTariff = "/Tariff";
+
+const basePathServiceCategoryMapping = "/ServiceCategoryMapping";
+
+export async function fetchServiceCategoryMappings(): Promise<
+  ServiceCategoryMapping[]
+> {
+  try {
+    const response = await apiClient.get<ServiceCategoryMapping[]>(
+      basePathServiceCategoryMapping
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch serviceCategoryMappings:", error);
+    throw error;
+  }
+}
 
 export async function fetchGateInOutInfos(): Promise<GateInOutInfo[]> {
   try {
@@ -161,6 +178,22 @@ export async function updateWeighGateInOut(
     return response.data;
   } catch (error) {
     console.error(`Failed to update weighGateInOut with id ${id}:`, error);
+    throw error;
+  }
+}
+
+export async function updateWeighDetailGateInOut(
+  id: string | number,
+  payload: WeighGateInOut
+): Promise<WeighGateInOut> {
+  try {
+    const response = await apiClient.put<WeighGateInOut>(
+      `${basePath}/UpdateWeightDetail${id}`,
+      payload
+    );
+    return response.data;
+  } catch (error) {
+    console.error(`Failed to update WeighDetailGateInOut with id ${id}:`, error);
     throw error;
   }
 }

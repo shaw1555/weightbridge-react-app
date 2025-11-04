@@ -31,8 +31,8 @@ const TariffDetailListPage: React.FC = () => {
 
   const columns: Column<TariffDetail>[] = [
     { key: "tariff_no_f", label: "Tariff No" },
-    { key: "category_f", label: "Ctegory" },
     { key: "service_f", label: "Service" },
+    { key: "category_f", label: "Ctegory" },
     { key: "truck_type_f", label: "Truck Type" },
     { key: "unit_price_f", label: "Unit Price", type: "number" },
     { key: "log_by_f", label: "Log By" },

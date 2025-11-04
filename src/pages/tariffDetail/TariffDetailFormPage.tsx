@@ -68,16 +68,6 @@ const TariffDetailFormPage: React.FC = () => {
       })),
     },
     {
-      name: "category_id_f",
-      label: "Category",
-      type: "select",
-      required: true,
-      options: categories.map((ctl) => ({
-        label: ctl.category_f,
-        value: ctl.category_id_f,
-      })),
-    },
-    {
       name: "service_id_f",
       label: "Service",
       type: "select",
@@ -87,6 +77,17 @@ const TariffDetailFormPage: React.FC = () => {
         value: ctl.service_id_f,
       })),
     },
+    {
+      name: "category_id_f",
+      label: "Category",
+      type: "select",
+      required: true,
+      options: categories.map((ctl) => ({
+        label: ctl.category_f,
+        value: ctl.category_id_f,
+      })),
+    },
+
     {
       name: "truck_type_id_f",
       label: "Truck Type",

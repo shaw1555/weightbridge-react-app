@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import SearchableDropdown from "../../components/SearchableDropdown";
 import FreeTextDropdown from "../../components/FreeTextDropdown";
 import DateInput from "../../components/DateInput";
@@ -14,6 +14,7 @@ import type {
   Category,
   TruckType,
   WeighGateInOut,
+  ServiceCategoryMapping,
 } from "./types";
 
 import {
@@ -22,6 +23,7 @@ import {
   fetchCategories,
   fetchTruckTypes,
   fetchSetups,
+  fetchServiceCategoryMappings,
 } from "./service";
 
 type Location = Setup;
@@ -59,6 +61,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [services, setServices] = useState<Service[]>([]);
   const [categorys, setCategorys] = useState<Category[]>([]);
+  const [filteredCategories, setFilteredCategories] = useState<Category[]>([]);
   const [truckTypes, setTruckTypes] = useState<TruckType[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
   const [jobDepartments, setJobDepartments] = useState<JobDepartment[]>([]);
@@ -70,12 +73,17 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
     []
   );
   const [truckNos, setTruckNos] = useState<TruckNo[]>([]);
+  const [serviceCategoryMappings, setServiceCategoryMappings] = useState<
+    ServiceCategoryMapping[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadData = async () => {
       try {
+        setLoading(true);
+
         const customers = await fetchCustomers();
         setCustomers(customers);
 
@@ -101,16 +109,35 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
           setups.filter((x) => x.category_f === "ContainerType")
         );
         setTruckNos(setups.filter((x) => x.category_f === "TruckNo"));
+
+        // ✅ await mapping fetch
+        const serviceCategoryMappings = await fetchServiceCategoryMappings();
+        setServiceCategoryMappings(serviceCategoryMappings);
       } catch (err) {
-        setError("Failed to load data");
         console.error(err);
+        setError("Failed to load data");
       } finally {
         setLoading(false);
       }
     };
 
-    loadData(); // call the async function
-  }, []);
+    loadData(); // run only once
+  }, []); // ✅ empty dependency array = fetch only on mount
+
+  // ✅ Filter categories automatically when service changes
+  useEffect(() => {
+    if (!weighGateInOutData.service_id_f) {
+      setFilteredCategories([]);
+      return;
+    }
+
+    const catIds = serviceCategoryMappings
+      .filter((x) => x.service_id_f === weighGateInOutData.service_id_f)
+      .map((x) => x.category_id_f);
+
+    const filtered = categorys.filter((x) => catIds.includes(x.category_id_f));
+    setFilteredCategories(filtered);
+  }, [weighGateInOutData.service_id_f, serviceCategoryMappings, categorys]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
@@ -330,7 +357,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
 
         <SearchableDropdown
           label="Category"
-          options={categorys}
+          options={filteredCategories}
           value={weighGateInOutData.category_id_f}
           onChange={handleCategoryIdChange}
           displayKey="category_f"

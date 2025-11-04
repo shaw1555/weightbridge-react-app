@@ -17,7 +17,7 @@ const ServiceListPage: React.FC = () => {
       try {
         fetchServices().then(setServices);
       } catch (err) {
-        setError("Failed to load form names");
+        setError("Failed to load service");
         console.error(err);
       } finally {
         setLoading(false);

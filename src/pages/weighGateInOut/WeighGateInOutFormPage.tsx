@@ -13,7 +13,9 @@ import {
   fetchWeighGateInOutById,
   createWeighGateInOut,
   updateWeighGateInOut,
+  updateWeighDetailGateInOut,
   deleteWeighGateInOut,
+  fetchSetups,
 } from "./service";
 
 export default function WeighGateInOutFormPage() {
@@ -21,6 +23,7 @@ export default function WeighGateInOutFormPage() {
   const [weighGateInOutData, setWeighGateInOutData] =
     useState<WeighGateInOut>(initialForm);
   const [activeTariff, setActiveTariff] = useState<ActiveTariff>();
+  const [commericalTaxPercentage, setCommericalTaxPercentage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,6 +33,7 @@ export default function WeighGateInOutFormPage() {
     return {
       ...initialForm,
       tariff_id_f: activeTariff?.tariff_t.tariff_id_f ?? 0,
+      tariff_no_f: activeTariff?.tariff_t.tariff_no_f?? "",
       date_f: today, // ✅ added properly
     };
   };
@@ -39,10 +43,15 @@ export default function WeighGateInOutFormPage() {
       try {
         const activeTariff = await fetchActiveTariff();
         setActiveTariff(activeTariff);
+        activeTariff?.tariff_t.tariff_no_f
+
+        const setups = await fetchSetups();
+        const tax = setups.find((x) => x.category_f === "CommericalTax");
+        setCommericalTaxPercentage(Number(tax?.description_f ?? 0));
 
         if (!id || id === "new" || id === "0") {
           // 🆕 new record
-          setWeighGateInOutData(getInitialWeighGateInOutData());
+          setWeighGateInOutData(getInitialWeighGateInOutData());          
         } else {
           // ✏️ existing record
           const existingRecord = await fetchWeighGateInOutById(Number(id));
@@ -81,6 +90,8 @@ export default function WeighGateInOutFormPage() {
       truck_weight_f: initialForm.truck_weight_f,
       net_weight_f: initialForm.net_weight_f,
       weight_charge_uom_f: initialForm.weight_charge_uom_f,
+      gate_in_out_truck_weighValue_f:
+        initialForm.gate_in_out_truck_weighValue_f,
     }));
   };
   const deleteRecord = async () => {
@@ -125,12 +136,41 @@ export default function WeighGateInOutFormPage() {
   };
 
   const saveDetailInfo = async () => {
-    const res = await axios.post("/api/transactions", weighGateInOutData);
-    alert("Block B saved!");
+    try {
+      // 👉 Update Weight Detail existing record
+      await updateWeighDetailGateInOut(
+        weighGateInOutData.transaction_id_f,
+        weighGateInOutData
+      );
+
+      toast.success("Successfully updated!");
+    } catch (error: any) {
+      console.error("Save failed:", error);
+      toast.error(error.message || "An error occurred while updating.");
+    }
+  };
+
+  const calculateFinalAmount = (weightAmount: number, gateAount: number) => {
+    const subTotal = weightAmount + gateAount;
+    const commTaxAmt = (subTotal * commericalTaxPercentage) / 100;
+    const grandTotal = subTotal + commTaxAmt;
+
+    setWeighGateInOutData((prev) => ({
+      ...prev,
+      sub_total_amount_f: subTotal,
+      commerical_tax_amount_f: commTaxAmt,
+      grand_total_amount_f: grandTotal,
+    }));
   };
 
   const updateGateChargeAmount = (data = weighGateInOutData) => {
-    const { category_id_f, service_id_f, truck_type_id_f, is_gate_foc_f } = data;
+    const {
+      category_id_f,
+      service_id_f,
+      truck_type_id_f,
+      is_gate_foc_f,
+      weight_charge_amount_f,
+    } = data;
 
     const matchedDetail = activeTariff?.tariff_detail_t.find(
       (x) =>
@@ -151,10 +191,17 @@ export default function WeighGateInOutFormPage() {
       gate_charge_unitprice_f: tariffUnitPrice,
       gate_charge_amount_f: tariffGateAmount,
     });
+
+    calculateFinalAmount(weight_charge_amount_f, tariffGateAmount);
   };
 
   const updateWeightChargeAmount = (data = weighGateInOutData) => {
-    const { weight_charge_unitprice_f, no_of_container_f , is_weight_foc_f} = data;
+    const {
+      weight_charge_unitprice_f,
+      no_of_container_f,
+      is_weight_foc_f,
+      gate_charge_amount_f,
+    } = data;
     let weightChargeAmount = weight_charge_unitprice_f * no_of_container_f;
 
     if (is_weight_foc_f) {
@@ -166,6 +213,8 @@ export default function WeighGateInOutFormPage() {
       ...data,
       weight_charge_amount_f: weightChargeAmount,
     });
+
+    calculateFinalAmount(weightChargeAmount, gate_charge_amount_f);
   };
 
   return (

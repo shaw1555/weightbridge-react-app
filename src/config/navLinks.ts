@@ -42,15 +42,21 @@ export const NAV_LINKS: HeaderLink[] = [
     path: ROUTES.TariffSetup_Menu,
     permission: "View_MenuTariffSetup",
     children: [
+        {
+        label: "Services",
+        path: ROUTES.Service_List,
+        permission: "View_Service",
+      },
       {
         label: "Categorys",
         path: ROUTES.Category_List,
         permission: "View_Category",
       },
-      {
-        label: "Services",
-        path: ROUTES.Service_List,
-        permission: "View_Service",
+    
+        {
+        label: "Service Category Mapping",
+        path: ROUTES.ServiceCategoryMapping_List,
+        permission: "View_ServiceCategoryMapping",
       },
       {
         label: "Truck Types",

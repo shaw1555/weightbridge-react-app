@@ -23,6 +23,11 @@ const ROUTES = {
   Service_List: "/Service",
   Service_Form: (id: string | "new" = "new") => `/Service/${id}`,
 
+
+  // Service Category Mapping
+  ServiceCategoryMapping_List: "/ServiceCategoryMapping",
+  ServiceCategoryMapping_Form: (id: string | "new" = "new") => `/ServiceCategoryMapping/${id}`,
+
   // TruckType
   TruckType_List: "/TruckType",
   TruckType_Form: (id: string | "new" = "new") => `/TruckType/${id}`,
