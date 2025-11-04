@@ -40,6 +40,7 @@ import ROUTES from "./config/routes";
 import Header from "./components/Header";
 import PrivateRoute from "./components/PrivateRoute";
 import { NAV_LINKS } from "./config/navLinks";
+import { ENTITIES } from "./constants";
 
 const AppContent: React.FC = () => {
   const { showPopup } = usePopup();
@@ -79,7 +80,7 @@ const AppContent: React.FC = () => {
           }
         />
         <Route
-          path="/weighGateInOut/:id"
+          path={ROUTES.WeighGateInOut_Form(":id")}
           element={
             <PrivateRoute>
               <WeighGateInOutFormPage />
@@ -97,7 +98,7 @@ const AppContent: React.FC = () => {
         />
 
         <Route
-          path="/category/:id"
+          path={ROUTES.Category_Form(":id")}
           element={
             <PrivateRoute>
               <CategoryFormPage />
@@ -115,7 +116,7 @@ const AppContent: React.FC = () => {
         />
 
         <Route
-          path="/serviceCategoryMapping/:id"
+          path={ROUTES.ServiceCategoryMapping_Form(":id")}
           element={
             <PrivateRoute>
               <ServiceCategoryMappingFormPage />
@@ -133,7 +134,7 @@ const AppContent: React.FC = () => {
         />
 
         <Route
-          path="/service/:id"
+          path={ROUTES.Service_Form(":id")}
           element={
             <PrivateRoute>
               <ServiceFormPage />
@@ -151,7 +152,7 @@ const AppContent: React.FC = () => {
         />
 
         <Route
-          path="/truckType/:id"
+          path={ROUTES.TruckType_Form(":id")}
           element={
             <PrivateRoute>
               <TruckTypeFormPage />
@@ -169,7 +170,7 @@ const AppContent: React.FC = () => {
         />
 
         <Route
-          path="/tariff/:id"
+          path={ROUTES.Tariff_Form(":id")}
           element={
             <PrivateRoute>
               <TariffFormPage />
@@ -187,7 +188,7 @@ const AppContent: React.FC = () => {
         />
 
         <Route
-          path="/tariffDetail/:id"
+          path={ROUTES.TariffDetail_Form(":id")}
           element={
             <PrivateRoute>
               <TariffDetailFormPage />
@@ -205,7 +206,7 @@ const AppContent: React.FC = () => {
         />
 
         <Route
-          path="/customer/:id"
+          path={ROUTES.Customer_Form(":id")}
           element={
             <PrivateRoute>
               <CustomerFormPage />
@@ -223,7 +224,7 @@ const AppContent: React.FC = () => {
         />
 
         <Route
-          path="/permission/:id"
+          path={ROUTES.Permission_Form(":id")}
           element={
             <PrivateRoute>
               <PermissionFormPage />
@@ -241,7 +242,7 @@ const AppContent: React.FC = () => {
         />
 
         <Route
-          path="/setup/:id"
+          path={ROUTES.Setup_Form(":id")}
           element={
             <PrivateRoute>
               <SetupFormPage />
@@ -259,7 +260,7 @@ const AppContent: React.FC = () => {
         />
 
         <Route
-          path="/user/:id"
+          path={ROUTES.User_Form(":id")}
           element={
             <PrivateRoute>
               <UserFormPage />
@@ -277,7 +278,7 @@ const AppContent: React.FC = () => {
         />
 
         <Route
-          path="/weighingCompanyProfile/:id"
+          path={ROUTES.WeighingCompanyProfile_Form(":id")}
           element={
             <PrivateRoute>
               <WeighingCompanyProfileFormPage />

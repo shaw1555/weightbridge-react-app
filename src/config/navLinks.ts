@@ -1,5 +1,5 @@
 import ROUTES from "./routes";
-import { type HeaderLink } from "../types/navigation";
+import { type HeaderLink } from "./types";
 import { PERMISSIONS } from "../constants";
 
 export const NAV_LINKS: HeaderLink[] = [

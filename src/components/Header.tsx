@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { AuthService } from "../services/AuthService";
 import { UserCircle, ChevronDown } from "lucide-react";
 import Button from "./Button";
-import { type HeaderLink } from "../types/navigation"; // ✅ import shared type
+import { type HeaderLink } from "../config/types"; // ✅ import shared type
  
 interface HeaderProps {
   links: HeaderLink[];
