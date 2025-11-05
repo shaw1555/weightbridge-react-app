@@ -17,6 +17,7 @@ import {
   fetchSetups,
   fetchGateInOutInfos,
   fetchGateInOutStatus,
+  DownloadReceiptInvoice,
 } from "./service";
 
 type WeightUOM = Setup;
@@ -121,6 +122,10 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
     handleChange("truck_cargo_weight_f", val);
     handleChange("gate_in_out_truck_weighValue_f", val);
     updateNetWeighChange(Number(val), weighGateInOutData.truck_weight_f);
+  };
+
+  const OnDownloadReceiptInvoice = async () => {
+    await DownloadReceiptInvoice(weighGateInOutData.transaction_no_f);
   };
 
   return (
@@ -335,7 +340,10 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
               </span>
 
               <div className="flex gap-3">
-                <Button disabled={!weighGateInOutData.transaction_id_f}>
+                <Button
+                  disabled={!weighGateInOutData.transaction_id_f}
+                  onClick={OnDownloadReceiptInvoice}
+                >
                   Receipt / Invoice
                 </Button>
                 <Button disabled={!weighGateInOutData.transaction_id_f}>

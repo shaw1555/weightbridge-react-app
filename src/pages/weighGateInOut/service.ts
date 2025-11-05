@@ -1,3 +1,4 @@
+import { downloadBlob } from "../../utils/fileDownloader";
 import type {
   Customer,
   ActiveTariff,
@@ -39,6 +40,21 @@ export async function fetchServiceCategoryMappings(): Promise<
     return response.data;
   } catch (error) {
     console.error("Failed to fetch serviceCategoryMappings:", error);
+    throw error;
+  }
+}
+
+export async function DownloadReceiptInvoice(transactionNo: string): Promise<void> {
+  try {
+    const response = await apiClient.get(
+      `${basePath}/Download/ReceiptInvoice/${transactionNo}`,
+      { responseType: "blob" }
+    );
+
+    // Use the centralized helper
+    downloadBlob(response.data, `ReceiptInvoice_${transactionNo}.pdf`);
+  } catch (error) {
+    console.error("Failed to download ReceiptInvoice:", error);
     throw error;
   }
 }
@@ -193,7 +209,10 @@ export async function updateWeighDetailGateInOut(
     );
     return response.data;
   } catch (error) {
-    console.error(`Failed to update WeighDetailGateInOut with id ${id}:`, error);
+    console.error(
+      `Failed to update WeighDetailGateInOut with id ${id}:`,
+      error
+    );
     throw error;
   }
 }
