@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { downloadBlob } from "../../utils/fileDownloader";
 import type {
   Customer,
@@ -44,7 +45,24 @@ export async function fetchServiceCategoryMappings(): Promise<
   }
 }
 
-export async function DownloadReceiptInvoice(transactionNo: string): Promise<void> {
+export async function DownloadWeightSlip(transactionNo: string): Promise<void> {
+  try {
+    const response = await apiClient.get(
+      `${basePath}/Download/WeightSlip/${transactionNo}`,
+      { responseType: "blob" }
+    );
+
+    // Use the centralized helper
+    downloadBlob(response.data, `WeightSlip_${transactionNo}.pdf`);
+  } catch (error) {
+    console.error("Failed to download WeightSlip:", error);
+    throw error;
+  }
+}
+
+export async function DownloadReceiptInvoice(
+  transactionNo: string
+): Promise<void> {
   try {
     const response = await apiClient.get(
       `${basePath}/Download/ReceiptInvoice/${transactionNo}`,

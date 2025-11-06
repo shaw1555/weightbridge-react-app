@@ -18,6 +18,7 @@ import {
   fetchGateInOutInfos,
   fetchGateInOutStatus,
   DownloadReceiptInvoice,
+  DownloadWeightSlip,
 } from "./service";
 
 type WeightUOM = Setup;
@@ -126,6 +127,10 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
 
   const OnDownloadReceiptInvoice = async () => {
     await DownloadReceiptInvoice(weighGateInOutData.transaction_no_f);
+  };
+
+  const OnDownloadWeightSlip = async () => {
+    await DownloadWeightSlip(weighGateInOutData.transaction_no_f);
   };
 
   return (
@@ -346,7 +351,10 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
                 >
                   Receipt / Invoice
                 </Button>
-                <Button disabled={!weighGateInOutData.transaction_id_f}>
+                <Button
+                  disabled={!weighGateInOutData.transaction_id_f}
+                  onClick={OnDownloadWeightSlip}
+                >
                   Weight Slip
                 </Button>
               </div>

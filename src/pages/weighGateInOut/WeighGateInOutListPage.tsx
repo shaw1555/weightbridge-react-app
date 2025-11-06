@@ -8,7 +8,7 @@ import { EntityList, type Column } from "../../components/EntityList";
 import DateRangeFilter from "../../components/DateRangeFilter";
 import Checkbox from "../../components/Checkbox";
 import SearchableDropdown from "../../components/SearchableDropdown";
-import { ALL_LOCATION_NAME, STORAGE_KEYS } from "../../constants";
+import { ALL_LOCATION_NAME, STORAGE_KEYS, SETUP_CATEGORIES } from "../../constants";
 
 type Location = Setup;
 
@@ -58,19 +58,18 @@ const WeighGateInOutListPage: React.FC = () => {
       const data = await fetchWeighGateInOuts(fromDate, toDate);
       setWeighGateInOuts(data);
 
-      const setups = await fetchSetups();
-      const filterNameLocation = "Location";
+      const setups = await fetchSetups(); 
 
       // Filter for locations
       const dbLocation = setups.filter(
-        (x) => x.category_f === filterNameLocation
+        (x) => x.category_f === SETUP_CATEGORIES.LOCATION
       );
 
       // Add "All Location" at the beginning
       const allLocations: Location[] = [
         {
           setup_id_f: 0,
-          category_f: filterNameLocation,
+          category_f: SETUP_CATEGORIES.LOCATION,
           description_f: ALL_LOCATION_NAME.ALLLOCATION,
         },
         ...dbLocation,
