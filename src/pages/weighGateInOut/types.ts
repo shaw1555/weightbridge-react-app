@@ -8,6 +8,7 @@ export interface WeighGateInOut {
   tariff_id_f: number;
   tariff_no_f: string;
   customer_id_f: number;
+  customer_name_f?: string;
   truck_no_f: string;
   product_f: string;
   date_f: string | null;
@@ -209,4 +210,3 @@ export interface ServiceCategoryMapping {
   category_id_f: number;
   category_f: string;
 }
- 

@@ -109,6 +109,7 @@ const WeighGateInOutListPage: React.FC = () => {
     { key: "truck_no_f", label: "Truck No", width: "100px" },
     { key: "product_f", label: "Product", width: "150px" },
     { key: "date_f", label: "Date", type: "date" },
+     { key: "customer_name_f", label: "Customer", width: "280px"  },
     { key: "vessel_f", label: "Vessel" },
     { key: "voy_f", label: "Voy" },
     { key: "container_size_type_f", label: "Container Size Type" },

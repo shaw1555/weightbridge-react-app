@@ -84,7 +84,7 @@ export async function fetchGateInOutInfos(): Promise<GateInOutInfo[]> {
     );
     return response.data;
   } catch (error) {
-    console.error("Failed to fetch truckTypes:", error);
+    console.error("Failed to fetch GateInOutInfo:", error);
     throw error;
   }
 }

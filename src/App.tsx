@@ -32,6 +32,8 @@ import SetupListPage from "./pages/setup/SetupListPage";
 import SetupFormPage from "./pages/setup/SetupFormPage";
 import UserListPage from "./pages/user/UserListPage";
 import UserFormPage from "./pages/user/UserFormPage";
+import WeighVGMListPage from "./pages/weighVGM/WeighVGMListPage";
+import WeighVGMFormPage from "./pages/weighVGM/WeighVGMFormPage";
 import WeighingCompanyProfileListPage from "./pages/weighingCompanyProfile/WeighingCompanyProfileListPage";
 import WeighingCompanyProfileFormPage from "./pages/weighingCompanyProfile/WeighingCompanyProfileFormPage";
 import WeighGateInOutListPage from "./pages/weighGateInOut/WeighGateInOutListPage";
@@ -282,6 +284,22 @@ const AppContent: React.FC = () => {
           element={
             <PrivateRoute>
               <WeighingCompanyProfileFormPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path={ROUTES.WeighVGM_List}
+          element={
+            <PrivateRoute>
+              <WeighVGMListPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path={ROUTES.WeighVGM_Form(":id")}
+          element={
+            <PrivateRoute>
+              <WeighVGMFormPage />
             </PrivateRoute>
           }
         />
