@@ -6,7 +6,8 @@ import TextInput from "../../components/TextInput";
 import TextareaInput from "../../components/TextareaInput";
 import Button from "../../components/Button";
 import { SETUP_CATEGORIES } from "../../constants";
-
+import { PERMISSIONS } from "../../constants";
+import { AuthService } from "../../services/AuthService";
 import type {
   Customer,
   ActiveTariff,
@@ -79,6 +80,16 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
   >([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const canCreate = AuthService.hasPermission(
+    PERMISSIONS.CREATE_WEIGH_GATE_IN_OUT
+  );
+  const canUpdate = AuthService.hasPermission(
+    PERMISSIONS.UPDATE_WEIGH_GATE_IN_OUT
+  );
+  const canDelete = AuthService.hasPermission(
+    PERMISSIONS.DELETE_WEIGH_GATE_IN_OUT
+  );
 
   useEffect(() => {
     const loadData = async () => {
@@ -457,17 +468,29 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
         <Button color="gray" onClick={handleReset}>
           New
         </Button>
-        <Button onClick={handleDuplicate}>Duplicate</Button>
-        <Button color="green" onClick={onSubmit}>
-          {weighGateInOutData.transaction_id_f !== 0 ? "Update" : "Save"}
-        </Button>
         <Button
           disabled={!weighGateInOutData.transaction_id_f}
-          color="red"
-          onClick={onDelete}
+          onClick={handleDuplicate}
         >
-          Delete
+          Duplicate
         </Button>
+
+        {(weighGateInOutData.transaction_id_f === 0 && canCreate) ||
+        (weighGateInOutData.transaction_id_f !== 0 && canUpdate) ? (
+          <Button color="green" onClick={onSubmit}>
+            {weighGateInOutData.transaction_id_f !== 0 ? "Update" : "Save"}
+          </Button>
+        ) : null}
+
+        {canDelete && (
+          <Button
+            disabled={!weighGateInOutData.transaction_id_f}
+            color="red"
+            onClick={onDelete}
+          >
+            Delete
+          </Button>
+        )}
       </div>
     </div>
   );

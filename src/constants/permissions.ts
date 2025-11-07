@@ -16,9 +16,22 @@ export const PERMISSIONS = {
 
   // Weigh Gate In/Out
   VIEW_WEIGH_GATE_IN_OUT: "View_WeighGateInOut",
+  CREATE_WEIGH_GATE_IN_OUT: "Create_WeighGateInOut",
+  UPDATE_WEIGH_GATE_IN_OUT: "Update_WeighGateInOut",
+  DELETE_WEIGH_GATE_IN_OUT: "Delete_WeighGateInOut",
+
 
   // VGM
   VIEW_MENU_VGM: "View_MenuVGM",
+
+    // Weigh VGM
+  VIEW_WEIGH_VGM: "View_WeighVGM",
+  CREATE_WeighVGM: "Create_WeighVGM",
+  UPDATE_WeighVGM: "Update_WeighVGM",
+  DELETE_WeighVGM: "Delete_WeighVGM",
+
+     // VGMDeclarationForm
+  VIEW_VGM_DECLARATION_FORM: "View_VGMDeclarationForm",
 
     // Weighing Company Profile
   VIEW_WEIGHING_COMPANY_PROFILE: "View_WeighingCompanyProfile",

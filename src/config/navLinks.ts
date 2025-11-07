@@ -32,8 +32,16 @@ export const NAV_LINKS: HeaderLink[] = [
     path: ROUTES.VGM_Menu,
     permission: PERMISSIONS.VIEW_MENU_VGM,
     children: [
-      { label: "Weigh VGM", path: "/", permission: "" },
-      { label: "VGM Declaration Form", path: "/", permission: "" },
+      {
+        label: "Weigh VGM",
+        path: ROUTES.WeighVGM_List,
+        permission: PERMISSIONS.VIEW_WEIGH_VGM,
+      },
+      {
+        label: "VGM Declaration Form",
+        path: ROUTES.VGMDeclarationForm_List,
+        permission: PERMISSIONS.VIEW_VGM_DECLARATION_FORM,
+      },
       {
         label: "Weighing Company Profile",
         path: ROUTES.WeighingCompanyProfile_List,

@@ -1,7 +1,9 @@
 export const ENTITIES = {
   DASHBOARD: "Dashboard",
   LOGIN: "Login",
-  VGM_MENU: "VGM_Menu",
+  VGM_MENU: "VGMMenu",
+  WEIGH_VGM: "WeighVGM",
+  VGM_DECLARATION_FORM: "VGMDeclarationForm",
   WEIGHING_COMPANY_PROFILE: "WeighingCompanyProfile",
   TARIFF_SETUP_MENU: "TariffSetup",
   CATEGORY: "Category",

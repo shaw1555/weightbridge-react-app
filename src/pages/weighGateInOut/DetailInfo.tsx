@@ -6,6 +6,8 @@ import Button from "../../components/Button";
 import Checkbox from "../../components/Checkbox";
 import RadioGroup from "../../components/RadioGroup";
 import { SETUP_CATEGORIES } from "../../constants";
+import { PERMISSIONS } from "../../constants";
+import { AuthService } from "../../services/AuthService";
 import type {
   Setup,
   WeighGateInOut,
@@ -49,6 +51,10 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
   const [paymentTypes, setPaymentTypes] = useState<PaymentType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const canUpdate = AuthService.hasPermission(
+    PERMISSIONS.UPDATE_WEIGH_GATE_IN_OUT
+  );
 
   useEffect(() => {
     const loadData = async () => {
@@ -326,19 +332,20 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
         <div className="col-span-2 self-end justify-self-end">
           {/* Buttons */}
           <div className="flex justify-end mt-6 gap-3">
-            <div className="border rounded-xl p-4 relative">
-              <span className="absolute -top-3 left-4 bg-white px-2 text-sm font-semibold"></span>
-              <div className="flex gap-3">
-                <Button
-                  disabled={!weighGateInOutData.transaction_id_f}
-                  color="green"
-                  onClick={onSubmit}
-                >
-                  Update Weight and Gate Info
-                </Button>
+            {canUpdate && (
+              <div className="border rounded-xl p-4 relative">
+                <span className="absolute -top-3 left-4 bg-white px-2 text-sm font-semibold"></span>
+                <div className="flex gap-3">
+                  <Button
+                    disabled={!weighGateInOutData.transaction_id_f}
+                    color="green"
+                    onClick={onSubmit}
+                  >
+                    Update Weight and Gate Info
+                  </Button>
+                </div>
               </div>
-            </div>
-
+            )}
             <div className="border rounded-xl p-4 relative">
               <span className="absolute -top-3 left-4 bg-white px-2 text-sm font-semibold">
                 Print Preview
