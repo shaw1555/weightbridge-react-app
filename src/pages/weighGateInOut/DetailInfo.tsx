@@ -348,7 +348,7 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
             )}
             <div className="border rounded-xl p-4 relative">
               <span className="absolute -top-3 left-4 bg-white px-2 text-sm font-semibold">
-                Print Preview
+                Download
               </span>
 
               <div className="flex gap-3">

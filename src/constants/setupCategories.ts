@@ -3,6 +3,7 @@ export const SETUP_CATEGORIES = {
   LOCATION: "Location",
   JOB_DEPARTMENT: "JobDeparment", // ← (note spelling, keep as in DB)
   ARRANGE_BY: "ArrangeBy",
+  WEIGHT_BY: "WeightBy",
   ACCEPTED_BY: "AcceptedBy",
   APPROVED_BY: "ApprovedBy",
   PRODUCT: "Product",

@@ -5,3 +5,4 @@ export * from "./gateTruckInfos";
 export * from "./allLocationName";
 export * from "./permissions";
 export * from "./entities";
+export * from "./gateVGMTruckInfos";

@@ -7,19 +7,9 @@ import ROUTES from "../../config/routes";
 import { EntityList, type Column } from "../../components/EntityList";
 import DateRangeFilter from "../../components/DateRangeFilter";
 import Checkbox from "../../components/Checkbox";
-import SearchableDropdown from "../../components/SearchableDropdown";
-import {
-  ALL_LOCATION_NAME,
-  STORAGE_KEYS,
-  SETUP_CATEGORIES,
-} from "../../constants";
-
-type Location = Setup;
 
 const WeighVGMListPage: React.FC = () => {
   const [weighVGMs, setWeighVGMs] = useState<WeighVGM[]>([]);
-  const [locations, setLocations] = useState<Location[]>([]);
-  const [selectedLocation, setselectedLocation] = useState(String);
   const [inactive, setInactive] = useState(false);
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState<{
@@ -37,10 +27,6 @@ const WeighVGMListPage: React.FC = () => {
     fetchData(fromDate, toDate);
   };
 
-  const handleSelectedLocation = (val: string) => {
-    setselectedLocation(val);
-  };
-
   const handleInactiveChange = (val: boolean) => {
     setInactive(val);
   };
@@ -50,27 +36,6 @@ const WeighVGMListPage: React.FC = () => {
     try {
       const data = await fetchWeighVGMs(fromDate, toDate);
       setWeighVGMs(data);
-
-      const setups = await fetchSetups();
-
-      // Filter for locations
-      const dbLocation = setups.filter(
-        (x) => x.category_f === SETUP_CATEGORIES.LOCATION
-      );
-
-      // Add "All Location" at the beginning
-      const allLocations: Location[] = [
-        {
-          setup_id_f: 0,
-          category_f: SETUP_CATEGORIES.LOCATION,
-          description_f: ALL_LOCATION_NAME.ALLLOCATION,
-        },
-        ...dbLocation,
-      ];
-      setLocations(allLocations);
-
-      const defaultLoc = localStorage.getItem(STORAGE_KEYS.DEFAULT_LOCATION);
-      setselectedLocation(String(defaultLoc));
     } catch (error) {
       console.error("Error fetching weighVGMs:", error);
     } finally {
@@ -82,11 +47,9 @@ const WeighVGMListPage: React.FC = () => {
   const filteredWeighVGMs = useMemo(() => {
     return weighVGMs.filter(
       (x) =>
-        x.inactive_f === inactive &&
-        (selectedLocation === ALL_LOCATION_NAME.ALLLOCATION ||
-          x.location_f === selectedLocation)
+        x.inactive_f === inactive  
     );
-  }, [weighVGMs, inactive, selectedLocation]);
+  }, [weighVGMs, inactive]);
 
   useEffect(() => {
     fetchData(filters.fromDate, filters.toDate);
@@ -131,7 +94,6 @@ const WeighVGMListPage: React.FC = () => {
     { key: "truck_weight_f", label: "Truck Weight", type: "number" },
     { key: "net_weight_f", label: "Net Weight", type: "number" },
     { key: "remark_f", label: "Remark" },
-    { key: "location_f", label: "Location" },
     { key: "weight_by_f", label: "Weight By", width: "150px" },
     { key: "accepted_by_f", label: "Accepted By", width: "150px" },
     { key: "vgm_verified_by_f", label: "VGM Verified By", width: "150px" },
@@ -156,21 +118,7 @@ const WeighVGMListPage: React.FC = () => {
           filters={filters}
           onFilterApply={handleDateFilterApply}
         />
-        <div className="w-64">
-          {" "}
-          {/* adjust width as needed, e.g., w-48, w-72 */}
-          <SearchableDropdown
-            // label="Location"
-            options={locations}
-            value={selectedLocation}
-            onChange={(val) => {
-              if (val !== null) handleSelectedLocation(String(val));
-            }}
-            displayKey="description_f"
-            valueKey="description_f"
-            placeholder="Select a location"
-          />
-        </div>
+
         <Checkbox
           label="Inactive"
           checked={inactive}
