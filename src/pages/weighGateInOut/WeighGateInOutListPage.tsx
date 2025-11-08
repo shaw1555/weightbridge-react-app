@@ -185,7 +185,7 @@ const WeighGateInOutListPage: React.FC = () => {
     { key: "received_by_f", label: "Received By" },
     { key: "accepted_by_f", label: "Accepted By", width: "150px" },
     { key: "approved_by_f", label: "Approved By", width: "150px" },
-    { key: "inactive_f", label: "Inactive", type: "checkbox" },
+    // { key: "inactive_f", label: "Inactive", type: "checkbox" },
     { key: "log_by_f", label: "Log By", width: "150px" },
     {
       key: "log_date_time_f",

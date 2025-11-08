@@ -20,7 +20,7 @@ const WeighVGMListPage: React.FC = () => {
   const [weighVGMs, setWeighVGMs] = useState<WeighVGM[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
   const [selectedLocation, setselectedLocation] = useState(String);
-
+  const [inactive, setInactive] = useState(false);
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState<{
     fromDate: string;
@@ -39,6 +39,10 @@ const WeighVGMListPage: React.FC = () => {
 
   const handleSelectedLocation = (val: string) => {
     setselectedLocation(val);
+  };
+
+  const handleInactiveChange = (val: boolean) => {
+    setInactive(val);
   };
 
   const fetchData = async (fromDate: string, toDate: string) => {
@@ -75,13 +79,14 @@ const WeighVGMListPage: React.FC = () => {
   };
 
   // Automatically recompute filtered data
-  const filteredWeighGateInOuts = useMemo(() => {
+  const filteredWeighVGMs = useMemo(() => {
     return weighVGMs.filter(
       (x) =>
-        selectedLocation === ALL_LOCATION_NAME.ALLLOCATION ||
-        x.location_f === selectedLocation
+        x.inactive_f === inactive &&
+        (selectedLocation === ALL_LOCATION_NAME.ALLLOCATION ||
+          x.location_f === selectedLocation)
     );
-  }, [weighVGMs, selectedLocation]);
+  }, [weighVGMs, inactive, selectedLocation]);
 
   useEffect(() => {
     fetchData(filters.fromDate, filters.toDate);
@@ -98,7 +103,7 @@ const WeighVGMListPage: React.FC = () => {
     { key: "booking_no_f", label: "Booking No" },
     { key: "convoy_note_f", label: "Convoy Note" },
     { key: "port_of_loading_f", label: "Port of Loading" },
-    { key: "vessel_voy_f", label: "Vessel/Voy" , width: "230px" },
+    { key: "vessel_voy_f", label: "Vessel/Voy", width: "230px" },
     { key: "seal_number_f", label: "Seal No" },
     { key: "container_size_type_f", label: "Container Size Type" },
 
@@ -127,7 +132,7 @@ const WeighVGMListPage: React.FC = () => {
     { key: "net_weight_f", label: "Net Weight", type: "number" },
     { key: "remark_f", label: "Remark" },
     { key: "location_f", label: "Location" },
-    { key: "weight_by_f", label: "Weight By" , width: "150px" },
+    { key: "weight_by_f", label: "Weight By", width: "150px" },
     { key: "accepted_by_f", label: "Accepted By", width: "150px" },
     { key: "vgm_verified_by_f", label: "VGM Verified By", width: "150px" },
     { key: "log_by_f", label: "Log By", width: "150px" },
@@ -166,6 +171,11 @@ const WeighVGMListPage: React.FC = () => {
             placeholder="Select a location"
           />
         </div>
+        <Checkbox
+          label="Inactive"
+          checked={inactive}
+          onChange={(val) => handleInactiveChange(val)}
+        />
       </div>
 
       {/* Table */}
@@ -178,10 +188,17 @@ const WeighVGMListPage: React.FC = () => {
 
         <EntityList
           title="Weigh VGM"
-          data={filteredWeighGateInOuts}
+          data={filteredWeighVGMs}
           columns={columns}
           idKey="transaction_id_f" // 👈 tell which field is the PK
           onRowClick={(id) => {
+            const selected = filteredWeighVGMs.find(
+              (item) => String(item.transaction_id_f) === String(id)
+            );
+            if (selected?.inactive_f) {
+              toast.warning("This record is inactive and cannot be modified.");
+              return;
+            }
             navigate(ROUTES.WeighVGM_Form(String(id)));
           }}
           onAddClick={() => navigate(ROUTES.WeighVGM_Form())}

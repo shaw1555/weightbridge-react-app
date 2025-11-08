@@ -26,6 +26,7 @@ export interface WeighVGM {
   weight_by_f: string;
   accepted_by_f: string;
   vgm_verified_by_f: string;
+  inactive_f: boolean;
   log_by_f: string;
   log_date_time_f: string | null;
 
@@ -40,28 +41,28 @@ export const initialForm: WeighVGM = {
   transaction_no_f: "Auto",
 
   customer_id_f: 0,
-  truck_no_f: "", 
+  truck_no_f: "",
   date_f: null,
-  vessel_voy_f: "", 
+  vessel_voy_f: "",
   container_size_type_f: "",
- 
- 
-  location_f: "", 
- 
-  container_no_f: "", 
-   
+
+  location_f: "",
+
+  container_no_f: "",
+
   booking_no_f: "",
   date_time_in_f: null,
   date_time_out_f: null,
   truck_cargo_weight_f: 0,
   truck_weight_f: 0,
-  net_weight_f: 0,    
+  net_weight_f: 0,
   remark_f: "",
   weight_by_f: "",
-  accepted_by_f: "",  
+  accepted_by_f: "",
   vgm_verified_by_f: "",
+  inactive_f: false,
   log_by_f: "",
-  log_date_time_f: null, 
+  log_date_time_f: null,
 
   gate_in_out_truck_info_f: GATE_TRUCK_INFO.TRUCK_ONLY,
   gate_in_out_truck_dateTime_f: "",
