@@ -3,7 +3,7 @@ export const ENTITIES = {
   LOGIN: "Login",
   VGM_MENU: "VGMMenu",
   WEIGH_VGM: "WeighVGM",
-  VGM_DECLARATION_FORM: "VGMDeclarationForm",
+
   WEIGHING_COMPANY_PROFILE: "WeighingCompanyProfile",
   TARIFF_SETUP_MENU: "TariffSetup",
   CATEGORY: "Category",
@@ -18,4 +18,7 @@ export const ENTITIES = {
   SETTING_MENU: "Setting",
   SETUP: "Setup",
   USER: "User",
+  REPORT_MENU: "Report",
+  VGM_DECLARATION_FORM: "VGMDeclarationForm",
+  ODOO_EXPORT: "ODOOExport",
 };

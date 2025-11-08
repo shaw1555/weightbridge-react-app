@@ -8,11 +8,10 @@ const ROUTES = {
 
   // VGM
   VGM_Menu: `/${ENTITIES.VGM_MENU}`,
-  //Weigh VGM // 
+  //Weigh VGM //
   WeighVGM_List: `/${ENTITIES.WEIGH_VGM}`,
   WeighVGM_Form: (id: string | "new" = "new") => `/${ENTITIES.WEIGH_VGM}/${id}`,
-  //VGM Declaration Form// 
-  VGMDeclarationForm_List: `/${ENTITIES.VGM_DECLARATION_FORM}`,
+
   // Weighing Company Profile
   WeighingCompanyProfile_List: `/${ENTITIES.WEIGHING_COMPANY_PROFILE}`,
   WeighingCompanyProfile_Form: (id: string | "new" = "new") =>
@@ -72,6 +71,11 @@ const ROUTES = {
   // User
   User_List: `/${ENTITIES.USER}`,
   User_Form: (id: string | "new" = "new") => `/${ENTITIES.USER}/${id}`,
+
+  //Report // 
+  Report_Menu: `/${ENTITIES.REPORT_MENU}`,
+  VGMDeclarationForm_List: `/${ENTITIES.VGM_DECLARATION_FORM}`,
+  ODOOExport_List: `/${ENTITIES.ODOO_EXPORT}`,
 };
 
 export default ROUTES;

@@ -36,12 +36,7 @@ export const NAV_LINKS: HeaderLink[] = [
         label: "Weigh VGM",
         path: ROUTES.WeighVGM_List,
         permission: PERMISSIONS.VIEW_WEIGH_VGM,
-      },
-      {
-        label: "VGM Declaration Form",
-        path: ROUTES.VGMDeclarationForm_List,
-        permission: PERMISSIONS.VIEW_VGM_DECLARATION_FORM,
-      },
+      },  
       {
         label: "Weighing Company Profile",
         path: ROUTES.WeighingCompanyProfile_List,
@@ -105,4 +100,23 @@ export const NAV_LINKS: HeaderLink[] = [
       },
     ],
   },
+
+  {
+    label: "Reports",
+    path: ROUTES.Report_Menu,
+    permission: PERMISSIONS.VIEW_MENU_REPORT,
+    children: [       
+      {
+        label: "VGM Declaration Form",
+        path: ROUTES.VGMDeclarationForm_List,
+        permission: PERMISSIONS.VIEW_VGM_DECLARATION_FORM,
+      },
+      {
+        label: "ODOO Export",
+        path: ROUTES.ODOOExport_List,
+        permission: PERMISSIONS.VIEW_ODOO_EXPORT,
+      },
+    ],
+  },
+
 ];

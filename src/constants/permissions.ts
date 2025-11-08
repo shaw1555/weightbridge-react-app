@@ -20,20 +20,16 @@ export const PERMISSIONS = {
   UPDATE_WEIGH_GATE_IN_OUT: "Update_WeighGateInOut",
   DELETE_WEIGH_GATE_IN_OUT: "Delete_WeighGateInOut",
 
-
   // VGM
   VIEW_MENU_VGM: "View_MenuVGM",
 
-    // Weigh VGM
+  // Weigh VGM
   VIEW_WEIGH_VGM: "View_WeighVGM",
   CREATE_WeighVGM: "Create_WeighVGM",
   UPDATE_WeighVGM: "Update_WeighVGM",
   DELETE_WeighVGM: "Delete_WeighVGM",
 
-     // VGMDeclarationForm
-  VIEW_VGM_DECLARATION_FORM: "View_VGMDeclarationForm",
-
-    // Weighing Company Profile
+  // Weighing Company Profile
   VIEW_WEIGHING_COMPANY_PROFILE: "View_WeighingCompanyProfile",
   CREATE_WEIGHING_COMPANY_PROFILE: "Create_WeighingCompanyProfile",
   UPDATE_WEIGHING_COMPANY_PROFILE: "Update_WeighingCompanyProfile",
@@ -91,4 +87,9 @@ export const PERMISSIONS = {
   CREATE_PERMISSION: "Create_Permission",
   UPDATE_PERMISSION: "Update_Permission",
   DELETE_PERMISSION: "Delete_Permission",
+
+  //Report //
+  VIEW_MENU_REPORT: "View_MenuReport",
+  VIEW_VGM_DECLARATION_FORM: "View_VGMDeclarationForm",
+  VIEW_ODOO_EXPORT: "View_ODOOExport",
 } as const;

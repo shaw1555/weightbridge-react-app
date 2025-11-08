@@ -38,11 +38,12 @@ import WeighingCompanyProfileListPage from "./pages/weighingCompanyProfile/Weigh
 import WeighingCompanyProfileFormPage from "./pages/weighingCompanyProfile/WeighingCompanyProfileFormPage";
 import WeighGateInOutListPage from "./pages/weighGateInOut/WeighGateInOutListPage";
 import WeighGateInOutFormPage from "./pages/weighGateInOut/WeighGateInOutFormPage";
+import VGMDeclarationFormListPage from "./pages/report/VGMDeclarationFormListPage";
 import ROUTES from "./config/routes";
 import Header from "./components/Header";
 import PrivateRoute from "./components/PrivateRoute";
 import { NAV_LINKS } from "./config/navLinks";
-import { ENTITIES } from "./constants";
+
 
 const AppContent: React.FC = () => {
   const { showPopup } = usePopup();
@@ -303,6 +304,15 @@ const AppContent: React.FC = () => {
             </PrivateRoute>
           }
         />
+        <Route
+          path={ROUTES.VGMDeclarationForm_List}
+          element={
+            <PrivateRoute>
+              <VGMDeclarationFormListPage />
+            </PrivateRoute>
+          }
+        />
+
       </Routes>
       <ToastContainer
         position="top-right"
