@@ -75,31 +75,12 @@ const LoginPage: React.FC = () => {
       );
       navigate(ROUTES.Dashboard);
     } catch (err: any) {
-      console.error("Login failed:", err);
-
-      let message = "Login failed";
-
-      if (err?.response?.data?.message) {
-        message =
-          typeof err.response.data.message === "object"
-            ? JSON.stringify(err.response.data.message)
-            : err.response.data.message;
-      } else if (err?.message) {
-        message = err.message;
-      } else if (typeof err === "string") {
-        message = err;
-      }
-      console.log("Error message type:", typeof message, message);
-
-     setError(String(message));
-
+      // console.error("Login failed:", err.response.data.message);
+      setError(String(err.response.data.message));
     } finally {
       setLoading(false);
     }
   };
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-100 to-white-900">

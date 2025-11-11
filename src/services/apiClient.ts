@@ -19,7 +19,10 @@ const apiClient = axios.create({
 
 // ✅ Flag to prevent multiple refresh requests at once
 let isRefreshing = false;
-let failedQueue: Array<{ resolve: (token: string) => void; reject: (err: any) => void }> = [];
+let failedQueue: Array<{
+  resolve: (token: string) => void;
+  reject: (err: any) => void;
+}> = [];
 
 const processQueue = (error: any, token: string | null = null) => {
   failedQueue.forEach((prom) => {
@@ -79,7 +82,7 @@ apiClient.interceptors.response.use(
         processQueue(refreshError, null);
         AuthService.logout();
 
-        // Optional: redirect to login page
+        //   // Optional: redirect to login page
         window.location.href = "/login";
         return Promise.reject(refreshError);
       } finally {
