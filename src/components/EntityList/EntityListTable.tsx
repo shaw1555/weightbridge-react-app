@@ -50,7 +50,11 @@ function EntityListTable<T>({
       <table className="border-collapse border border-gray-300 w-full">
         <thead>
           <tr>
-            <th className="border border-gray-300 p-2 text-center">
+            {/* ✅ Fixed width for checkbox column only */}
+            <th
+              className="border border-gray-300 p-2 text-center"
+              style={{ width: 40, minWidth: 40, maxWidth: 40 }}
+            >
               <input
                 type="checkbox"
                 checked={allSelected}
@@ -58,10 +62,10 @@ function EntityListTable<T>({
                 className="mx-auto block"
               />
             </th>
+
             {columns.map((col) => {
               const alignmentClass = getAlignmentClass(col.type);
               const isRightAligned = col.type === "number";
-
               return (
                 <th
                   key={String(col.key)}
@@ -85,17 +89,18 @@ function EntityListTable<T>({
 
           {/* Filters Row */}
           <tr className="bg-gray-50">
-            <th className="border border-gray-300 p-2"></th>
+            <th
+              className="border border-gray-300 p-2"
+              style={{ width: 40, minWidth: 40, maxWidth: 40 }}
+            ></th>
             {columns.map((col) => {
               const alignmentClass = getAlignmentClass(col.type);
               const isCheckbox = col.type === "checkbox";
-
-              // Filter input: number => number, date => date (always no time), else text
               const inputType =
                 col.type === "number"
                   ? "number"
                   : col.type === "date"
-                  ? "date" // always date only
+                  ? "date"
                   : "text";
 
               return (
@@ -109,7 +114,7 @@ function EntityListTable<T>({
                     value={filters[String(col.key)] ?? ""}
                     onChange={(e) => onFilterChange(col.key, e.target.value)}
                     className="border border-gray-300 rounded w-full p-1 text-sm placeholder-gray-400"
-                    disabled={isCheckbox} // disable checkbox filter
+                    disabled={isCheckbox}
                   />
                 </th>
               );
@@ -124,13 +129,13 @@ function EntityListTable<T>({
               <tr
                 key={itemId}
                 className={`cursor-pointer hover:bg-blue-50 transition
-              odd:bg-gray-50 even:bg-white
-              ${selectedRows[itemId] ? "bg-blue-100" : ""}`}  
+            odd:bg-gray-50 even:bg-white
+            ${selectedRows[itemId] ? "bg-blue-100" : ""}`}
               >
-                {/* Row selection checkbox */}
+                {/* ✅ Fixed width for checkbox cell */}
                 <td
-                  className="border border-gray-300 p-2 text-center w-12"
-                  style={{ minWidth: 40, maxWidth: 40 }}
+                  className="border border-gray-300 p-2 text-center"
+                  style={{ width: 40, minWidth: 40, maxWidth: 40 }}
                   onClick={(e) => e.stopPropagation()}
                 >
                   <input
@@ -160,7 +165,7 @@ function EntityListTable<T>({
                     content = col.render(item);
                   } else if (col.type === "number") {
                     const num = Number(item[col.key]);
-                    content = isNaN(num) ? "" : num.toLocaleString(); // 👈 Add thousand separators
+                    content = isNaN(num) ? "" : num.toLocaleString();
                   } else {
                     content = String(item[col.key] ?? "");
                   }

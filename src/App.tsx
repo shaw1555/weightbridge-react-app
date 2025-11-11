@@ -39,11 +39,11 @@ import WeighingCompanyProfileFormPage from "./pages/weighingCompanyProfile/Weigh
 import WeighGateInOutListPage from "./pages/weighGateInOut/WeighGateInOutListPage";
 import WeighGateInOutFormPage from "./pages/weighGateInOut/WeighGateInOutFormPage";
 import VGMDeclarationFormListPage from "./pages/report/VGMDeclarationFormListPage";
+import ODOOExportListPage from "./pages/report/ODOOExportListPage";
 import ROUTES from "./config/routes";
 import Header from "./components/Header";
 import PrivateRoute from "./components/PrivateRoute";
 import { NAV_LINKS } from "./config/navLinks";
-
 
 const AppContent: React.FC = () => {
   const { showPopup } = usePopup();
@@ -312,7 +312,14 @@ const AppContent: React.FC = () => {
             </PrivateRoute>
           }
         />
-
+        <Route
+          path={ROUTES.ODOOExport_List}
+          element={
+            <PrivateRoute>
+              <ODOOExportListPage />
+            </PrivateRoute>
+          }
+        />
       </Routes>
       <ToastContainer
         position="top-right"

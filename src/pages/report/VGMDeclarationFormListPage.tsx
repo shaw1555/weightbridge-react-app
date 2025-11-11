@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify"; 
+import { toast } from "react-toastify";
 import { fetchVGMDeclarationForm, DownloadVGMDeclarationForm } from "./service"; // your API function
 import type { VGMDeclarationForm } from "./types"; // your Product type
 import { EntityList, type Column } from "../../components/EntityList";
@@ -40,7 +40,7 @@ const VGMDeclarationFormListPage: React.FC = () => {
   const columns: Column<VGMDeclarationForm>[] = [
     { key: "customer_name_f", label: "Customer", width: "500px" },
     { key: "booking_no_f", label: "Booking No", width: "300px" },
-    { key: "port_of_loading_f", label: "Port of Loading", width: "300px" },
+    { key: "port_of_loading_f", label: "Port of Loading", width: "300px" }, 
   ];
 
   return (
@@ -66,6 +66,7 @@ const VGMDeclarationFormListPage: React.FC = () => {
 
         <EntityList
           title="VGM Declaration Form"
+          subTitle="Click the row to download VGM Declaration Form."
           data={datas}
           columns={columns}
           idKey="transaction_id_f" // 👈 tell which field is the PK
@@ -76,7 +77,7 @@ const VGMDeclarationFormListPage: React.FC = () => {
             if (!selected) {
               toast.warning("Invalid for download file.");
               return;
-            }
+            } 
             DownloadVGMDeclarationForm(selected);
           }}
         />

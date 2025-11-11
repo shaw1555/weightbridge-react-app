@@ -1,19 +1,18 @@
 // types/auth.ts
 
 export interface LoginRequest {
-  username: string;
+  loginAccount: string;
   password: string;
 }
 
 export interface LoginResponse {
-  id: number;
-  username: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  gender: string;
-  image: string;
-  token: string;
+  user_id_f: number;
+  accessToken: string;
+  refreshToken: string;
+  user: {
+    login_account_f: string;
+    user_name_f?: string;
+  };
 }
 
 export interface Setup {

@@ -9,15 +9,17 @@ import Button from "../Button";
 
 interface EntityListProps<T> {
   title: string;
+  subTitle?: string; // ✅ optional subtitle
   data: T[];
   columns: Column<T>[];
   idKey: keyof T; // 👈 must specify which property is the PK
   onRowClick: (id: string | number) => void;
-  onAddClick?: () => void; // ✅ made optional
+  onAddClick?: () => void; // optional
 }
 
 function EntityList<T>({
   title,
+  subTitle,
   data,
   columns,
   idKey,
@@ -212,6 +214,10 @@ function EntityList<T>({
           allSelected={allSelected}
           idKey={idKey} // 🔑 dynamic ID key
         />
+        {/* Subtitle on the next row */}
+        {subTitle && (
+          <div className="text-gray-500 text-sm mt-1">{subTitle}</div>
+        )}
       </div>
     </div>
   );

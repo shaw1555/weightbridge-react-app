@@ -18,7 +18,7 @@ type Location = Setup;
 
 const LoginPage: React.FC = () => {
   const [form, setForm] = useState<LoginRequest>({
-    username: "",
+    loginAccount: "",
     password: "",
   });
   const [locations, setLocations] = useState<Location[]>([]);
@@ -75,11 +75,31 @@ const LoginPage: React.FC = () => {
       );
       navigate(ROUTES.Dashboard);
     } catch (err: any) {
-      setError(err.message || "Login failed");
+      console.error("Login failed:", err);
+
+      let message = "Login failed";
+
+      if (err?.response?.data?.message) {
+        message =
+          typeof err.response.data.message === "object"
+            ? JSON.stringify(err.response.data.message)
+            : err.response.data.message;
+      } else if (err?.message) {
+        message = err.message;
+      } else if (typeof err === "string") {
+        message = err;
+      }
+      console.log("Error message type:", typeof message, message);
+
+     setError(String(message));
+
     } finally {
       setLoading(false);
     }
   };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-100 to-white-900">
@@ -104,8 +124,8 @@ const LoginPage: React.FC = () => {
             <UserIcon className="absolute w-5 h-5 text-gray-400 left-3 top-10" />
             <input
               type="text"
-              name="username"
-              value={form.username}
+              name="loginAccount"
+              value={form.loginAccount}
               onChange={handleChange}
               className="w-full border border-gray-300 px-10 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="Enter username"
