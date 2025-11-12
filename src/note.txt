@@ -1,0 +1,12 @@
+# api connection string defined at
+For developement >> .env 
+For production >> .env.production
+
+# project run for developement
+command >> npm run dev
+
+# generate package to run on IIS 
+command >> npm run build
+api url >> will be fixed as defined at .env.production
+(must be updated for destination server api before build)
+
