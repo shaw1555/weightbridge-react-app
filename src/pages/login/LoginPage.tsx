@@ -11,7 +11,7 @@ import {
   UserIcon,
   LockClosedIcon,
 } from "@heroicons/react/24/outline";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/kln-logo.png";
 import { fetchSetups } from "./service";
 
 type Location = Setup;
@@ -85,12 +85,12 @@ const LoginPage: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-100 to-white-900">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
-        <div className="flex justify-center mb-6">
-          <img src={logo} alt="Logo" className="w-16 h-16 object-contain" />
+        <div className="flex justify-center mb-2">
+          <img src={logo} alt="Logo" className="w-32 h-32 object-contain" />
         </div>
 
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
-          My Application
+          Weighbridge
         </h2>
 
         {error && (

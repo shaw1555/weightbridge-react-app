@@ -384,6 +384,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
           valueKey="description_f"
           placeholder="Select a location"
           required
+          disabled={true}
         />
 
         <SearchableDropdown
