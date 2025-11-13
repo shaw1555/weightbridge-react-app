@@ -63,6 +63,7 @@ export interface WeighGateInOut {
   self_own_f: boolean;
   lock_f: boolean;
   gate_charge_unitprice_f: number;
+  fmis_job_no_f: string;
 
   //for entry, UI field only //
   gate_in_out_status_f: string;
@@ -133,6 +134,7 @@ export const initialForm: WeighGateInOut = {
   self_own_f: false,
   lock_f: false,
   gate_charge_unitprice_f: 0,
+  fmis_job_no_f: "",
 
   gate_in_out_status_f: GATE_STATUS.IN,
   gate_in_out_truck_info_f: GATE_TRUCK_INFO.TRUCK_ONLY,

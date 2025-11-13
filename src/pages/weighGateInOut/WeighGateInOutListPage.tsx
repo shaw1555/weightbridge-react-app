@@ -8,7 +8,11 @@ import { EntityList, type Column } from "../../components/EntityList";
 import DateRangeFilter from "../../components/DateRangeFilter";
 import Checkbox from "../../components/Checkbox";
 import SearchableDropdown from "../../components/SearchableDropdown";
-import { ALL_LOCATION_NAME, STORAGE_KEYS, SETUP_CATEGORIES } from "../../constants";
+import {
+  ALL_LOCATION_NAME,
+  STORAGE_KEYS,
+  SETUP_CATEGORIES,
+} from "../../constants";
 
 type Location = Setup;
 
@@ -58,7 +62,7 @@ const WeighGateInOutListPage: React.FC = () => {
       const data = await fetchWeighGateInOuts(fromDate, toDate);
       setWeighGateInOuts(data);
 
-      const setups = await fetchSetups(); 
+      const setups = await fetchSetups();
 
       // Filter for locations
       const dbLocation = setups.filter(
@@ -76,9 +80,7 @@ const WeighGateInOutListPage: React.FC = () => {
       ];
       setLocations(allLocations);
 
-      const defaultLoc = localStorage.getItem(
-        STORAGE_KEYS.DEFAULT_LOCATION
-      );
+      const defaultLoc = localStorage.getItem(STORAGE_KEYS.DEFAULT_LOCATION);
       setselectedLocation(String(defaultLoc));
     } catch (error) {
       console.error("Error fetching weighGateInOuts:", error);
@@ -109,9 +111,8 @@ const WeighGateInOutListPage: React.FC = () => {
     { key: "truck_no_f", label: "Truck No", width: "100px" },
     { key: "product_f", label: "Product", width: "150px" },
     { key: "date_f", label: "Date", type: "date" },
-     { key: "customer_name_f", label: "Customer", width: "280px"  },
-    { key: "vessel_f", label: "Vessel" },
-    { key: "voy_f", label: "Voy" },
+    { key: "customer_name_f", label: "Customer", width: "280px" },
+    { key: "container_no_f", label: "Container No" },
     { key: "container_size_type_f", label: "Container Size Type" },
     // { key: "service_id_f", label: "Service ID" },
     { key: "service_f", label: "Service" },
@@ -129,7 +130,7 @@ const WeighGateInOutListPage: React.FC = () => {
     },
     { key: "is_gate_foc_f", label: "Is Gate FOC", type: "checkbox" },
     { key: "weight_charge_uom_f", label: "Weight Charge UOM", width: "120px" },
-    { key: "container_no_f", label: "Container No" },
+
     { key: "no_of_container_f", label: "No of Container", type: "number" },
     {
       key: "weight_charge_unitprice_f",
@@ -156,6 +157,8 @@ const WeighGateInOutListPage: React.FC = () => {
     { key: "job_department_f", label: "Job Department" },
     { key: "truck_arrange_by_f", label: "Truck Arrange By" },
     { key: "bl_no_f", label: "BL No" },
+    { key: "vessel_f", label: "Vessel" },
+    { key: "voy_f", label: "Voy" },
     {
       key: "date_time_in_f",
       label: "Date Time In",

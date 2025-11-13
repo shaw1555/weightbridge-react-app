@@ -12,6 +12,7 @@ interface FreeTextDropdownProps<T> {
   placeholder?: string;
   required?: boolean;
   errorMessage?: string;
+  uppercase?: boolean; // 🆕 new prop
 }
 
 export default function FreeTextDropdown<T extends Record<string, any>>({
@@ -24,6 +25,7 @@ export default function FreeTextDropdown<T extends Record<string, any>>({
   placeholder = "Select...",
   required = false,
   errorMessage = "This field is required",
+  uppercase = false, // 🆕 default false
 }: FreeTextDropdownProps<T>) {
   const [inputValue, setInputValue] = useState("");
   const [touched, setTouched] = useState(false);
@@ -43,6 +45,13 @@ export default function FreeTextDropdown<T extends Record<string, any>>({
 
   const showError = required && touched && !inputValue.trim();
 
+  const handleInputChange = (val: string) => {
+    const newVal = uppercase ? val.toUpperCase() : val; // 🧠 convert instantly
+    setInputValue(newVal);
+    onChange(newVal);
+    setTouched(true);
+  };
+
   return (
     <div className="w-full">
       <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -53,23 +62,19 @@ export default function FreeTextDropdown<T extends Record<string, any>>({
         value={inputValue}
         onChange={(val: string | null) => {
           const newVal = val ?? "";
-          setInputValue(newVal);
-          setTouched(true);
-          onChange(newVal);
+          handleInputChange(newVal);
         }}
       >
         <div className="relative mt-1">
           <Combobox.Input
             className={`w-full mt-1 rounded-lg border ${
               showError ? "border-red-500" : "border-gray-300"
-            } shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 px-3 py-2 text-sm bg-yellow-50`}
+            } shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 px-3 py-2 text-sm bg-yellow-50 ${
+              uppercase ? "uppercase" : "" // 🆕 visual style too
+            }`}
             displayValue={() => inputValue}
-            onChange={(e) => {
-              const val = e.target.value;
-              setInputValue(val);
-              onChange(val);
-              setTouched(true);
-            }}
+            value={inputValue}
+            onChange={(e) => handleInputChange(e.target.value)} // live update
             onBlur={() => setTouched(true)}
             placeholder={placeholder}
           />

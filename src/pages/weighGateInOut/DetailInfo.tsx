@@ -293,10 +293,9 @@ const DetailInfo: React.FC<DetailInfoProps> = ({
                 label="Weight Value"
                 type="number"
                 value={weighGateInOutData.gate_in_out_truck_weighValue_f}
-                // onChange={(val) =>
-                //   handleChange("gate_in_out_truck_weighValue_f", val)
-                // }
-                readOnly
+                onChange={(val) =>
+                  handleChange("gate_in_out_truck_weighValue_f", val)
+                }
               />
             </div>
           </div>

@@ -215,7 +215,7 @@ export default function WeighVGMFormPage() {
         >
           <ArrowLeft className="w-5 h-5 text-gray-700" />
         </Button>
-        <h2 className="text-lg font-semibold ml-2">Weigh Gate In & Out</h2>
+        <h2 className="text-lg font-semibold ml-2">Weigh VGM</h2>
       </div>
       <HeaderInfo
         onSubmit={saveHeaderInfo}

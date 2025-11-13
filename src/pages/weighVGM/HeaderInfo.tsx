@@ -221,6 +221,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
           onChange={(val) => handleChange("truck_no_f", val)}
           placeholder="Enter vehicle number"
           required
+          uppercase
         />
 
         <TextInput

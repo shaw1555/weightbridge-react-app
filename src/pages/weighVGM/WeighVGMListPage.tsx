@@ -68,10 +68,8 @@ const WeighVGMListPage: React.FC = () => {
     { key: "port_of_loading_f", label: "Port of Loading" },
     { key: "vessel_voy_f", label: "Vessel/Voy", width: "230px" },
     { key: "seal_number_f", label: "Seal No" },
-    { key: "container_size_type_f", label: "Container Size Type" },
-
     { key: "container_no_f", label: "Container No" },
-
+    { key: "container_size_type_f", label: "Container Size Type" },
     {
       key: "date_time_in_f",
       label: "Date Time In",

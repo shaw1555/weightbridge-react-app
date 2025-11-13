@@ -320,6 +320,7 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
           valueKey="description_f"
           placeholder="Select or type truck number"
           required
+          uppercase
         />
 
         <TextInput
@@ -450,6 +451,14 @@ const HeaderInfo: React.FC<HeaderInfoProps> = ({
           value={weighGateInOutData.received_by_f}
           onChange={(val) => handleChange("received_by_f", val)}
           placeholder="Enter receiver name"
+        />
+
+
+        <TextInput
+          label="FMIS Job No"
+          value={weighGateInOutData.fmis_job_no_f}
+          onChange={(val) => handleChange("fmis_job_no_f", val)}
+          placeholder="Enter FMIS job no"
         />
 
         {/* Full Width Remark */}
