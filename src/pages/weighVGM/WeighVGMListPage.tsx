@@ -56,9 +56,8 @@ const WeighVGMListPage: React.FC = () => {
   }, [filters.fromDate, filters.toDate]);
 
   const columns: Column<WeighVGM>[] = [
-    { key: "transaction_no_f", label: "Transaction No", width: "240px" },
-
     { key: "date_f", label: "Date", type: "date" },
+        { key: "transaction_no_f", label: "Transaction No", width: "240px" },
     { key: "customer_name_f", label: "Customer", width: "300px" },
     { key: "registration_number_f", label: "Registration No" },
     { key: "vgm_reference_f", label: "VGM Reference" },

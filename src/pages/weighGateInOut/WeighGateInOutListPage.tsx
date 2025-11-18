@@ -34,7 +34,7 @@ const WeighGateInOutListPage: React.FC = () => {
       fromDate: savedFrom || new Date().toISOString().split("T")[0],
       toDate: savedTo || new Date().toISOString().split("T")[0],
     };
-  }); 
+  });
 
   const navigate = useNavigate();
 
@@ -112,58 +112,24 @@ const WeighGateInOutListPage: React.FC = () => {
 
   const columns: Column<WeighGateInOut>[] = [
     // { key: "weighGateInOut_id_f", label: "WeighGateInOut Id" }, // can remove, but it still work for save, update, delete//
-    { key: "transaction_no_f", label: "Transaction No", width: "240px" },
-    { key: "truck_no_f", label: "Truck No", width: "100px" },
-    { key: "product_f", label: "Product", width: "150px" },
     { key: "date_f", label: "Date", type: "date" },
+    { key: "transaction_no_f", label: "Transaction No", width: "240px" },
     { key: "customer_name_f", label: "Customer", width: "280px" },
-    { key: "container_no_f", label: "Container No" },
-    { key: "container_size_type_f", label: "Container Size Type" },
-    // { key: "service_id_f", label: "Service ID" },
-    { key: "service_f", label: "Service" },
-    // { key: "category_id_f", label: "Category ID" },
-    { key: "category_f", label: "Category" },
-    // { key: "truck_type_id_f", label: "Truck Type ID" },
-    { key: "truck_type_f", label: "Truck Type" },
-    { key: "payment_type_f", label: "Payment Type" },
-    { key: "location_f", label: "Location" },
-    { key: "gate_charge_uom_f", label: "Gate Charge UOM" },
-    {
-      key: "gate_charge_amount_f",
-      label: "Gate Charge Amount",
-      type: "number",
-    },
-    { key: "is_gate_foc_f", label: "Is Gate FOC", type: "checkbox" },
-    { key: "weight_charge_uom_f", label: "Weight Charge UOM", width: "120px" },
-
-    { key: "no_of_container_f", label: "No of Container", type: "number" },
-    {
-      key: "weight_charge_unitprice_f",
-      label: "Weight Charge Unit Price",
-      type: "number",
-    },
-    {
-      key: "weight_charge_amount_f",
-      label: "Weight Charge Amount",
-      type: "number",
-    },
-    { key: "is_weight_foc_f", label: "Is Weight FOC", type: "checkbox" },
-    { key: "sub_total_amount_f", label: "Sub Total Amount", type: "number" },
-    {
-      key: "commerical_tax_amount_f",
-      label: "Commercial Tax Amount",
-      type: "number",
-    },
-    {
-      key: "grand_total_amount_f",
-      label: "Grand Total Amount",
-      type: "number",
-    },
-    { key: "job_department_f", label: "Job Department" },
+    { key: "tariff_no_f", label: "Tariff No" },
     { key: "truck_arrange_by_f", label: "Truck Arrange By" },
-    { key: "bl_no_f", label: "BL No" },
+    { key: "truck_type_f", label: "Truck Type" },
+    { key: "truck_no_f", label: "Truck No", width: "100px" },
+    { key: "self_own_f", label: "Self Own", type: "checkbox" },
+    { key: "product_f", label: "Product", width: "150px" },
     { key: "vessel_f", label: "Vessel" },
     { key: "voy_f", label: "Voy" },
+    { key: "container_no_f", label: "Container No" },
+    { key: "container_size_type_f", label: "Container Size Type" },
+    { key: "service_f", label: "Service" },
+    { key: "category_f", label: "Category" },
+    { key: "location_f", label: "Location" },
+    { key: "job_department_f", label: "Job Department" },
+    { key: "bl_no_f", label: "BL No" },
     {
       key: "date_time_in_f",
       label: "Date Time In",
@@ -178,6 +144,18 @@ const WeighGateInOutListPage: React.FC = () => {
       showTime: true,
       width: "200px",
     },
+    { key: "weight_charge_uom_f", label: "Weight Charge UOM", width: "120px" },
+    { key: "no_of_container_f", label: "No of Container", type: "number" },
+    {
+      key: "weight_charge_unitprice_f",
+      label: "Weight Charge Unit Price",
+      type: "number",
+    },
+    {
+      key: "weight_charge_amount_f",
+      label: "Weight Charge Amount",
+      type: "number",
+    },
     {
       key: "truck_cargo_weight_f",
       label: "Truck Cargo Weight",
@@ -185,6 +163,31 @@ const WeighGateInOutListPage: React.FC = () => {
     },
     { key: "truck_weight_f", label: "Truck Weight", type: "number" },
     { key: "net_weight_f", label: "Net Weight", type: "number" },
+    { key: "gate_charge_uom_f", label: "Gate Charge UOM" },
+    { key: "payment_type_f", label: "Payment Type" },
+    {
+      key: "gate_charge_unitprice_f",
+      label: "Gate Charge Unit Price",
+      type: "number",
+    },
+    {
+      key: "gate_charge_amount_f",
+      label: "Gate Charge Amount",
+      type: "number",
+    },
+    { key: "is_gate_foc_f", label: "Is Gate FOC", type: "checkbox" },
+    { key: "is_weight_foc_f", label: "Is Weight FOC", type: "checkbox" },
+    { key: "sub_total_amount_f", label: "Sub Total Amount", type: "number" },
+    {
+      key: "commerical_tax_amount_f",
+      label: "Commercial Tax Amount",
+      type: "number",
+    },
+    {
+      key: "grand_total_amount_f",
+      label: "Grand Total Amount",
+      type: "number",
+    },
     { key: "gate_in_info_f", label: "Gate In Info", width: "150px" },
     { key: "gate_in_weight_f", label: "Gate In Weight", type: "number" },
     { key: "gate_out_info_f", label: "Gate Out Info", width: "150px" },
@@ -194,7 +197,7 @@ const WeighGateInOutListPage: React.FC = () => {
     { key: "received_by_f", label: "Received By" },
     { key: "accepted_by_f", label: "Accepted By", width: "150px" },
     { key: "approved_by_f", label: "Approved By", width: "150px" },
-    // { key: "inactive_f", label: "Inactive", type: "checkbox" },
+    { key: "inactive_f", label: "Inactive", type: "checkbox" },
     { key: "log_by_f", label: "Log By", width: "150px" },
     {
       key: "log_date_time_f",
@@ -202,13 +205,6 @@ const WeighGateInOutListPage: React.FC = () => {
       type: "date",
       showTime: true,
       width: "200px",
-    },
-    { key: "self_own_f", label: "Self Own", type: "checkbox" },
-    // { key: "lock_f", label: "Lock", type: "checkbox" },
-    {
-      key: "gate_charge_unitprice_f",
-      label: "Gate Charge Unit Price",
-      type: "number",
     },
   ];
 
