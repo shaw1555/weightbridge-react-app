@@ -12,6 +12,7 @@ import {
   ALL_LOCATION_NAME,
   STORAGE_KEYS,
   SETUP_CATEGORIES,
+  WEIGH_DATE,
 } from "../../constants";
 
 type Location = Setup;
@@ -23,20 +24,24 @@ const WeighGateInOutListPage: React.FC = () => {
   const [inactive, setInactive] = useState(false);
   const [selfOwn, setSelfOwn] = useState(false);
   const [subContractor, setSubContractor] = useState(false);
-
   const [loading, setLoading] = useState(false);
-  const [filters, setFilters] = useState<{
-    fromDate: string;
-    toDate: string;
-  }>({
-    fromDate: new Date().toISOString().split("T")[0], // e.g. "2025-10-22"
-    toDate: new Date().toISOString().split("T")[0],
-  });
+
+  const [filters, setFilters] = useState(() => {
+    const savedFrom = localStorage.getItem(WEIGH_DATE.WEIGH_FROMDATE);
+    const savedTo = localStorage.getItem(WEIGH_DATE.WEIGH_TODATE);
+
+    return {
+      fromDate: savedFrom || new Date().toISOString().split("T")[0],
+      toDate: savedTo || new Date().toISOString().split("T")[0],
+    };
+  }); 
 
   const navigate = useNavigate();
 
   const handleDateFilterApply = (fromDate: string, toDate: string) => {
     setFilters({ fromDate, toDate });
+    localStorage.setItem(WEIGH_DATE.WEIGH_FROMDATE, fromDate);
+    localStorage.setItem(WEIGH_DATE.WEIGH_TODATE, toDate);
     fetchData(fromDate, toDate);
   };
 
@@ -184,8 +189,8 @@ const WeighGateInOutListPage: React.FC = () => {
     { key: "gate_in_weight_f", label: "Gate In Weight", type: "number" },
     { key: "gate_out_info_f", label: "Gate Out Info", width: "150px" },
     { key: "gate_out_weight_f", label: "Gate Out Weight", type: "number" },
-    { key: "fmis_job_no_f", label: "FMIS Job.No", width: "150px"  },
-    { key: "remark_f", label: "Remark" , width: "150px" },
+    { key: "fmis_job_no_f", label: "FMIS Job.No", width: "150px" },
+    { key: "remark_f", label: "Remark", width: "150px" },
     { key: "received_by_f", label: "Received By" },
     { key: "accepted_by_f", label: "Accepted By", width: "150px" },
     { key: "approved_by_f", label: "Approved By", width: "150px" },

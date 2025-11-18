@@ -6,3 +6,4 @@ export * from "./allLocationName";
 export * from "./permissions";
 export * from "./entities";
 export * from "./gateVGMTruckInfos";
+export * from "./weighDate";

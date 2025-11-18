@@ -1,7 +1,7 @@
 import type { LoginRequest, LoginResponse } from "../pages/login/types";
 import apiClient from "./apiClient";
 import axios from "axios";
-import { STORAGE_KEYS } from "../constants";
+import { STORAGE_KEYS, WEIGH_DATE } from "../constants";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL as string;
 const basePathLogin = `${API_BASE_URL}/Login`;
@@ -82,6 +82,8 @@ class AuthServiceClass {
     localStorage.removeItem(STORAGE_KEYS.TOKEN);
     localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
     localStorage.removeItem(STORAGE_KEYS.USER_INFO);
+    localStorage.removeItem(WEIGH_DATE.WEIGH_FROMDATE);
+    localStorage.removeItem(WEIGH_DATE.WEIGH_TODATE);
   }
 
   isLoggedIn(): boolean {
