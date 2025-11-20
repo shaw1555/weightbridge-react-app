@@ -81,9 +81,7 @@ class AuthServiceClass {
   logout() {
     localStorage.removeItem(STORAGE_KEYS.TOKEN);
     localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
-    localStorage.removeItem(STORAGE_KEYS.USER_INFO);
-    localStorage.removeItem(WEIGH_DATE.WEIGH_FROMDATE);
-    localStorage.removeItem(WEIGH_DATE.WEIGH_TODATE);
+    localStorage.removeItem(STORAGE_KEYS.USER_INFO); 
   }
 
   isLoggedIn(): boolean {
