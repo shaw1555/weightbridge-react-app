@@ -25,14 +25,15 @@ const WeighGateInOutListPage: React.FC = () => {
   const [selfOwn, setSelfOwn] = useState(false);
   const [subContractor, setSubContractor] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const [filters, setFilters] = useState(() => {
-    const savedFrom = localStorage.getItem(WEIGH_DATE.WEIGH_FROMDATE);
-    const savedTo = localStorage.getItem(WEIGH_DATE.WEIGH_TODATE);
+    const savedFrom = sessionStorage.getItem(WEIGH_DATE.WEIGH_FROMDATE);
+    const savedTo = sessionStorage.getItem(WEIGH_DATE.WEIGH_TODATE);
+
+    const today = new Date().toISOString().split("T")[0];
 
     return {
-      fromDate: savedFrom || new Date().toISOString().split("T")[0],
-      toDate: savedTo || new Date().toISOString().split("T")[0],
+      fromDate: savedFrom || today,
+      toDate: savedTo || today,
     };
   });
 
@@ -40,8 +41,8 @@ const WeighGateInOutListPage: React.FC = () => {
 
   const handleDateFilterApply = (fromDate: string, toDate: string) => {
     setFilters({ fromDate, toDate });
-    localStorage.setItem(WEIGH_DATE.WEIGH_FROMDATE, fromDate);
-    localStorage.setItem(WEIGH_DATE.WEIGH_TODATE, toDate);
+    sessionStorage.setItem(WEIGH_DATE.WEIGH_FROMDATE, fromDate);
+    sessionStorage.setItem(WEIGH_DATE.WEIGH_TODATE, toDate); 
     fetchData(fromDate, toDate);
   };
 
