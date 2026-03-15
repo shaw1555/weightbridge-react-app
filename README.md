@@ -1,73 +1,88 @@
-# React + TypeScript + Vite
+# Weightbridge React App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+This project is a **Weightbridge management application** built using **React, TypeScript, and Vite**.
+The system supports weightbridge operations such as **truck weigh-in, weigh-out, and transaction management**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+It also provides configuration for **customers, products, and tariffs**, allowing the system to **automatically calculate transaction costs** based on the configured tariff rules.
 
-## React Compiler
+The application communicates with backend APIs to manage weighbridge transactions and operational data.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Technologies
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+* React
+* TypeScript
+* Vite
+* REST API Integration
+* CSS
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Project Structure
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src
+ ├── assets        # Images and static resources
+ ├── components    # Reusable UI components
+ ├── config        # Application configuration
+ ├── constants     # Constant values 
+ ├── pages         # Application pages
+ ├── services      # API service calls
+ ├── utils         # Helper functions
+ ├── App.tsx       # Main application component
+ └── main.tsx      # Application entry point
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Features
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+* Truck **weigh-in / weigh-out** transaction management
+* **Gate in / gate out** operations
+* **Customer setup and management**
+* **Product setup and configuration**
+* **Tariff setup** for weight-based charges
+* **Automatic cost calculation** during weight transactions based on configured tariffs
+* **Weight transaction recording**
+* **Report generation and download**
+* Integration with backend APIs
+
+---
+
+## Installation
+
+### 1. Clone the repository
+
 ```
+git clone https://github.com/yourusername/weightbridge-react-app.git
+```
+
+### 2. Install dependencies
+
+```
+npm install
+```
+
+### 3. Run the application
+
+```
+npm run dev
+```
+
+The application will start using the **Vite development server**.
+
+---
+
+## Purpose
+
+This project was developed as part of a **logistics / warehouse operational system** to support weightbridge operations and automate tariff-based cost calculations.
+
+---
+
+## Author
+
+Aung Soe Moe
+Senior Backend Engineer | .NET | React | SQL Server
